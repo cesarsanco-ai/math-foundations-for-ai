@@ -1,0 +1,349 @@
+\documentclass[12pt,a4paper,openany,oneside]{book}
+
+% --- Paquetes ---
+\usepackage[utf8]{inputenc}
+\usepackage[spanish, es-noshorthands]{babel}
+\usepackage{amsmath, amsfonts, amssymb}
+\usepackage{graphicx}
+\usepackage{geometry}
+\usepackage{hyperref}
+\usepackage{booktabs}
+\usepackage{fancyhdr}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usetikzlibrary{arrows.meta, positioning, shapes.geometric}
+\pgfplotsset{compat=1.18}
+
+\geometry{margin=2.5cm}
+
+% --- Colores y estilos para código Python ---
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstset{
+    language=Python,
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{blue},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\small,
+    breaklines=true,
+    frame=single,
+    showstringspaces=false
+}
+
+% --- Estilo de cabecera y pie ---
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+\fancyhead[L]{\small Carlos César Sánchez Coronel}
+\fancyhead[R]{\small Sesión 14: Integrales y Aplicaciones en Evaluación de Modelos}
+\fancyfoot[L]{\small Carlos César Sánchez Coronel}
+\fancyfoot[C]{\thepage}
+
+% --- Portada ---
+\title{
+    \textbf{Sesión 14} \\ 
+    \Huge \textbf{INTEGRALES Y APLICACIONES EN EVALUACIÓN DE MODELOS} \\
+    \large De la acumulación de áreas a la métrica AUC \\
+    \normalsize Aplicaciones en machine learning, probabilidad y modelos generativos
+}
+\author{
+    \small Por \\ \vspace{0.2cm}
+    \Large \textsc{Carlos César Sánchez Coronel}
+}
+\date{2026}
+
+\begin{document}
+
+\maketitle
+\tableofcontents
+\addcontentsline{toc}{chapter}{Índice general}
+
+% ------------------------------------------------------------------
+% CAPÍTULO 14: SESIÓN 14 - INTEGRALES
+% ------------------------------------------------------------------
+\chapter{Integrales y Aplicaciones en Evaluación de Modelos}
+
+En esta sesión final exploramos el cálculo integral, el complemento natural del cálculo diferencial. Mientras que la derivada mide el cambio instantáneo, la integral mide la acumulación. Veremos cómo la integral definida nos permite calcular áreas bajo curvas, lo que tiene aplicaciones directas en la evaluación de modelos de machine learning (curva ROC y AUC), en probabilidad (funciones de densidad y valor esperado) y en modelos generativos profundos (VAEs). Al finalizar, serás capaz de calcular integrales simbólica y numéricamente, y entenderás por qué el AUC es una métrica tan utilizada.
+
+\section{Idea intuitiva de integral}
+
+\subsection{Problema del área bajo una curva}
+Consideremos una función $f(x)$ no negativa en un intervalo $[a,b]$. Queremos calcular el área encerrada entre la curva y el eje $x$. Una aproximación consiste en dividir el intervalo en muchos rectángulos pequeños, sumar sus áreas y luego tomar el límite cuando el ancho de los rectángulos tiende a cero. Esta idea es la base de la \textbf{integral definida}.
+
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[
+    title={Aproximación del área mediante rectángulos},
+    xlabel=$x$,
+    ylabel=$f(x)$,
+    domain=0:2,
+    samples=100,
+    xmin=0, xmax=2,
+    ymin=0, ymax=2.5,
+    width=12cm,
+    height=6cm,
+]
+\addplot[blue, thick, domain=0:2] {0.5*x^2 + 0.5};
+\addplot[ybar interval, fill=red!30] plot coordinates {(0,0) (0.5, {0.5*0.5^2+0.5}) (1, {0.5*1^2+0.5}) (1.5, {0.5*1.5^2+0.5}) (2, {0.5*2^2+0.5})};
+\end{axis}
+\end{tikzpicture}
+\captionof{figure}{Aproximación del área mediante rectángulos (suma de Riemann).}
+\end{center}
+
+\section{Integral indefinida (antiderivada)}
+
+\subsection{Definición}
+Una función $F(x)$ es una \textbf{antiderivada} o \textbf{integral indefinida} de $f(x)$ si $F'(x) = f(x)$. La integral indefinida se denota:
+\[
+\int f(x) \, dx = F(x) + C
+\]
+donde $C$ es la constante de integración.
+
+\subsection{Tabla de integrales básicas}
+\begin{table}[h]
+\centering
+\begin{tabular}{ll}
+\toprule
+$f(x)$ & $\int f(x)\, dx$ \\ \midrule
+$k$ (constante) & $kx + C$ \\
+$x^n$ ($n \neq -1$) & $\frac{x^{n+1}}{n+1} + C$ \\
+$\frac{1}{x}$ & $\ln|x| + C$ \\
+$e^x$ & $e^x + C$ \\
+$a^x$ & $\frac{a^x}{\ln a} + C$ \\
+$\sin x$ & $-\cos x + C$ \\
+$\cos x$ & $\sin x + C$ \\
+$\sec^2 x$ & $\tan x + C$ \\
+$\frac{1}{1+x^2}$ & $\arctan x + C$ \\
+$\frac{1}{\sqrt{1-x^2}}$ & $\arcsin x + C$ \\
+\bottomrule
+\end{tabular}
+\caption{Tabla de integrales inmediatas.}
+\end{table}
+
+\subsection{Propiedades de linealidad}
+\[
+\int [f(x) \pm g(x)] \, dx = \int f(x) \, dx \pm \int g(x) \, dx
+\]
+\[
+\int k f(x) \, dx = k \int f(x) \, dx
+\]
+
+\section{Integral definida y Teorema Fundamental del Cálculo}
+
+\subsection{Definición de integral definida}
+La integral definida de $f$ desde $a$ hasta $b$ se define como el límite de las sumas de Riemann:
+\[
+\int_a^b f(x) \, dx = \lim_{\max \Delta x_i \to 0} \sum_{i=1}^n f(x_i^*) \Delta x_i
+\]
+Si $f$ es continua en $[a,b]$, este límite existe y representa el área neta entre la curva y el eje $x$ (considerando áreas negativas cuando $f(x) < 0$).
+
+\subsection{Teorema Fundamental del Cálculo (TFC)}
+El TFC conecta la derivación y la integración:
+
+\textbf{Parte 1:} Si $f$ es continua en $[a,b]$ y definimos $F(x) = \int_a^x f(t) \, dt$, entonces $F$ es derivable y $F'(x) = f(x)$.
+
+\textbf{Parte 2:} Si $F$ es una antiderivada de $f$ en $[a,b]$, entonces
+\[
+\int_a^b f(x) \, dx = F(b) - F(a)
+\]
+
+\subsection{Ejemplo paso a paso}
+Calcular $\int_0^1 x^2 \, dx$.
+\begin{align*}
+\int x^2 \, dx &= \frac{x^3}{3} + C \\
+\int_0^1 x^2 \, dx &= \left[ \frac{x^3}{3} \right]_0^1 = \frac{1}{3} - 0 = \frac{1}{3}
+\end{align*}
+
+\subsection{Propiedades de la integral definida}
+\begin{itemize}
+    \item $\int_a^b f(x) \, dx = -\int_b^a f(x) \, dx$.
+    \item $\int_a^b c f(x) \, dx = c \int_a^b f(x) \, dx$.
+    \item $\int_a^b [f(x) \pm g(x)] \, dx = \int_a^b f(x) \, dx \pm \int_a^b g(x) \, dx$.
+    \item $\int_a^b f(x) \, dx = \int_a^c f(x) \, dx + \int_c^b f(x) \, dx$.
+    \item Si $f(x) \ge 0$ en $[a,b]$, entonces $\int_a^b f(x) \, dx \ge 0$.
+\end{itemize}
+
+\section{Aplicaciones en Inteligencia Artificial}
+
+\subsection{Curva ROC y AUC (Area Under the Curve)}
+En clasificación binaria, la curva ROC (Receiver Operating Characteristic) representa la tasa de verdaderos positivos (TPR) frente a la tasa de falsos positivos (FPR) al variar el umbral de decisión. El área bajo esta curva, AUC, es una medida de la capacidad del modelo para separar las clases. Un AUC de 1 indica un clasificador perfecto; 0.5 indica un clasificador aleatorio.
+
+El AUC se calcula como la integral:
+\[
+\text{AUC} = \int_{0}^{1} \text{TPR}(\text{FPR}) \, d(\text{FPR})
+\]
+En la práctica, se aproxima mediante la regla trapezoidal sobre los puntos observados.
+
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[
+    title={Curva ROC},
+    xlabel={Tasa de Falsos Positivos (FPR)},
+    ylabel={Tasa de Verdaderos Positivos (TPR)},
+    xmin=0, xmax=1,
+    ymin=0, ymax=1,
+    grid=major,
+    width=8cm,
+    height=8cm,
+]
+\addplot[blue, thick, domain=0:1] {x};
+\addlegendentry{Clasificador aleatorio (AUC=0.5)}
+\addplot[red, thick] coordinates {(0,0) (0.2,0.6) (0.4,0.8) (0.6,0.9) (0.8,0.95) (1,1)};
+\addlegendentry{Buen clasificador}
+\addplot[fill=red!20, draw=none] coordinates {(0,0) (0.2,0.6) (0.4,0.8) (0.6,0.9) (0.8,0.95) (1,1) (1,0) (0,0)} \closedcycle;
+\end{axis}
+\end{tikzpicture}
+\captionof{figure}{La curva ROC y el área bajo ella (AUC).}
+\end{center}
+
+\subsection{Probabilidad: PDF, CDF y valor esperado}
+En probabilidad, una variable aleatoria continua $X$ tiene una función de densidad de probabilidad (PDF) $f(x)$ que satisface $\int_{-\infty}^{\infty} f(x) \, dx = 1$. La probabilidad de que $X$ esté en un intervalo $[a,b]$ es:
+\[
+P(a \le X \le b) = \int_a^b f(x) \, dx
+\]
+La función de distribución acumulada (CDF) es $F(x) = \int_{-\infty}^x f(t) \, dt$.
+El valor esperado (media) se define como:
+\[
+E[X] = \int_{-\infty}^{\infty} x f(x) \, dx
+\]
+Estas integrales aparecen constantemente en estadística y machine learning.
+
+\subsection{Modelos generativos profundos (VAEs)}
+En los Autoencoders Variacionales (VAEs), se maximiza una cota inferior de la verosimilitud (ELBO) que involucra una esperanza:
+\[
+\mathcal{L}(\theta, \phi; \mathbf{x}) = \mathbb{E}_{q_\phi(\mathbf{z}|\mathbf{x})} [\log p_\theta(\mathbf{x}|\mathbf{z})] - D_{\text{KL}}(q_\phi(\mathbf{z}|\mathbf{x}) \| p(\mathbf{z}))
+\]
+El primer término es una esperanza (integral) sobre la distribución latente $q_\phi(\mathbf{z}|\mathbf{x})$. Aunque en la práctica se aproxima mediante muestreo, la formulación es intrínsecamente integral.
+
+\section{Python: Cálculo de integrales y AUC}
+
+\subsection{Integrales definidas con scipy.integrate.quad}
+\begin{lstlisting}[language=Python]
+import numpy as np
+from scipy import integrate
+
+# Definir función a integrar
+def f(x):
+    return x**2
+
+# Calcular integral definida de 0 a 1
+resultado, error = integrate.quad(f, 0, 1)
+print(f"∫_0^1 x^2 dx = {resultado:.6f} (error estimado {error:.2e})")
+# Comparar con valor exacto 1/3 ≈ 0.333333
+\end{lstlisting}
+
+\subsection{Cálculo de AUC desde cero y con sklearn}
+Simulamos las predicciones de un clasificador y calculamos el AUC numéricamente.
+
+\begin{lstlisting}[language=Python]
+import numpy as np
+from sklearn import metrics
+import matplotlib.pyplot as plt
+
+# Generar puntuaciones y etiquetas verdaderas (simuladas)
+np.random.seed(42)
+y_true = np.array([0]*50 + [1]*50)
+y_score = np.concatenate([np.random.normal(0.2, 0.3, 50),
+                          np.random.normal(0.8, 0.2, 50)])
+
+# Obtener puntos de la curva ROC
+fpr, tpr, thresholds = metrics.roc_curve(y_true, y_score)
+
+# Calcular AUC con la regla trapezoidal
+auc_numerico = np.trapz(tpr, fpr)  # integración trapezoidal
+auc_sklearn = metrics.roc_auc_score(y_true, y_score)
+
+print(f"AUC calculado con trapz: {auc_numerico:.4f}")
+print(f"AUC con sklearn: {auc_sklearn:.4f}")
+
+# Visualizar
+plt.figure()
+plt.plot(fpr, tpr, 'b-', label=f'ROC (AUC = {auc_sklearn:.4f})')
+plt.plot([0,1], [0,1], 'k--', label='Aleatorio')
+plt.xlabel('Tasa de Falsos Positivos')
+plt.ylabel('Tasa de Verdaderos Positivos')
+plt.legend()
+plt.grid(True)
+plt.show()
+\end{lstlisting}
+
+\subsection{Probabilidad: calcular probabilidad acumulada de una normal}
+Calculamos $P(0 \le X \le 1)$ para una normal estándar $N(0,1)$ integrando su PDF.
+
+\begin{lstlisting}[language=Python]
+from scipy.stats import norm
+from scipy.integrate import quad
+
+# Definir PDF de la normal estándar
+def pdf_normal(x):
+    return (1/np.sqrt(2*np.pi)) * np.exp(-x**2/2)
+
+# Calcular integral de 0 a 1
+prob, error = quad(pdf_normal, 0, 1)
+print(f"P(0 ≤ X ≤ 1) ≈ {prob:.6f}")
+
+# Comparar con la CDF de scipy
+prob_cdf = norm.cdf(1) - norm.cdf(0)
+print(f"Usando CDF: {prob_cdf:.6f}")
+\end{lstlisting}
+
+\subsection{Valor esperado de una función de una variable aleatoria}
+Si $X \sim N(0,1)$, calculamos $E[X^2]$ que debería ser 1 (varianza de normal estándar).
+
+\begin{lstlisting}[language=Python]
+def integrando(x):
+    return x**2 * pdf_normal(x)
+
+E_X2, error = quad(integrando, -np.inf, np.inf)
+print(f"E[X^2] = {E_X2:.6f}")
+\end{lstlisting}
+
+\section{Notación en papers científicos}
+
+En artículos de machine learning, las integrales aparecen en contextos como:
+
+\begin{itemize}
+    \item Evaluación de clasificadores: AUC = $\int \text{ROC}(t) \, dt$.
+    \item Expectativas: $\mathbb{E}_{p(x)}[f(x)] = \int f(x) p(x) dx$.
+    \item Verosimilitud marginal: $p(\mathbf{x}) = \int p(\mathbf{x}|\mathbf{z}) p(\mathbf{z}) d\mathbf{z}$ (modelos generativos).
+    \item Divergencia KL: $D_{\text{KL}}(p\|q) = \int p(x) \log\frac{p(x)}{q(x)} dx$.
+    \item Entropía: $H(p) = -\int p(x) \log p(x) dx$.
+\end{itemize}
+
+Ejemplo típico en un paper de VAE:
+\[
+\log p(\mathbf{x}) \ge \mathbb{E}_{q_\phi(\mathbf{z}|\mathbf{x})} [\log p_\theta(\mathbf{x}|\mathbf{z})] - D_{\text{KL}}(q_\phi(\mathbf{z}|\mathbf{x}) \| p(\mathbf{z}))
+\]
+
+\section{Ejercicios propuestos}
+
+\begin{enumerate}
+    \item Calcula $\int_0^{\pi/2} \sin x \, dx$ manualmente y comprueba con Python.
+    \item Deriva la expresión para el área de un círculo de radio $R$ usando integración (pista: $y = \sqrt{R^2 - x^2}$ de $-R$ a $R$).
+    \item Para un clasificador, obtén las predicciones de un modelo de regresión logística sobre un dataset (por ejemplo, Iris con dos clases) y calcula el AUC manualmente usando la regla trapezoidal. Compara con sklearn.
+    \item Sea $X$ una variable aleatoria con PDF $f(x) = 2x$ para $x \in [0,1]$. Calcula $P(X > 0.5)$ y $E[X]$ usando integración simbólica y numérica.
+    \item Investiga qué es la ``regla de laplace'' para aproximar integrales y compárala con la regla trapezoidal en un ejemplo.
+\end{enumerate}
+
+\section{Resumen y cierre del curso}
+
+En esta sesión final hemos aprendido:
+\begin{itemize}
+    \item Los conceptos de integral indefinida y definida, y el Teorema Fundamental del Cálculo.
+    \item La interpretación de la integral como área bajo la curva.
+    \item Aplicaciones clave en machine learning (curva ROC y AUC), probabilidad (PDF, CDF, esperanza) y modelos generativos (VAEs).
+    \item Cálculo de integrales y AUC con Python (scipy.integrate, sklearn).
+    \item La notación típica en papers científicos.
+\end{itemize}
+
+Con esta sesión cerramos el curso de Cálculo y Álgebra Lineal para Inteligencia Artificial. Hemos recorrido un largo camino: desde los fundamentos de tensores y funciones, pasando por derivadas, gradientes, backpropagation, espacios vectoriales, transformaciones lineales, autovalores, SVD, hasta llegar a las integrales. Cada concepto ha sido conectado con aplicaciones reales en machine learning, deep learning, visión, NLP y robótica. Esperamos que esta base matemática te permita abordar con confianza cursos más avanzados y comprender en profundidad los algoritmos que impulsan la inteligencia artificial moderna.
+
+\end{document}

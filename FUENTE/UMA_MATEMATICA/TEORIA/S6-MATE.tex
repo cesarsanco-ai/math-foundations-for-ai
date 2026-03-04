@@ -1,0 +1,542 @@
+\documentclass[12pt,a4paper,openany,oneside]{book}
+
+% --- Paquetes ---
+\usepackage[utf8]{inputenc}
+\usepackage[spanish, es-noshorthands]{babel}
+\usepackage{amsmath, amsfonts, amssymb}
+\usepackage{graphicx}
+\usepackage{geometry}
+\usepackage{hyperref}
+\usepackage{booktabs}
+\usepackage{fancyhdr}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usetikzlibrary{arrows.meta, positioning, shapes.geometric}
+\pgfplotsset{compat=1.18}
+
+\geometry{margin=2.5cm}
+
+% --- Colores y estilos para código Python ---
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstset{
+    language=Python,
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{blue},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\small,
+    breaklines=true,
+    frame=single,
+    showstringspaces=false
+}
+
+% --- Estilo de cabecera y pie ---
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+\fancyhead[L]{\small Carlos César Sánchez Coronel}
+\fancyhead[R]{\small Sesión 6: La Derivada - Midiendo el Cambio}
+\fancyfoot[L]{\small Carlos César Sánchez Coronel}
+\fancyfoot[C]{\thepage}
+
+% --- Portada ---
+\title{
+    \textbf{Sesión 6} \\ 
+    \Huge \textbf{LA DERIVADA: MIDIENDO EL CAMBIO} \\
+    \large De la pendiente instantánea al entrenamiento de redes neuronales \\
+
+}
+\author{
+    \small Por \\ \vspace{0.2cm}
+    \Large \textsc{Carlos César Sánchez Coronel}
+}
+\date{2026}
+
+\begin{document}
+
+\maketitle
+\tableofcontents
+\addcontentsline{toc}{chapter}{Índice general}
+
+% ------------------------------------------------------------------
+% CAPÍTULO 6: SESIÓN 6 - LA DERIVADA
+% ------------------------------------------------------------------
+\chapter{La Derivada: Midiendo el Cambio}
+
+En esta sesión abordamos el concepto fundamental de derivada, su interpretación geométrica y física, las reglas de derivación y, lo más importante, su papel central en el entrenamiento de modelos de inteligencia artificial. Comprender la derivada es esencial para entender cómo una máquina ``aprende'' ajustando parámetros mediante el descenso de gradiente y el algoritmo de backpropagation.
+
+\section{Introducción y Motivación}
+
+\subsection{¿Por qué estudiar derivadas?}
+La derivada es la herramienta matemática para medir el \textbf{cambio instantáneo}. Sin derivadas, no tendríamos:
+\begin{itemize}
+    \item \textbf{Ingeniería:} Para calcular la resistencia de materiales ante cargas variables.
+    \item \textbf{Economía:} Para hallar el costo marginal y maximizar ganancias.
+    \item \textbf{Física:} Para entender la relación entre posición, velocidad y aceleración.
+    \item \textbf{Inteligencia Artificial:} Para los algoritmos de optimización que actualizan los pesos de una red neuronal.
+\end{itemize}
+
+\subsection{Origen Geométrico: De la Secante a la Tangente}
+La derivada nace de la necesidad de medir la inclinación de una curva en un punto exacto. Históricamente, esto se resuelve mediante el paso de una recta secante a una recta tangente.
+
+\begin{itemize}
+    \item \textbf{Recta Secante:} Línea que corta a la función en dos puntos, $(x_1, y_1)$ y $(x_2, y_2)$. Su pendiente es:
+    \[
+    m_{\text{sec}} = \frac{\Delta y}{\Delta x} = \frac{f(x_2) - f(x_1)}{x_2 - x_1}
+    \]
+    \item \textbf{Recta Tangente:} A medida que el segundo punto se acerca al primero ($\Delta x \to 0$), la secante se convierte en tangente. La pendiente de esta tangente es la \textbf{derivada}.
+\end{itemize}
+
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[
+    title={Aproximación de la tangente mediante secantes},
+    xlabel=$x$,
+    ylabel=$f(x)$,
+    xmin=0, xmax=3,
+    ymin=0, ymax=4,
+    grid=major,
+    samples=100,
+    domain=0:3
+]
+\addplot[blue, thick] {0.5*x^2 + 1};
+\addplot[red, thick, domain=0.5:2.5] {1.5*x - 0.5};
+\addplot[green, thick, domain=0.8:2.2] {1.2*x + 0.2};
+\addplot[orange, thick, domain=1:2] {1*x + 1};
+\node[pin=90:{$f(x)$}] at (axis cs:2.5,3.5) {};
+\node[pin=90:{Secante}] at (axis cs:1.8,2.5) {};
+\node[pin=90:{Secante más cercana}] at (axis cs:1.5,2.2) {};
+\node[pin=90:{Tangente}] at (axis cs:1.2,2.2) {};
+\end{axis}
+\end{tikzpicture}
+\captionof{figure}{Aproximación de la recta tangente mediante secantes cada vez más cercanas al punto de interés.}
+\end{center}
+
+\subsection{El Método Delta ($\Delta$)}
+El método delta es la definición formal de la derivada mediante límites. Representamos un incremento pequeño en $x$ como $\Delta x$:
+\begin{equation}
+\boxed{ \frac{dy}{dx} = \lim_{\Delta x \to 0} \frac{f(x + \Delta x) - f(x)}{\Delta x} }
+\end{equation}
+Esta expresión nos da la \textbf{pendiente instantánea} de la función en cualquier punto $x$.
+
+\section{Notación y Aplicaciones}
+
+\subsection{Sistemas de Notación y Orden Superior}
+La diferenciación puede aplicarse más de una vez sobre una función. Dependiendo del autor y del campo de estudio (Ingeniería, Física o Matemática Pura), se utilizan distintas formas de representar las derivadas de orden superior.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{@{}lllll@{}}
+\toprule
+\textbf{Orden} & \textbf{Leibniz} & \textbf{Lagrange} & \textbf{Euler} & \textbf{Newton} \\ \midrule
+1ª Derivada & $\frac{dy}{dx}$ & $f'(x)$ & $D_x y$ & $\dot{y}$ \\ \addlinespace
+2ª Derivada & $\frac{d^2y}{dx^2}$ & $f''(x)$ & $D_x^2 y$ & $\ddot{y}$ \\ \addlinespace
+3ª Derivada & $\frac{d^3y}{dx^3}$ & $f'''(x)$ & $D_x^3 y$ & $\dddot{y}$ \\ \addlinespace
+$n$-ésima Derivada & $\frac{d^ny}{dx^n}$ & $f^{(n)}(x)$ & $D_x^n y$ & - \\ \bottomrule
+\end{tabular}
+\caption{Comparativa de notaciones para derivadas de orden superior.}
+\end{table}
+
+\subsection{La Derivada en Ecuaciones (¿Cómo leerlas?)}
+Para notar la diferencia visual y práctica, observa cómo se presenta la misma relación física (la aceleración de un objeto) en distintas notaciones dentro de una ecuación:
+
+\begin{enumerate}
+    \item \textbf{Forma de Lagrange (Matemática):} $f''(x) = a$
+    \item \textbf{Forma de Leibniz (Ingeniería):} $\frac{d^2s}{dt^2} = a$
+    \item \textbf{Forma de Newton (Física):} $\ddot{s} = a$
+\end{enumerate}
+
+\subsection{Aplicación Geométrica: La Recta Tangente}
+La derivada $f'(a)$ nos da la pendiente $m$ de la recta tangente a la curva en el punto $a$. Con esto, podemos construir la ecuación de la recta:
+\[
+y - f(a) = f'(a)(x - a)
+\]
+Que simplificada toma la forma clásica $y = mx + b$.
+
+\subsection{Ejemplo de Orden Superior}
+Si tenemos $f(x) = x^4$, sus derivadas sucesivas son:
+\begin{align*}
+f'(x) &= 4x^3 \quad &\text{(Velocidad de cambio)}\\
+f''(x) &= 12x^2 \quad &\text{(Aceleración de cambio)}\\
+f'''(x) &= 24x \\
+f^{(4)}(x) &= 24 \quad &\text{(Constante)}
+\end{align*}
+
+\section{Tabla de Derivadas y Reglas}
+
+\subsection{Tabla de Derivadas más Usadas}
+A continuación, se presentan las derivadas de las funciones más comunes:
+
+\begin{table}[h]
+\centering
+\begin{tabular}{ll}
+\toprule
+\textbf{Función $f(x)$} & \textbf{Derivada $f'(x)$} \\ \midrule
+Constante $k$ & $0$ \\
+Identidad $x$ & $1$ \\
+Potencia $x^n$ & $n \cdot x^{n-1}$ \\
+Exponencial $e^x$ & $e^x$ \\
+Exponencial $a^x$ & $a^x \ln a$ \\
+Logaritmo natural $\ln x$ & $\frac{1}{x}$ \\
+Logaritmo $\log_a x$ & $\frac{1}{x \ln a}$ \\
+Seno $\sin x$ & $\cos x$ \\
+Coseno $\cos x$ & $-\sin x$ \\
+Tangente $\tan x$ & $\sec^2 x$ \\
+Arcoseno $\arcsin x$ & $\frac{1}{\sqrt{1-x^2}}$ \\
+Arcocoseno $\arccos x$ & $-\frac{1}{\sqrt{1-x^2}}$ \\
+Arcotangente $\arctan x$ & $\frac{1}{1+x^2}$ \\ \bottomrule
+\end{tabular}
+\caption{Tabla resumen de derivadas elementales.}
+\end{table}
+
+\subsection{Reglas de Derivación}
+\begin{itemize}
+    \item \textbf{Múltiplo constante:} $[c \cdot f(x)]' = c \cdot f'(x)$.
+    \item \textbf{Suma o Resta:} $(f \pm g)' = f' \pm g'$.
+    \item \textbf{Producto:} $(f \cdot g)' = f'g + fg'$.
+    \item \textbf{Cociente:} $\left( \frac{f}{g} \right)' = \frac{f'g - fg'}{g^2}$.
+    \item \textbf{Regla de la Cadena:} $\frac{d}{dx}[f(g(x))] = f'(g(x)) \cdot g'(x)$.
+\end{itemize}
+
+\section{Ejercicios Resueltos Paso a Paso}
+
+\subsection{Caso Polinómico y Raíces}
+Derivar $f(x) = 4x^5 - 2x^2 + \sqrt{x}$. 
+
+\textit{Solución:} Re-escribimos la raíz como potencia: $f(x) = 4x^5 - 2x^2 + x^{1/2}$.
+\begin{align*}
+f'(x) &= (4 \cdot 5)x^4 - (2 \cdot 2)x^1 + \frac{1}{2}x^{-1/2} \\
+&= 20x^4 - 4x + \frac{1}{2\sqrt{x}}
+\end{align*}
+
+\subsection{Caso con Regla del Producto}
+Derivar $f(x) = x^2 \cdot \cos x$. 
+
+\textit{Solución:} 
+\begin{align*}
+f'(x) &= (x^2)'\cos x + x^2(\cos x)' \\
+&= 2x\cos x - x^2\sin x
+\end{align*}
+
+\subsection{Caso con Regla del Cociente}
+Derivar $f(x) = \frac{x^2 + 1}{x^3 - x}$.
+
+\textit{Solución:} Aplicamos la regla del cociente:
+\begin{align*}
+f'(x) &= \frac{(2x)(x^3 - x) - (x^2 + 1)(3x^2 - 1)}{(x^3 - x)^2} \\
+&= \frac{2x^4 - 2x^2 - (3x^4 + 3x^2 - x^2 - 1)}{(x^3 - x)^2} \\
+&= \frac{2x^4 - 2x^2 - 3x^4 - 2x^2 + 1}{(x^3 - x)^2} \\
+&= \frac{-x^4 - 4x^2 + 1}{(x^3 - x)^2}
+\end{align*}
+
+\subsection{Caso con Regla de la Cadena}
+Derivar $f(x) = \ln(x^3 + 1)$. 
+
+\textit{Solución:} Aplicamos la derivada del logaritmo y luego la cadena:
+\[
+f'(x) = \frac{1}{x^3 + 1} \cdot (x^3 + 1)' = \frac{3x^2}{x^3 + 1}
+\]
+
+\subsection{Caso de la Cadena con Potencia}
+Derivar $f(x) = (3x^2 + 1)^4$:
+\[
+f'(x) = 4(3x^2 + 1)^3 \cdot (6x) = 24x(3x^2 + 1)^3
+\]
+
+\section{Optimización: Máximos y Mínimos}
+
+Antes de ver cómo aprende una IA, debemos entender cómo las derivadas nos permiten encontrar los mejores valores posibles para una función. A esto le llamamos \textbf{Optimización}.
+
+\subsection{Criterio de la Primera Derivada}
+Para encontrar un punto donde la función alcanza un pico (máximo) o un valle (mínimo), buscamos los \textbf{Puntos Críticos}. Estos ocurren cuando la pendiente es horizontal, es decir:
+\[
+f'(x) = 0
+\]
+
+\begin{itemize}
+    \item \textbf{Máximo Relativo:} La función sube y luego baja. La pendiente pasa de positiva a negativa.
+    \item \textbf{Mínimo Relativo:} La función baja y luego sube. La pendiente pasa de negativa a positiva.
+\end{itemize}
+
+\subsection{Criterio de la Segunda Derivada}
+¿Cómo sabemos si el punto donde $f'(x)=0$ es un máximo o un mínimo sin ver la gráfica? Usamos la segunda derivada:
+\begin{enumerate}
+    \item Si $f''(x) > 0$, la función es "cóncava hacia arriba" (curvatura positiva) $\rightarrow$ Es un \textbf{Mínimo}.
+    \item Si $f''(x) < 0$, la función es "cóncava hacia abajo" (curvatura negativa) $\rightarrow$ Es un \textbf{Máximo}.
+\end{enumerate}
+
+\subsection{Guía Paso a Paso para el Análisis}
+Para resolver cualquier problema de optimización en la evaluación, sigue este protocolo:
+\begin{enumerate}
+    \item \textbf{Derivar:} Obtén la primera derivada $f'(x)$.
+    \item \textbf{Puntos Críticos:} Iguala $f'(x) = 0$ y resuelve para $x$.
+    \item \textbf{Segunda Derivada:} Calcula $f''(x)$.
+    \item \textbf{Clasificar:} Sustituye tu punto crítico en $f''(x)$ y observa el signo.
+\end{enumerate}
+
+\subsection{Ejercicio Resuelto: Maximizando Beneficios}
+\textit{Problema:} Una empresa de software estima que sus ganancias están dadas por $G(x) = -x^2 + 8x - 12$. Hallar el precio óptimo $x$ para maximizar la ganancia.
+
+\textbf{Paso 1: Hallar la primera derivada.}
+\[
+G'(x) = -2x + 8
+\]
+
+\textbf{Paso 2: Encontrar el punto crítico.}
+Igualamos a cero:
+\[
+-2x + 8 = 0 \implies 2x = 8 \implies x = 4
+\]
+
+\textbf{Paso 3: Verificación con la segunda derivada.}
+\[
+G''(x) = -2
+\]
+Como $G''(4) = -2 < 0$, la función es cóncava hacia abajo. Por lo tanto, en \textbf{$x = 4$} existe un \textbf{Máximo Relativo}.
+
+\subsection{Conexión Crítica con la IA: ¿Por qué optimizamos?}
+Imagina que estás enseñando a una IA a predecir el precio de una casa. Si la casa vale \$100k y la IA dice \$120k, hay un error de \$20k. La herramienta que mide ese error es la \textbf{Función de Pérdida} (Loss Function).
+
+\subsubsection{La ecuación del error: Error Cuadrático Medio (MSE)}
+Piensa en la función de pérdida más básica:
+\[
+L(\hat{y}, y) = (\hat{y} - y)^2
+\]
+Donde:
+\begin{itemize}
+    \item $L$: es el valor de la pérdida (Loss).
+    \item $\hat{y}$: es lo que la IA \textbf{predice}.
+    \item $y$: es el valor \textbf{real} que debió obtener.
+\end{itemize}
+El exponente al cuadrado se usa para que el error siempre sea positivo y para penalizar más fuerte los errores grandes.
+
+\subsubsection{Interpretación para el entrenamiento}
+\begin{itemize}
+    \item \textbf{Pérdida Alta:} La predicción está muy lejos de la realidad. El modelo está "confundido".
+    \item \textbf{Pérdida Baja (Mínimo):} La predicción es casi idéntica al valor real. El modelo ha "aprendido".
+\end{itemize}
+
+\subsubsection{Derivada de la función MSE}
+Si tenemos un modelo lineal $\hat{y} = wx + b$, la pérdida para un conjunto de datos es:
+\[
+L(w,b) = \frac{1}{N} \sum_{i=1}^{N} (wx_i + b - y_i)^2
+\]
+Las derivadas parciales respecto a $w$ y $b$ nos indican cómo ajustar estos parámetros para minimizar el error. Por ejemplo:
+\[
+\frac{\partial L}{\partial w} = \frac{2}{N} \sum_{i=1}^{N} (wx_i + b - y_i) x_i
+\]
+Esta derivada es la base del \textbf{descenso de gradiente}.
+
+\section{Derivadas en IA: Funciones de Activación}
+
+El aprendizaje profundo (\textit{Deep Learning}) se fundamenta en la optimización de funciones de coste mediante el descenso del gradiente. Para ello, es imprescindible calcular derivadas de las funciones que componen la red, especialmente las \textbf{funciones de activación}. Estas introducen no linealidad, permitiendo que la red aprenda patrones complejos.
+
+\subsection{Función Sigmoide: La puerta a la probabilidad}
+
+\begin{equation}
+\sigma(x) = \frac{1}{1 + e^{-x}}
+\end{equation}
+
+\begin{itemize}
+    \item \textbf{Dominio:} $\mathbb{R}$, \textbf{Rango:} $(0,1)$.
+    \item \textbf{Continuidad y derivabilidad:} Infinitamente diferenciable.
+\end{itemize}
+
+\subsubsection{Derivada de la sigmoide}
+\begin{equation}
+\sigma'(x) = \sigma(x) \bigl(1 - \sigma(x)\bigr)
+\end{equation}
+
+\textbf{Demostración paso a paso:}
+\begin{align*}
+\sigma(x) &= (1 + e^{-x})^{-1} \\
+\sigma'(x) &= -1 (1 + e^{-x})^{-2} \cdot (-e^{-x}) = \frac{e^{-x}}{(1 + e^{-x})^2} \\
+&= \frac{1}{1 + e^{-x}} \cdot \frac{e^{-x}}{1 + e^{-x}} = \sigma(x) \cdot \frac{e^{-x}}{1 + e^{-x}}.
+\end{align*}
+Pero $\frac{e^{-x}}{1 + e^{-x}} = 1 - \frac{1}{1 + e^{-x}} = 1 - \sigma(x)$. Luego $\sigma'(x) = \sigma(x)(1 - \sigma(x))$.
+
+\subsubsection{Casos de uso en IA}
+\begin{itemize}
+    \item Clasificación binaria (capa final).
+    \item Puertas en redes LSTM.
+\end{itemize}
+
+\subsection{Función ReLU: El motor del Deep Learning moderno}
+
+\begin{equation}
+\text{ReLU}(x) = \max(0, x)
+\end{equation}
+
+\begin{itemize}
+    \item \textbf{Dominio:} $\mathbb{R}$, \textbf{Rango:} $[0, \infty)$.
+    \item \textbf{Continuidad:} Continua; no derivable en $x=0$.
+\end{itemize}
+
+\subsubsection{Derivada de ReLU}
+\[
+\text{ReLU}'(x) = 
+\begin{cases}
+1, & x > 0 \\
+0, & x \le 0
+\end{cases}
+\]
+En la práctica, se define como 0 en $x=0$ (o a veces 0.5).
+
+\subsubsection{Casos de uso en IA}
+\begin{itemize}
+    \item Capas ocultas de redes convolucionales (CNN).
+    \item Redes profundas en general.
+\end{itemize}
+
+\subsection{Función Softplus: Versión suave y diferenciable}
+
+\begin{equation}
+\text{Softplus}(x) = \ln(1 + e^x)
+\end{equation}
+
+\begin{itemize}
+    \item \textbf{Dominio:} $\mathbb{R}$, \textbf{Rango:} $(0, \infty)$.
+    \item \textbf{Derivabilidad:} Infinitamente diferenciable.
+\end{itemize}
+
+\subsubsection{Derivada de Softplus}
+\[
+\text{Softplus}'(x) = \sigma(x) = \frac{1}{1 + e^{-x}}
+\]
+
+\subsubsection{Casos de uso}
+\begin{itemize}
+    \item Alternativa suave a ReLU cuando se requiere derivada definida en todo punto.
+\end{itemize}
+
+\subsection{Función GELU: El secreto de los Transformers}
+
+\begin{equation}
+\text{GELU}(x) = x \cdot \Phi(x)
+\end{equation}
+donde $\Phi(x)$ es la función de distribución acumulada normal estándar. En la práctica se usa la aproximación:
+\[
+\text{GELU}(x) \approx 0.5x \left(1 + \tanh\left[\sqrt{\frac{2}{\pi}}\left(x + 0.044715 x^3\right)\right]\right)
+\]
+
+\begin{itemize}
+    \item \textbf{Dominio y rango:} $\mathbb{R} \to \mathbb{R}$.
+    \item \textbf{Derivabilidad:} Suave.
+\end{itemize}
+
+\subsubsection{Casos de uso}
+\begin{itemize}
+    \item Modelos Transformer (BERT, GPT).
+\end{itemize}
+
+\section{Python: Cálculo de Derivadas con SymPy y Derivación Numérica}
+
+\subsection{Cálculo simbólico con SymPy}
+SymPy permite obtener derivadas exactas de funciones simbólicas.
+
+\begin{lstlisting}[language=Python]
+import sympy as sp
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Definir variable simbólica
+x = sp.Symbol('x')
+
+# Derivada de una función polinómica
+f = x**3 + 2*x**2 - 5*x + 1
+f_prima = sp.diff(f, x)
+print("f'(x) =", f_prima)
+
+# Derivada de una función compuesta
+g = sp.sin(x**2)
+g_prima = sp.diff(g, x)
+print("g'(x) =", g_prima)
+
+# Evaluar la derivada en un punto
+valor = f_prima.subs(x, 2)
+print("f'(2) =", valor)
+
+# Derivada de la sigmoide
+sig = 1 / (1 + sp.exp(-x))
+sig_prima = sp.diff(sig, x)
+print("sig'(x) =", sig_prima)
+\end{lstlisting}
+
+\subsection{Derivación numérica y comparación con la analítica}
+Podemos aproximar derivadas numéricamente usando diferencias finitas y comparar con el valor exacto.
+
+\begin{lstlisting}[language=Python]
+def f(x):
+    return x**3
+
+def f_prima_exacta(x):
+    return 3*x**2
+
+def derivada_numerica(f, x, h=1e-5):
+    return (f(x + h) - f(x)) / h
+
+x_val = 2.0
+h_vals = [1e-1, 1e-2, 1e-3, 1e-4, 1e-5, 1e-6]
+print("Exacta:", f_prima_exacta(x_val))
+for h in h_vals:
+    aprox = derivada_numerica(f, x_val, h)
+    error = abs(aprox - f_prima_exacta(x_val))
+    print(f"h={h:.0e}: {aprox:.10f}, error={error:.2e}")
+\end{lstlisting}
+
+\subsection{Visualización de la derivada}
+\begin{lstlisting}[language=Python]
+x_vals = np.linspace(-2, 2, 100)
+y_vals = f(x_vals)
+y_prima_vals = f_prima_exacta(x_vals)
+
+plt.figure(figsize=(10,4))
+plt.subplot(1,2,1)
+plt.plot(x_vals, y_vals, label='f(x)')
+plt.title('Función')
+plt.grid(True)
+
+plt.subplot(1,2,2)
+plt.plot(x_vals, y_prima_vals, label="f'(x)", color='red')
+plt.title('Derivada')
+plt.grid(True)
+plt.show()
+\end{lstlisting}
+
+\section{Notación en Papers Científicos}
+En artículos de IA, las derivadas aparecen en contextos como:
+\begin{itemize}
+    \item Definición de gradiente: $\nabla_{\mathbf{w}} \mathcal{L}(\mathbf{w}) = \left( \frac{\partial \mathcal{L}}{\partial w_1}, \dots, \frac{\partial \mathcal{L}}{\partial w_n} \right)$.
+    \item Actualización de pesos: $\mathbf{w}_{t+1} = \mathbf{w}_t - \eta \nabla \mathcal{L}(\mathbf{w}_t)$.
+    \item Regla de la cadena en backpropagation: $\frac{\partial \mathcal{L}}{\partial w_{ij}^{(l)}} = \frac{\partial \mathcal{L}}{\partial a_j^{(l)}} \cdot \frac{\partial a_j^{(l)}}{\partial z_j^{(l)}} \cdot \frac{\partial z_j^{(l)}}{\partial w_{ij}^{(l)}}$.
+\end{itemize}
+
+\section{Ejercicios Propuestos}
+\begin{enumerate}
+    \item Calcula la derivada de $f(x) = \ln(\sin x)$ usando la regla de la cadena.
+    \item Obtén la derivada de la función de pérdida de entropía cruzada binaria $L = -y \log \hat{y} - (1-y) \log(1-\hat{y})$ respecto a $\hat{y}$.
+    \item Implementa en Python la derivada numérica de $f(x) = e^{-x^2}$ y compárala con la analítica.
+    \item Demuestra que la derivada de la función $\tanh$ es $1 - \tanh^2(x)$.
+    \item Encuentra los puntos críticos de $f(x) = x^3 - 3x$ y clasifícalos usando la segunda derivada.
+\end{enumerate}
+
+\section{Resumen}
+En esta sesión hemos aprendido:
+\begin{itemize}
+    \item La definición de derivada como límite de la pendiente secante.
+    \item Las reglas de derivación (potencia, producto, cociente, cadena).
+    \item La interpretación geométrica y su aplicación en optimización.
+    \item El papel crucial de las derivadas en el entrenamiento de modelos de IA (funciones de pérdida, funciones de activación).
+    \item Cómo calcular derivadas simbólica y numéricamente con Python.
+\end{itemize}
+La derivada es la base del descenso de gradiente y del backpropagation, temas que abordaremos en sesiones posteriores.
+
+\end{document}

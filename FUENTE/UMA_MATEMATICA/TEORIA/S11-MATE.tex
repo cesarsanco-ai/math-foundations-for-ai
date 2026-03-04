@@ -1,0 +1,347 @@
+\documentclass[12pt,a4paper,openany,oneside]{book}
+
+% --- Paquetes ---
+\usepackage[utf8]{inputenc}
+\usepackage[spanish, es-noshorthands]{babel}
+\usepackage{amsmath, amsfonts, amssymb}
+\usepackage{graphicx}
+\usepackage{geometry}
+\usepackage{hyperref}
+\usepackage{booktabs}
+\usepackage{fancyhdr}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usetikzlibrary{arrows.meta, positioning, shapes.geometric}
+\pgfplotsset{compat=1.18}
+
+\geometry{margin=2.5cm}
+
+% --- Colores y estilos para código Python ---
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstset{
+    language=Python,
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{blue},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\small,
+    breaklines=true,
+    frame=single,
+    showstringspaces=false
+}
+
+% --- Estilo de cabecera y pie ---
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+\fancyhead[L]{\small Carlos César Sánchez Coronel}
+\fancyhead[R]{\small Sesión 11: Determinantes, Inversas y Sistemas Lineales}
+\fancyfoot[L]{\small Carlos César Sánchez Coronel}
+\fancyfoot[C]{\thepage}
+
+% --- Portada ---
+\title{
+    \textbf{Sesión 11} \\ 
+    \Huge \textbf{DETERMINANTES, INVERSAS Y SISTEMAS LINEALES} \\
+    \large Volumen, invertibilidad y capacidad de representación \\
+    \normalsize Aplicaciones en machine learning, robótica y redes neuronales
+}
+\author{
+    \small Por \\ \vspace{0.2cm}
+    \Large \textsc{Carlos César Sánchez Coronel}
+}
+\date{2026}
+
+\begin{document}
+
+\maketitle
+\tableofcontents
+\addcontentsline{toc}{chapter}{Índice general}
+
+% ------------------------------------------------------------------
+% CAPÍTULO 11: SESIÓN 11 - DETERMINANTES, INVERSAS Y SISTEMAS LINEALES
+% ------------------------------------------------------------------
+\chapter{Determinantes, Inversas y Sistemas Lineales}
+
+En esta sesión exploramos tres conceptos profundamente interrelacionados: el determinante (que mide el cambio de volumen que induce una transformación lineal), la matriz inversa (que nos permite deshacer una transformación) y el rango (que nos dice la dimensión efectiva de la imagen de una transformación). Estos conceptos tienen aplicaciones directas en inteligencia artificial: desde la función de densidad de la normal multivariante (que usa determinantes de matrices de covarianza) hasta el análisis de la capacidad expresiva de las capas de una red neuronal (a través del rango de sus matrices de pesos), pasando por la robótica (donde el determinante del Jacobiano relaciona velocidades).
+
+\section{Determinante de una matriz}
+
+\subsection{Definición e interpretación geométrica}
+El determinante de una matriz cuadrada $\mathbf{A} \in \mathbb{R}^{n \times n}$, denotado $\det(\mathbf{A})$ o $|\mathbf{A}|$, es un número que captura información clave sobre la transformación lineal asociada:
+
+\begin{itemize}
+    \item Si $\det(\mathbf{A}) > 0$, la transformación preserva la orientación (no refleja).
+    \item Si $\det(\mathbf{A}) < 0$, la transformación invierte la orientación (refleja).
+    \item La magnitud $|\det(\mathbf{A})|$ es el factor por el cual la transformación escala el volumen (o área en 2D, o longitud en 1D) de cualquier región.
+    \item Si $\det(\mathbf{A}) = 0$, la transformación aplasta el espacio en una dimensión menor (pérdida de volumen), lo que significa que la matriz es singular (no invertible).
+\end{itemize}
+
+\begin{center}
+\begin{tikzpicture}
+\draw[fill=blue!20] (0,0) rectangle (2,2);
+\node at (1,1) {Área $=4$};
+\draw[->, thick] (3,1) -- (5,1);
+\draw[fill=red!20] (6,0) -- (8,0) -- (6,2) -- cycle;
+\node at (7,1) {Área $= \det(\mathbf{A})\cdot 4$};
+\end{tikzpicture}
+\captionof{figure}{El determinante escala el área (o volumen) de cualquier región.}
+\end{center}
+
+\subsection{Cálculo para matrices pequeñas}
+Para una matriz $2\times 2$:
+\[
+\mathbf{A} = \begin{pmatrix} a & b \\ c & d \end{pmatrix}, \quad \det(\mathbf{A}) = ad - bc
+\]
+
+Para una matriz $3\times 3$ (regla de Sarrus):
+\[
+\det\begin{pmatrix}
+a_{11} & a_{12} & a_{13} \\
+a_{21} & a_{22} & a_{23} \\
+a_{31} & a_{32} & a_{33}
+\end{pmatrix}
+= a_{11}a_{22}a_{33} + a_{12}a_{23}a_{31} + a_{13}a_{21}a_{32}
+- a_{13}a_{22}a_{31} - a_{11}a_{23}a_{32} - a_{12}a_{21}a_{33}
+\]
+
+\subsection{Propiedades fundamentales}
+\begin{enumerate}
+    \item $\det(\mathbf{I}) = 1$.
+    \item $\det(\mathbf{A}^\top) = \det(\mathbf{A})$.
+    \item $\det(\mathbf{A}\mathbf{B}) = \det(\mathbf{A})\det(\mathbf{B})$.
+    \item Si se intercambian dos filas (o columnas), el determinante cambia de signo.
+    \item Si una fila se multiplica por un escalar $k$, el determinante queda multiplicado por $k$.
+    \item Si una fila es combinación lineal de otras, $\det(\mathbf{A}) = 0$.
+    \item $\det(\mathbf{A}^{-1}) = 1/\det(\mathbf{A})$ (si $\mathbf{A}$ es invertible).
+\end{enumerate}
+
+\subsection{Interpretación en transformaciones lineales}
+Si consideramos un conjunto de vectores que forman un paralelepípedo de volumen $V$, al aplicar la transformación $\mathbf{A}$, el volumen del paralelepípedo transformado es $|\det(\mathbf{A})| \cdot V$. Esto es especialmente útil en robótica (jacobiano) y en probabilidad (cambio de variable).
+
+\section{Matriz inversa}
+
+\subsection{Definición}
+Una matriz $\mathbf{A} \in \mathbb{R}^{n \times n}$ es \textbf{invertible} (o no singular) si existe una matriz $\mathbf{A}^{-1}$ tal que:
+\[
+\mathbf{A}\mathbf{A}^{-1} = \mathbf{A}^{-1}\mathbf{A} = \mathbf{I}_n
+\]
+La inversa es única.
+
+\subsection{Condiciones equivalentes a la invertibilidad}
+Son equivalentes:
+\begin{itemize}
+    \item $\det(\mathbf{A}) \neq 0$.
+    \item $\mathbf{A}$ tiene rango máximo ($= n$).
+    \item Las columnas (y filas) de $\mathbf{A}$ son linealmente independientes.
+    \item El sistema $\mathbf{A}\mathbf{x} = \mathbf{b}$ tiene solución única para cualquier $\mathbf{b}$.
+    \item $\mathbf{A}$ no tiene autovalor cero.
+\end{itemize}
+
+\subsection{Cálculo de la inversa}
+Para una matriz $2\times 2$:
+\[
+\mathbf{A} = \begin{pmatrix} a & b \\ c & d \end{pmatrix}, \quad \mathbf{A}^{-1} = \frac{1}{ad-bc} \begin{pmatrix} d & -b \\ -c & a \end{pmatrix}
+\]
+Para matrices más grandes, se utilizan métodos como eliminación de Gauss-Jordan o factorizaciones (LU, QR). En la práctica, nunca se calcula explícitamente la inversa para resolver sistemas lineales por razones de estabilidad numérica y eficiencia.
+
+\subsection{Uso de la inversa para resolver sistemas lineales}
+Si $\mathbf{A}$ es invertible, la solución de $\mathbf{A}\mathbf{x} = \mathbf{b}$ es $\mathbf{x} = \mathbf{A}^{-1}\mathbf{b}$. Sin embargo, computacionalmente es preferible usar $\mathbf{x} = \mathbf{A} \setminus \mathbf{b}$ en MATLAB/Octave o \texttt{np.linalg.solve} en NumPy, que utilizan factorizaciones.
+
+\section{Rango de una matriz y nulidad}
+
+\subsection{Definiciones}
+El \textbf{rango} de una matriz $\mathbf{A} \in \mathbb{R}^{m \times n}$, denotado $\operatorname{rango}(\mathbf{A})$, es la dimensión del espacio columna (o del espacio fila). Equivale al número máximo de columnas (o filas) linealmente independientes.
+
+La \textbf{nulidad} es la dimensión del espacio nulo (núcleo) de $\mathbf{A}$, es decir, el conjunto de vectores $\mathbf{x}$ tales que $\mathbf{A}\mathbf{x} = \mathbf{0}$.
+
+Teorema de la dimensión: $\operatorname{rango}(\mathbf{A}) + \operatorname{nulidad}(\mathbf{A}) = n$ (número de columnas).
+
+\subsection{Interpretación geométrica}
+El rango nos dice cuántas direcciones independientes abarca la transformación. Si el rango es menor que $n$, la transformación aplasta el espacio en un subespacio de menor dimensión (hay pérdida de información). En redes neuronales, el rango de la matriz de pesos indica la capacidad de la capa para representar distintas direcciones; un rango bajo implica que la capa es esencialmente de menor dimensión (puede ser un signo de redundancia o de limitación expresiva).
+
+\subsection{Cálculo del rango}
+En la práctica, el rango se calcula mediante eliminación gaussiana contando el número de pivotes no nulos, o mediante la descomposición en valores singulares (SVD) contando los valores singulares mayores que una tolerancia. NumPy proporciona \texttt{np.linalg.matrix\_rank}.
+
+\section{Aplicaciones en IA y cursos futuros}
+
+\subsection{Machine Learning: distribución normal multivariante}
+La función de densidad de la normal multivariante en $\mathbb{R}^d$ es:
+\[
+\mathcal{N}(\mathbf{x}|\boldsymbol{\mu}, \boldsymbol{\Sigma}) = \frac{1}{(2\pi)^{d/2} |\boldsymbol{\Sigma}|^{1/2}} \exp\left( -\frac{1}{2}(\mathbf{x}-\boldsymbol{\mu})^\top \boldsymbol{\Sigma}^{-1} (\mathbf{x}-\boldsymbol{\mu}) \right)
+\]
+Aquí, $\boldsymbol{\Sigma}$ es la matriz de covarianza (definida positiva, por lo tanto invertible y con determinante positivo). El determinante $|\boldsymbol{\Sigma}|$ aparece en el factor de normalización. Un determinante muy pequeño indica una distribución muy concentrada (alta precisión); un determinante grande indica alta dispersión.
+
+\subsection{Robótica: determinante del Jacobiano}
+En robótica, el Jacobiano $\mathbf{J}(\mathbf{q})$ relaciona las velocidades de las articulaciones $\dot{\mathbf{q}}$ con la velocidad del extremo (efector final) $\mathbf{v}$:
+\[
+\mathbf{v} = \mathbf{J}(\mathbf{q}) \dot{\mathbf{q}}
+\]
+El determinante del Jacobiano (para un manipulador no redundante) indica si la configuración es singular: $\det(\mathbf{J}) = 0$ implica que hay direcciones en el espacio de tareas que no se pueden alcanzar (pérdida de grados de libertad). Cerca de una singularidad, el determinante se hace pequeño y la amplificación de velocidades puede ser enorme, lo que hay que evitar en el control.
+
+\subsection{Redes Neuronales: rango de la matriz de pesos}
+En una capa fully connected $\mathbf{y} = \mathbf{W}\mathbf{x}$, el rango de $\mathbf{W}$ determina la dimensión de la variedad lineal que puede generar la capa. Si $\operatorname{rango}(\mathbf{W})$ es bajo, la capa proyecta las entradas en un subespacio de menor dimensión, perdiendo información. En redes profundas, se busca que las matrices tengan rango completo para mantener la capacidad expresiva. Técnicas como la inicialización cuidadosa y la regularización ayudan a evitar que los rangos colapsen.
+
+\section{Python: cálculos con NumPy}
+
+\subsection{Determinante, inversa y rango}
+\begin{lstlisting}[language=Python]
+import numpy as np
+
+# Crear una matriz aleatoria
+A = np.array([[2, 1], [1, 2]])
+print("Matriz A:\n", A)
+
+# Determinante
+det_A = np.linalg.det(A)
+print("det(A) =", det_A)
+
+# Inversa
+A_inv = np.linalg.inv(A)
+print("Inversa de A:\n", A_inv)
+print("A @ A_inv:\n", A @ A_inv)  # debería ser identidad
+
+# Rango
+rango_A = np.linalg.matrix_rank(A)
+print("Rango de A =", rango_A)
+
+# Matriz singular (determinante cero)
+B = np.array([[1, 2], [2, 4]])
+det_B = np.linalg.det(B)
+rango_B = np.linalg.matrix_rank(B)
+print("det(B) =", det_B)      # ~0
+print("Rango de B =", rango_B) # 1
+try:
+    B_inv = np.linalg.inv(B)   # lanzará error
+except np.linalg.LinAlgError as e:
+    print("Error al invertir B:", e)
+\end{lstlisting}
+
+\subsection{Resolver sistemas lineales con inversa vs. solve}
+Comparación de eficiencia (para matrices grandes, es mucho mejor usar \texttt{np.linalg.solve}).
+
+\begin{lstlisting}[language=Python]
+import time
+
+# Matriz grande aleatoria bien condicionada
+n = 1000
+A = np.random.randn(n, n)
+b = np.random.randn(n)
+
+# Método 1: usando inversa
+start = time.time()
+x_inv = np.linalg.inv(A) @ b
+t_inv = time.time() - start
+
+# Método 2: usando solve (factorización LU)
+start = time.time()
+x_solve = np.linalg.solve(A, b)
+t_solve = time.time() - start
+
+print(f"Tiempo con inversa: {t_inv:.4f} s")
+print(f"Tiempo con solve:   {t_solve:.4f} s")
+print("Diferencia relativa:", np.linalg.norm(x_inv - x_solve) / np.linalg.norm(x_solve))
+\end{lstlisting}
+
+\subsection{Visualización del determinante como factor de escala}
+Generamos una nube de puntos en un cuadrado unitario, aplicamos una transformación y observamos cómo cambia el área.
+
+\begin{lstlisting}[language=Python]
+import matplotlib.pyplot as plt
+
+# Puntos en un cuadrado [-1,1]x[-1,1]
+x = np.linspace(-1,1,20)
+y = np.linspace(-1,1,20)
+X, Y = np.meshgrid(x,y)
+puntos = np.vstack([X.ravel(), Y.ravel()])
+
+# Transformación: rotación + escalado
+theta = np.radians(30)
+A = np.array([[2*np.cos(theta), -0.5*np.sin(theta)],
+              [2*np.sin(theta),  0.5*np.cos(theta)]])
+det_A = np.linalg.det(A)
+print("Determinante de A =", det_A)
+
+# Aplicar transformación
+puntos_trans = A @ puntos
+
+plt.figure(figsize=(8,4))
+plt.subplot(1,2,1)
+plt.scatter(puntos[0,:], puntos[1,:], s=1)
+plt.xlim(-3,3); plt.ylim(-3,3); plt.axis('equal')
+plt.title('Original')
+
+plt.subplot(1,2,2)
+plt.scatter(puntos_trans[0,:], puntos_trans[1,:], s=1)
+plt.xlim(-3,3); plt.ylim(-3,3); plt.axis('equal')
+plt.title(f'Transformada (det = {det_A:.2f})')
+plt.tight_layout()
+plt.show()
+\end{lstlisting}
+
+\subsection{Rango y nulidad en una red neuronal simulada}
+Creamos una matriz de pesos aleatoria y otra con columnas redundantes para observar el rango.
+
+\begin{lstlisting}[language=Python]
+# Matriz de pesos de una capa con 10 entradas y 5 salidas
+W = np.random.randn(5, 10)
+print("Rango de W (debería ser 5):", np.linalg.matrix_rank(W))
+
+# Hacer que una columna sea combinación lineal de otras
+W[:, 3] = 0.5*W[:, 1] + 0.7*W[:, 5]
+print("Rango después de hacer columna dependiente:", np.linalg.matrix_rank(W))
+
+# Nulidad = número de columnas - rango
+nulidad = W.shape[1] - np.linalg.matrix_rank(W)
+print("Nulidad =", nulidad)
+\end{lstlisting}
+
+\section{Notación en papers científicos}
+
+En artículos de machine learning, robótica y estadística, estos conceptos aparecen con frecuencia:
+
+\begin{itemize}
+    \item Determinante de la matriz de covarianza: $\det(\boldsymbol{\Sigma})$ en la expresión de la normal multivariante o en la entropía diferencial $h(\mathcal{N}) = \frac{1}{2}\ln\left((2\pi e)^d \det(\boldsymbol{\Sigma})\right)$.
+    \item Inversa de la matriz de covarianza (matriz de precisión): $\boldsymbol{\Lambda} = \boldsymbol{\Sigma}^{-1}$.
+    \item Jacobiano y su determinante: $\det(\mathbf{J})$ en teoremas de cambio de variable y en análisis de singularidades.
+    \item Rango de una matriz de características: $\operatorname{rank}(\mathbf{X})$ para discutir si la matriz de diseño es de rango completo (condición para identificabilidad en regresión).
+    \item En deep learning, se analiza el rango de las matrices de pesos para estudiar la ``capacidad'' de la red: $\operatorname{rank}(\mathbf{W}^{(l)})$ y cómo evoluciona durante el entrenamiento.
+\end{itemize}
+
+Ejemplo en un paper:
+\[
+p(\mathbf{x}) = \frac{1}{\sqrt{(2\pi)^d \det(\boldsymbol{\Sigma})}} \exp\left( -\frac{1}{2} (\mathbf{x}-\boldsymbol{\mu})^\top \boldsymbol{\Sigma}^{-1} (\mathbf{x}-\boldsymbol{\mu}) \right)
+\]
+
+\section{Ejercicios propuestos}
+
+\begin{enumerate}
+    \item Calcula el determinante, la inversa (si existe) y el rango de la matriz $\begin{pmatrix} 1 & 2 & 3 \\ 0 & 1 & 4 \\ 5 & 6 & 0 \end{pmatrix}$ usando NumPy y verifica tus resultados.
+    \item Demuestra que si $\mathbf{A}$ es ortogonal ($\mathbf{A}^\top \mathbf{A} = \mathbf{I}$), entonces $\det(\mathbf{A}) = \pm 1$.
+    \item Genera una matriz aleatoria $5\times 5$ y otra matriz multiplicándola por una matriz diagonal con un cero en la diagonal. Compara sus rangos y determinantes.
+    \item Investiga cómo se calcula el rango de una matriz en la práctica usando SVD (pista: valores singulares). Implementa una función que compute el rango con una tolerancia.
+    \item En un sistema de recomendación, se factoriza la matriz de usuarios-productos $\mathbf{R} \approx \mathbf{U}\mathbf{V}^\top$ con $\mathbf{U} \in \mathbb{R}^{m\times k}$, $\mathbf{V} \in \mathbb{R}^{n\times k}$. ¿Cuál es el rango máximo de la aproximación? ¿Por qué se elige $k$ pequeño?
+\end{enumerate}
+
+\section{Resumen}
+
+En esta sesión hemos cubierto:
+\begin{itemize}
+    \item El determinante como medida de cambio de volumen y condición de invertibilidad.
+    \item La matriz inversa y su uso (limitado) para resolver sistemas.
+    \item El rango y la nulidad como medidas de la dimensión efectiva de una transformación.
+    \item Aplicaciones directas en machine learning (normal multivariante), robótica (jacobiano) y redes neuronales (capacidad de las capas).
+    \item Implementaciones eficientes en NumPy y advertencias sobre la no inversión explícita.
+    \item La notación típica en papers.
+\end{itemize}
+Estos conceptos son herramientas esenciales para entender modelos probabilísticos, optimización y la geometría de las redes profundas.
+
+\end{document}

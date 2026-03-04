@@ -1,0 +1,447 @@
+\documentclass[12pt,a4paper,openany,oneside]{book}
+
+% --- Paquetes ---
+\usepackage[utf8]{inputenc}
+\usepackage[spanish, es-noshorthands]{babel}
+\usepackage{amsmath, amsfonts, amssymb}
+\usepackage{graphicx}
+\usepackage{geometry}
+\usepackage{hyperref}
+\usepackage{booktabs}
+\usepackage{fancyhdr}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usetikzlibrary{arrows.meta, positioning, shapes.geometric, calc}
+\pgfplotsset{compat=1.18}
+
+\geometry{margin=2.5cm}
+
+% --- Colores y estilos para código Python ---
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstset{
+    language=Python,
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{blue},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\small,
+    breaklines=true,
+    frame=single,
+    showstringspaces=false
+}
+
+% --- Estilo de cabecera y pie ---
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+\fancyhead[L]{\small Carlos César Sánchez Coronel}
+\fancyhead[R]{\small Sesión 5: Límites y Continuidad}
+\fancyfoot[L]{\small Carlos César Sánchez Coronel}
+\fancyfoot[C]{\thepage}
+
+% --- Portada ---
+\title{
+    \textbf{Sesión 5} \\ 
+    \Huge \textbf{LÍMITES Y CONTINUIDAD} \\
+    \large El comportamiento de las funciones en el infinito y cerca de puntos críticos \\
+    \normalsize Aplicaciones en deep learning, optimización y análisis de algoritmos
+}
+\author{
+    \small Por \\ \vspace{0.2cm}
+    \Large \textsc{Carlos César Sánchez Coronel}
+}
+\date{2026}
+
+\begin{document}
+
+\maketitle
+\tableofcontents
+\addcontentsline{toc}{chapter}{Índice general}
+
+% ------------------------------------------------------------------
+% CAPÍTULO 5: SESIÓN 5 - LÍMITES Y CONTINUIDAD
+% ------------------------------------------------------------------
+\chapter{Límites y Continuidad}
+
+El concepto de límite es fundamental en cálculo. Nos permite describir el comportamiento de una función cuando la variable independiente se acerca a un valor determinado, incluso si la función no está definida en ese punto. En inteligencia artificial, los límites aparecen en la definición de derivadas (base del backpropagation), en el análisis de la convergencia de algoritmos de optimización y en el estudio de funciones de activación y pérdida.
+
+\section{Idea intuitiva de límite}
+
+Consideremos la función $f(x) = \frac{x^2 - 1}{x - 1}$. Esta función no está definida en $x = 1$ (división por cero), pero podemos preguntarnos: ¿qué valor se aproxima $f(x)$ cuando $x$ se acerca a 1?
+
+Construyamos una tabla:
+
+\begin{center}
+\begin{tabular}{c|c}
+$x$ & $f(x)$ \\
+\hline
+0.9 & 1.9 \\
+0.99 & 1.99 \\
+0.999 & 1.999 \\
+1.001 & 2.001 \\
+1.01 & 2.01 \\
+1.1 & 2.1 \\
+\end{tabular}
+\end{center}
+
+Observamos que cuando $x$ se aproxima a 1, $f(x)$ se aproxima a 2. Decimos que el límite de $f(x)$ cuando $x$ tiende a 1 es 2, y lo escribimos:
+
+\[
+\lim_{x \to 1} \frac{x^2 - 1}{x - 1} = 2
+\]
+
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[
+    title={$f(x)=\frac{x^2-1}{x-1}$},
+    xlabel=$x$,
+    ylabel=$f(x)$,
+    xmin=0, xmax=2,
+    ymin=0, ymax=3,
+    grid=major,
+    samples=100,
+    domain=0:2,
+    restrict expr to domain={x}{0:0.9999,1.0001:2}
+]
+\addplot[blue, thick] {(x^2-1)/(x-1)};
+\addplot[red, mark=*, only marks] coordinates {(1,2)};
+\node[pin=90:{Punto hueco (1,2)}] at (axis cs:1,2) {};
+\end{axis}
+\end{tikzpicture}
+\captionof{figure}{La función tiene un hueco en $x=1$, pero el límite existe y vale 2.}
+\end{center}
+
+\subsection{Definición informal}
+Decimos que $\lim_{x \to a} f(x) = L$ si podemos hacer que $f(x)$ esté tan cerca de $L$ como queramos, tomando $x$ suficientemente cerca de $a$ (pero no igual a $a$).
+
+\subsection{Definición formal (épsilon-delta)}
+Para completitud, la definición rigurosa es: $\lim_{x \to a} f(x) = L$ si para todo $\varepsilon > 0$ existe un $\delta > 0$ tal que si $0 < |x - a| < \delta$, entonces $|f(x) - L| < \varepsilon$. Esta definición es la base de muchos teoremas en análisis, pero en la práctica usaremos la noción intuitiva.
+
+\section{Límites laterales}
+
+A veces el comportamiento de la función es diferente según nos acerquemos por la izquierda o por la derecha.
+
+\begin{itemize}
+    \item \textbf{Límite por la izquierda}: $\lim_{x \to a^-} f(x)$ significa que $x$ se acerca a $a$ con valores menores que $a$.
+    \item \textbf{Límite por la derecha}: $\lim_{x \to a^+} f(x)$ significa que $x$ se acerca a $a$ con valores mayores que $a$.
+\end{itemize}
+
+El límite bilateral existe si y solo si los límites laterales existen y son iguales.
+
+\subsection{Ejemplo: función escalón}
+La función escalón (Heaviside) se define como:
+\[
+H(x) = \begin{cases}
+0 & \text{si } x < 0 \\
+1 & \text{si } x \ge 0
+\end{cases}
+\]
+En $x=0$, los límites laterales son:
+\[
+\lim_{x \to 0^-} H(x) = 0, \quad \lim_{x \to 0^+} H(x) = 1
+\]
+Como son distintos, $\lim_{x \to 0} H(x)$ no existe.
+
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[
+    title={Función escalón $H(x)$},
+    xlabel=$x$,
+    ylabel=$H(x)$,
+    xmin=-2, xmax=2,
+    ymin=-0.5, ymax=1.5,
+    grid=major,
+    samples=100,
+    domain=-2:0,
+    restrict expr to domain={x}{-2:0}
+]
+\addplot[blue, thick, domain=-2:0] {0};
+\addplot[blue, thick, domain=0:2] {1};
+\addplot[red, mark=*, only marks] coordinates {(0,0) (0,1)};
+\node[pin=90:{Salto}] at (axis cs:0,0.5) {};
+\end{axis}
+\end{tikzpicture}
+\captionof{figure}{La función escalón es discontinua en $x=0$.}
+\end{center}
+
+\section{Límites al infinito y asíntotas}
+
+Estudiamos el comportamiento de $f(x)$ cuando $x$ crece indefinidamente ($x \to \infty$) o decrece ($x \to -\infty$).
+
+\subsection{Definición}
+\[
+\lim_{x \to \infty} f(x) = L \quad \text{significa que $f(x)$ se acerca a $L$ cuando $x$ se hace grande.}
+\]
+
+Por ejemplo, $f(x) = \frac{1}{x}$ tiene $\lim_{x \to \infty} \frac{1}{x} = 0$.
+
+\subsection{Asíntotas horizontales}
+Si $\lim_{x \to \infty} f(x) = L$, entonces la recta $y = L$ es una asíntota horizontal.
+
+\subsection{Asíntotas verticales}
+Si $\lim_{x \to a} f(x) = \pm \infty$, entonces la recta $x = a$ es una asíntota vertical. Por ejemplo, $f(x) = \frac{1}{x}$ tiene asíntota vertical en $x=0$.
+
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[
+    title={$f(x)=\frac{1}{x}$},
+    xlabel=$x$,
+    ylabel=$f(x)$,
+    xmin=-3, xmax=3,
+    ymin=-3, ymax=3,
+    grid=major,
+    samples=100,
+    domain=-3:3,
+    restrict expr to domain={x}{-3:-0.01,0.01:3}
+]
+\addplot[blue, thick] {1/x};
+\draw[dashed, red] (axis cs:0,-3) -- (axis cs:0,3);
+\draw[dashed, green] (axis cs:-3,0) -- (axis cs:3,0);
+\end{axis}
+\end{tikzpicture}
+\captionof{figure}{Asíntotas vertical ($x=0$) y horizontal ($y=0$).}
+\end{center}
+
+\section{Continuidad}
+
+Una función es continua en un punto $a$ si:
+\begin{enumerate}
+    \item $f(a)$ está definida,
+    \item $\lim_{x \to a} f(x)$ existe,
+    \item $\lim_{x \to a} f(x) = f(a)$.
+\end{enumerate}
+
+Intuitivamente, podemos dibujar la función sin levantar el lápiz.
+
+\subsection{Tipos de discontinuidades}
+\begin{itemize}
+    \item \textbf{Discontinuidad evitable (o removible)}: El límite existe, pero no coincide con el valor de la función (o la función no está definida). Ejemplo: $f(x)=\frac{x^2-1}{x-1}$ en $x=1$.
+    \item \textbf{Discontinuidad de salto}: Los límites laterales existen pero son distintos. Ejemplo: la función escalón.
+    \item \textbf{Discontinuidad esencial (o infinita)}: Al menos uno de los límites laterales es infinito. Ejemplo: $f(x)=\frac{1}{x}$ en $x=0$.
+\end{itemize}
+
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[
+    title={Tipos de discontinuidades},
+    xlabel=$x$,
+    ylabel=$f(x)$,
+    xmin=-1, xmax=3,
+    ymin=-1, ymax=3,
+    grid=major,
+    width=12cm,
+    height=6cm
+]
+% Evitable
+\addplot[blue, thick, domain=0:2, samples=100] {(x^2-2*x)/(x-2)};
+\addplot[red, mark=*, only marks] coordinates {(2,2)};
+\node[pin=90:{Evitable}] at (axis cs:2,2) {};
+% Salto
+\addplot[green, thick, domain=2.5:3] {1};
+\addplot[green, thick, domain=2.5:3] at (2.5,0.5) {?}; % No sé cómo hacer un salto
+\end{axis}
+\end{tikzpicture}
+\end{center}
+
+\section{Aplicaciones en Inteligencia Artificial}
+
+\subsection{Funciones de activación: continuidad y diferenciabilidad}
+En deep learning, utilizamos funciones de activación para introducir no linealidad. La función escalón (discontinua) no es diferenciable, por lo que no podemos usar gradiente descendente. En cambio, preferimos funciones continuas y diferenciables como sigmoide, tanh o ReLU (esta última es continua pero no diferenciable en 0; sin embargo, se maneja con subgradientes).
+
+La función sigmoide $\sigma(x) = \frac{1}{1+e^{-x}}$ es continua y diferenciable en todo $\mathbb{R}$. Sus límites:
+\[
+\lim_{x \to \infty} \sigma(x) = 1, \quad \lim_{x \to -\infty} \sigma(x) = 0
+\]
+Esto la hace útil para modelar probabilidades.
+
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[
+    title={Función sigmoide},
+    xlabel=$x$,
+    ylabel=$\sigma(x)$,
+    xmin=-6, xmax=6,
+    ymin=0, ymax=1,
+    grid=major,
+    samples=100
+]
+\addplot[blue, thick] {1/(1+exp(-x))};
+\draw[dashed, red] (axis cs:-6,0) -- (axis cs:6,0);
+\draw[dashed, red] (axis cs:-6,1) -- (axis cs:6,1);
+\end{axis}
+\end{tikzpicture}
+\captionof{figure}{La sigmoide tiene asíntotas horizontales en 0 y 1.}
+\end{center}
+
+\subsection{Comportamiento asintótico de funciones de pérdida}
+Consideremos la entropía cruzada binaria:
+\[
+L(y, \hat{y}) = -y \log(\hat{y}) - (1-y) \log(1-\hat{y})
+\]
+donde $\hat{y} \in (0,1)$ es la probabilidad predicha. Cuando el modelo se vuelve muy seguro, $\hat{y}$ se acerca a 1 (si $y=1$) o a 0 (si $y=0$). Analicemos el límite:
+\[
+\lim_{\hat{y} \to 1} -\log(\hat{y}) = 0
+\]
+Es decir, la pérdida tiende a cero a medida que la predicción se acerca a la verdad. Esto es deseable.
+
+\subsection{Convergencia de algoritmos de optimización}
+En el análisis de convergencia del gradiente descendente, se estudia el límite de la sucesión de parámetros $\mathbf{w}^{(t)}$ cuando $t \to \infty$. Bajo ciertas condiciones, se demuestra que $\lim_{t \to \infty} \mathbf{w}^{(t)} = \mathbf{w}^*$, el punto óptimo.
+
+\section{Notación en papers científicos}
+En artículos de IA, los límites aparecen en contextos como:
+\begin{itemize}
+    \item Definición de derivada: $f'(x) = \lim_{h \to 0} \frac{f(x+h)-f(x)}{h}$.
+    \item Análisis de la tasa de aprendizaje: $\lim_{t \to \infty} \frac{1}{t} \sum_{i=1}^t \nabla L(\mathbf{w}^{(i)})$.
+    \item Propiedades de funciones de activación: $\lim_{x \to \infty} \text{ReLU}(x) = \infty$, $\lim_{x \to -\infty} \text{ReLU}(x) = 0$.
+    \item Convergencia de algoritmos: $\lim_{k \to \infty} \| \mathbf{w}^{(k+1)} - \mathbf{w}^{(k)} \| = 0$.
+\end{itemize}
+
+Es común encontrar expresiones como $\lim_{n \to \infty} \mathbb{E}[L_n] = L^*$ para indicar que el error esperado tiende al error óptimo.
+
+\section{Ejemplos con Python}
+
+\subsection{Cálculo de límites simbólicos con SymPy}
+SymPy permite calcular límites de forma simbólica.
+
+\begin{lstlisting}[language=Python]
+import sympy as sp
+import numpy as np
+import matplotlib.pyplot as plt
+
+x = sp.Symbol('x')
+
+# Límite de (x^2-1)/(x-1) cuando x->1
+f = (x**2 - 1)/(x - 1)
+limite = sp.limit(f, x, 1)
+print(f"límite cuando x->1: {limite}")
+
+# Límite de sin(x)/x cuando x->0
+g = sp.sin(x)/x
+limite0 = sp.limit(g, x, 0)
+print(f"límite sin(x)/x cuando x->0: {limite0}")
+
+# Límites laterales de la función escalón
+# Definimos la función escalón simbólicamente
+h = sp.Piecewise((0, x<0), (1, x>=0))
+lim_izq = sp.limit(h, x, 0, dir='-')
+lim_der = sp.limit(h, x, 0, dir='+')
+print(f"Límite izquierdo de H(x) en 0: {lim_izq}")
+print(f"Límite derecho de H(x) en 0: {lim_der}")
+
+# Límite al infinito de la sigmoide
+sigmoid = 1/(1 + sp.exp(-x))
+lim_inf = sp.limit(sigmoid, x, sp.oo)
+lim_sup = sp.limit(sigmoid, x, -sp.oo)
+print(f"Límite sigmoide en +oo: {lim_inf}")
+print(f"Límite sigmoide en -oo: {lim_sup}")
+\end{lstlisting}
+
+\subsection{Visualización de continuidad con Matplotlib}
+Mostramos gráficas de funciones con discontinuidades.
+
+\begin{lstlisting}[language=Python]
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Función con discontinuidad evitable
+x = np.linspace(0, 2, 400)
+y = (x**2 - 1)/(x - 1)
+plt.figure(figsize=(12,4))
+
+plt.subplot(1,3,1)
+plt.plot(x, y, 'b-', label='$f(x)=\\frac{x^2-1}{x-1}$')
+plt.plot(1, 2, 'ro', markersize=8, label='hueco')
+plt.xlabel('x')
+plt.ylabel('f(x)')
+plt.title('Discontinuidad evitable')
+plt.grid(True)
+plt.legend()
+
+# Función escalón (discontinuidad de salto)
+x1 = np.linspace(-2, 0, 100, endpoint=False)
+x2 = np.linspace(0, 2, 100)
+y1 = np.zeros_like(x1)
+y2 = np.ones_like(x2)
+plt.subplot(1,3,2)
+plt.plot(x1, y1, 'g-', label='$H(x)$')
+plt.plot(x2, y2, 'g-')
+plt.plot(0, 0, 'go', markersize=8)
+plt.plot(0, 1, 'go', markersize=8)
+plt.xlabel('x')
+plt.ylabel('H(x)')
+plt.title('Discontinuidad de salto')
+plt.grid(True)
+plt.legend()
+
+# Función 1/x (discontinuidad infinita)
+x3 = np.linspace(-2, -0.1, 100)
+x4 = np.linspace(0.1, 2, 100)
+y3 = 1/x3
+y4 = 1/x4
+plt.subplot(1,3,3)
+plt.plot(x3, y3, 'r-', label='$1/x$')
+plt.plot(x4, y4, 'r-')
+plt.axvline(0, color='k', linestyle='--')
+plt.xlabel('x')
+plt.ylabel('1/x')
+plt.title('Discontinuidad infinita')
+plt.grid(True)
+plt.legend()
+
+plt.tight_layout()
+plt.show()
+\end{lstlisting}
+
+\subsection{Comportamiento asintótico de la pérdida}
+Visualizamos la entropía cruzada para un caso binario con $y=1$.
+
+\begin{lstlisting}[language=Python]
+# Entropía cruzada para y=1
+p = np.linspace(0.001, 1, 100)
+loss = -np.log(p)
+
+plt.figure()
+plt.plot(p, loss)
+plt.xlabel('$\hat{y}$')
+plt.ylabel('Pérdida')
+plt.title('Entropía cruzada para y=1')
+plt.grid(True)
+plt.axvline(1, color='r', linestyle='--', label='$\hat{y}=1$')
+plt.legend()
+plt.show()
+\end{lstlisting}
+
+\section{Ejercicios propuestos}
+
+\begin{enumerate}
+    \item Calcula los siguientes límites usando SymPy y verifica gráficamente:
+    \[
+    \lim_{x \to 0} \frac{\sin(2x)}{x}, \quad \lim_{x \to \infty} \frac{e^x}{x^2}, \quad \lim_{x \to 0} \frac{1-\cos x}{x^2}
+    \]
+    \item Determina los puntos de discontinuidad de la función $f(x) = \frac{|x|}{x}$ y clasifícalos.
+    \item Investiga por qué la función ReLU es continua pero no diferenciable en 0. ¿Cómo se maneja esto en la práctica?
+    \item En un paper de machine learning, encuentras la expresión $\lim_{n \to \infty} \frac{1}{n} \sum_{i=1}^n \ell(y_i, f(x_i))$. ¿Qué significa? Relaciónalo con la convergencia del error empírico.
+\end{enumerate}
+
+\section{Resumen}
+
+En esta sesión hemos aprendido:
+\begin{itemize}
+    \item El concepto de límite como herramienta para describir el comportamiento de funciones.
+    \item Límites laterales y su importancia en la existencia del límite.
+    \item Límites al infinito y asíntotas.
+    \item Continuidad y tipos de discontinuidades.
+    \item Aplicaciones directas en IA: funciones de activación continuas, convergencia de pérdidas y algoritmos.
+    \item Uso de Python (SymPy y Matplotlib) para explorar estos conceptos.
+\end{itemize}
+Los límites son la puerta de entrada al cálculo diferencial, que será el tema de las próximas sesiones.
+
+\end{document}

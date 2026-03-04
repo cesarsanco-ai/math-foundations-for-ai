@@ -1,0 +1,606 @@
+\documentclass[12pt,a4paper,openany,oneside]{book}
+
+% --- Paquetes ---
+\usepackage[utf8]{inputenc}
+\usepackage[spanish, es-noshorthands]{babel} % Desactiva shorthands conflictivos (>, <, etc.)
+\usepackage{amsmath, amsfonts, amssymb}
+\usepackage{graphicx}
+\usepackage{geometry}
+\usepackage{hyperref}
+\usepackage{booktabs}
+\usepackage{fancyhdr}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta, positioning, shapes.geometric}
+
+\geometry{margin=2.5cm}
+
+% --- Colores y estilos para código Python ---
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstset{
+    language=Python,
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{blue},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\small,
+    breaklines=true,
+    frame=single,
+    showstringspaces=false
+}
+
+% --- Estilo de cabecera y pie ---
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+\fancyhead[L]{\small Carlos César Sánchez Coronel}
+\fancyhead[R]{\small Sesión 1: El Lenguaje de la IA}
+\fancyfoot[L]{\small Carlos César Sánchez Coronel}
+\fancyfoot[C]{\thepage}
+
+% --- Portada ---
+\title{
+    \textbf{Sesión 1} \\ 
+    \Huge \textbf{EL LENGUAJE DE LA IA} \\
+    \Large Datos, Funciones y Python \\
+    \normalsize Fundamentos matemáticos para inteligencia artificial
+}
+\author{
+    \small Por \\ \vspace{0.2cm}
+    \Large \textsc{Carlos César Sánchez Coronel}
+}
+\date{2026}
+
+\begin{document}
+
+\maketitle
+\tableofcontents
+\addcontentsline{toc}{chapter}{Índice general}
+
+% ------------------------------------------------------------------
+% CAPÍTULO 1: SESIÓN 1 - EL LENGUAJE DE LA IA
+% ------------------------------------------------------------------
+\chapter{El Lenguaje de la IA: Datos, Funciones y Python}
+
+En esta primera sesión, sentaremos las bases conceptuales y prácticas que nos acompañarán durante todo el curso. Exploraremos cómo los datos se organizan matemáticamente, qué tipos de funciones son el ``ADN'' de los algoritmos de inteligencia artificial, y cómo Python (con sus librerías) se convierte en nuestro laboratorio para experimentar. El objetivo es que al finalizar, tengas un mapa mental claro de las herramientas matemáticas y su relación con los modelos que estudiarás en cursos posteriores.
+
+\section{Conceptos Fundamentales}
+
+\subsection{Conjuntos numéricos y su representación en IA}
+Los datos en inteligencia artificial se organizan en estructuras matemáticas que permiten operaciones eficientes. Estas son las más importantes:
+
+\begin{itemize}
+    \item \textbf{Escalar}: un número real. Representa una magnitud individual, como una temperatura, un peso o un bias (sesgo) en una neurona.
+    \begin{equation*}
+        x = 5.2 \quad \text{(escalar)}
+    \end{equation*}
+    
+    \item \textbf{Vector}: lista ordenada de números. Cada punto en un espacio de características se representa como un vector.
+    \begin{equation*}
+        \mathbf{x} = \begin{bmatrix} x_1 & x_2 & \dots & x_n \end{bmatrix} \quad \text{ej. } \mathbf{x} = [2.5, 1.8, 3.0]
+    \end{equation*}
+    
+    \item \textbf{Matriz}: tabla bidimensional de números. Una imagen en escala de grises es una matriz donde cada elemento es un píxel.
+    \begin{equation*}
+        \mathbf{X} = \begin{bmatrix}
+            x_{11} & x_{12} & \dots & x_{1m} \\
+            x_{21} & x_{22} & \dots & x_{2m} \\
+            \vdots & \vdots & \ddots & \vdots \\
+            x_{n1} & x_{n2} & \dots & x_{nm}
+        \end{bmatrix}
+    \end{equation*}
+    
+    \item \textbf{Tensor}: generalización a más de dos dimensiones. Un lote de imágenes a color tiene dimensiones: [batch, alto, ancho, canales].
+    \begin{equation*}
+        \mathcal{T} \in \mathbb{R}^{B \times H \times W \times C}
+    \end{equation*}
+\end{itemize}
+
+\begin{center}
+\begin{tikzpicture}[scale=0.8]
+% Escalar
+\draw[fill=blue!20] (0,1) circle (0.5);
+\node at (0,1) {5.2};
+\node at (0,1.8) {Escalar};
+
+% Vector
+\draw[fill=green!20] (3,1) rectangle (5,2);
+\node at (4,1.5) {[2.5, 1.8, 3.0]};
+\node at (4,2.3) {Vector (1D)};
+
+% Matriz
+\draw[fill=red!20] (0,-2) rectangle (3,-0.5);
+\foreach \i in {0.3,0.9,1.5,2.1} {
+    \draw (\i,-1.2) -- (\i,-0.5);
+}
+\foreach \j in {-1.8,-1.2,-0.5} {
+    \draw (0,\j) -- (3,\j);
+}
+\node at (1.5,-1) {$p_{11}$};
+\node at (2.1,-1) {$p_{12}$};
+\node at (0.9,-1.6) {$p_{21}$};
+\node at (1.5,-1.6) {$p_{22}$};
+\node at (3.5,-1.25) {Matriz (2D)};
+
+% Tensor
+\draw[fill=yellow!20] (5,-3) rectangle (9,0);
+\draw (5,-1.5) -- (9,-1.5);
+\draw (5,-2.5) -- (9,-2.5);
+\draw (7,-3) -- (7,0);
+\node at (7,-0.5) {B};
+\node at (8,-1.8) {H};
+\node at (6,-2.3) {W};
+\node at (7.5,-3.3) {Tensor 4D};
+\end{tikzpicture}
+\captionof{figure}{Representación de escalares, vectores, matrices y tensores.}
+\end{center}
+
+\subsection{Funciones como ``cajas negras''}
+Una función $f: X \rightarrow Y$ asigna a cada elemento de un conjunto de entrada (dominio) un elemento de un conjunto de salida (rango). En IA, los modelos son funciones complejas que aprendemos a partir de datos.
+
+\begin{equation*}
+f(x) = y \quad \text{o en forma vectorial} \quad \mathbf{y} = f(\mathbf{x})
+\end{equation*}
+
+Por ejemplo, una red neuronal que clasifica imágenes es una función que toma un tensor de píxeles y devuelve una probabilidad por clase.
+
+\textbf{Tipos fundamentales de funciones:}
+
+\begin{itemize}
+    \item \textbf{Lineales}: $f(x) = mx + b$. Representan relaciones de proporcionalidad directa. En IA, son la base de la regresión lineal y de las capas fully-connected.
+    \begin{center}
+    \begin{tikzpicture}[scale=0.6]
+    \draw[->] (-2,0) -- (2,0) node[right] {$x$};
+    \draw[->] (0,-2) -- (0,2) node[above] {$f(x)$};
+    \draw[blue, thick] (-1.5,-1.5) -- (1.5,1.5);
+    \node at (1,1.5) {$f(x)=x$};
+    \end{tikzpicture}
+    \end{center}
+    
+    \item \textbf{Polinomiales}: $f(x) = a_n x^n + \dots + a_0$. Útiles para entender overfitting y para aproximar funciones complejas.
+    \begin{equation*}
+    f(x) = x^2 - 2x + 1
+    \end{equation*}
+    
+    \item \textbf{Exponenciales}: $f(x) = e^x$, $f(x) = a^x$. Aparecen en softmax, en funciones de pérdida como cross-entropy, y en modelos de crecimiento.
+    \begin{equation*}
+    e^x = \sum_{n=0}^{\infty} \frac{x^n}{n!}
+    \end{equation*}
+    
+    \item \textbf{Logarítmicas}: $f(x) = \ln x$. Son la inversa de las exponenciales y se usan en entropía y verosimilitud.
+    
+    \item \textbf{Trigonométricas}: $\sin x$, $\cos x$. Claves en procesamiento de señales y en positional encodings de transformers.
+    \begin{equation*}
+    \text{PE}(pos, 2i) = \sin\left(\frac{pos}{10000^{2i/d}}\right)
+    \end{equation*}
+\end{itemize}
+
+\section{Funciones de Activación (Deep Learning)}
+Son funciones no lineales que se aplican a la salida de una neurona. Permiten que la red aprenda relaciones complejas. A continuación, las más importantes con sus ecuaciones, propiedades y aplicaciones.
+
+\subsection{Sigmoide}
+\begin{equation*}
+\sigma(x) = \frac{1}{1 + e^{-x}}
+\end{equation*}
+\begin{itemize}
+    \item Dominio: $\mathbb{R}$
+    \item Rango: $(0,1)$
+    \item Propiedades: derivable, saturación para $|x|$ grande (gradientes pequeños).
+    \item Uso: capa final en clasificación binaria (probabilidad).
+\end{itemize}
+
+\subsection{Tanh}
+\begin{equation*}
+\tanh(x) = \frac{e^x - e^{-x}}{e^x + e^{-x}}
+\end{equation*}
+\begin{itemize}
+    \item Dominio: $\mathbb{R}$
+    \item Rango: $(-1,1)$
+    \item Propiedades: centrada en cero, saturación similar a sigmoide.
+    \item Uso: en RNN clásicas y como alternativa a sigmoide.
+\end{itemize}
+
+\subsection{ReLU (Rectified Linear Unit)}
+\begin{equation*}
+\text{ReLU}(x) = \max(0, x)
+\end{equation*}
+\begin{itemize}
+    \item Dominio: $\mathbb{R}$
+    \item Rango: $[0, \infty)$
+    \item Propiedades: no satura en la región positiva, computacionalmente eficiente. Puede morir (neuronas muertas si siempre negativas).
+    \item Uso: la más común en capas ocultas de CNNs y MLPs.
+\end{itemize}
+
+\subsection{Leaky ReLU}
+\begin{equation*}
+\text{LReLU}(x) = \max(\alpha x, x) \quad \text{con } \alpha \approx 0.01
+\end{equation*}
+Soluciona el problema de neuronas muertas permitiendo un pequeño gradiente cuando $x<0$.
+
+\subsection{ELU (Exponential Linear Unit)}
+\begin{equation*}
+\text{ELU}(x) = \begin{cases} x & x \ge 0 \\ \alpha(e^x - 1) & x < 0 \end{cases}
+\end{equation*}
+\begin{itemize}
+    \item Propiedades: suave para $x<0$, media de activaciones cercana a cero.
+\end{itemize}
+
+\subsection{Softmax}
+\begin{equation*}
+\text{softmax}(\mathbf{z})_i = \frac{e^{z_i}}{\sum_{j=1}^{K} e^{z_j}}
+\end{equation*}
+\begin{itemize}
+    \item Convierte un vector en una distribución de probabilidad (suma 1).
+    \item Uso: capa final en clasificación multiclase.
+\end{itemize}
+
+\subsection{GELU (Gaussian Error Linear Unit)}
+\begin{equation*}
+\text{GELU}(x) = x \Phi(x) \quad \text{donde } \Phi \text{ es la CDF normal estándar}
+\end{equation*}
+\begin{itemize}
+    \item Propiedades: combina ReLU y dropout, usada en transformers como BERT y GPT.
+\end{itemize}
+
+\subsection{Swish / SiLU}
+\begin{equation*}
+\text{Swish}(x) = x \cdot \sigma(x)
+\end{equation*}
+\begin{itemize}
+    \item Propiedades: no monótona, suave, usada en modelos eficientes como EfficientNet.
+\end{itemize}
+
+\begin{center}
+\begin{tikzpicture}[scale=0.8]
+\begin{axis}[
+    title={Funciones de activación},
+    xlabel=$x$,
+    ylabel=$f(x)$,
+    domain=-4:4,
+    samples=100,
+    legend pos=north west,
+    grid=major,
+    width=12cm,
+    height=8cm
+]
+\addplot[blue] {1/(1+exp(-x))};
+\addlegendentry{Sigmoide}
+\addplot[red] {tanh(x)};
+\addlegendentry{Tanh}
+\addplot[green] {max(0,x)};
+\addlegendentry{ReLU}
+\addplot[orange] {x*(1/(1+exp(-x)))};
+\addlegendentry{Swish}
+\end{axis}
+\end{tikzpicture}
+\captionof{figure}{Gráficas de funciones de activación comunes.}
+\end{center}
+
+\section{Funciones de Pérdida (Loss Functions)}
+Miden cuán lejos está la predicción del modelo del valor real. Son la base del entrenamiento.
+
+\subsection{Error Cuadrático Medio (MSE)}
+\begin{equation*}
+\text{MSE} = \frac{1}{n}\sum_{i=1}^{n} (y_i - \hat{y}_i)^2
+\end{equation*}
+\begin{itemize}
+    \item Uso: regresión.
+    \item Propiedades: diferenciable, sensible a outliers.
+\end{itemize}
+
+\subsection{Error Absoluto Medio (MAE)}
+\begin{equation*}
+\text{MAE} = \frac{1}{n}\sum_{i=1}^{n} |y_i - \hat{y}_i|
+\end{equation*}
+\begin{itemize}
+    \item Uso: regresión robusta.
+    \item Propiedades: menos sensible a outliers que MSE.
+\end{itemize}
+
+\subsection{Cross-Entropy (Entropía Cruzada)}
+Para clasificación binaria:
+\begin{equation*}
+\text{BCE} = -\frac{1}{n}\sum_{i=1}^{n} \left[ y_i \log(\hat{y}_i) + (1-y_i)\log(1-\hat{y}_i) \right]
+\end{equation*}
+Para clasificación multiclase:
+\begin{equation*}
+\text{CE} = -\sum_{i=1}^{n} \sum_{c=1}^{K} y_{i,c} \log(\hat{y}_{i,c})
+\end{equation*}
+\begin{itemize}
+    \item Uso: clasificación.
+    \item Propiedades: el logaritmo castiga fuertemente predicciones erróneas con alta confianza.
+\end{itemize}
+
+\subsection{Hinge Loss}
+\begin{equation*}
+\text{Hinge} = \max(0, 1 - y_i \hat{y}_i) \quad \text{con } y_i \in \{-1,1\}
+\end{equation*}
+\begin{itemize}
+    \item Uso: SVM (máquinas de soporte vectorial).
+\end{itemize}
+
+\subsection{Focal Loss}
+\begin{equation*}
+\text{FL} = -(1 - \hat{y}_i)^\gamma \log(\hat{y}_i)
+\end{equation*}
+\begin{itemize}
+    \item Uso: problemas de clases desbalanceadas (detección de objetos).
+\end{itemize}
+
+\subsection{Contrastive Loss / Triplet Loss}
+\begin{equation*}
+\mathcal{L} = \max(0, d(a,p) - d(a,n) + \alpha)
+\end{equation*}
+\begin{itemize}
+    \item Uso: aprendizaje de representaciones (face recognition, embeddings).
+\end{itemize}
+
+\section{Funciones de Similitud y Distancia}
+Miden la cercanía entre vectores.
+
+\subsection{Producto punto}
+\begin{equation*}
+\langle \mathbf{u}, \mathbf{v} \rangle = \sum_{i=1}^{n} u_i v_i
+\end{equation*}
+\begin{itemize}
+    \item Uso: base de la atención en transformers, medida de similitud no normalizada.
+\end{itemize}
+
+\subsection{Similitud de Coseno}
+\begin{equation*}
+\text{cos}(\theta) = \frac{\mathbf{u} \cdot \mathbf{v}}{\|\mathbf{u}\| \|\mathbf{v}\|}
+\end{equation*}
+\begin{itemize}
+    \item Uso: comparación de embeddings, motores de búsqueda semántica.
+\end{itemize}
+
+\subsection{Distancia Euclidiana (L2)}
+\begin{equation*}
+d(\mathbf{u},\mathbf{v}) = \sqrt{\sum_{i=1}^{n} (u_i - v_i)^2}
+\end{equation*}
+\begin{itemize}
+    \item Uso: KNN, K-means, clustering.
+\end{itemize}
+
+\subsection{Distancia Manhattan (L1)}
+\begin{equation*}
+d(\mathbf{u},\mathbf{v}) = \sum_{i=1}^{n} |u_i - v_i|
+\end{equation*}
+\begin{itemize}
+    \item Uso: robusta, usada en algunos algoritmos de recomendación.
+\end{itemize}
+
+\subsection{Kernel RBF}
+\begin{equation*}
+K(\mathbf{u},\mathbf{v}) = \exp\left(-\gamma \|\mathbf{u}-\mathbf{v}\|^2\right)
+\end{equation*}
+\begin{itemize}
+    \item Uso: SVM, procesos Gaussianos.
+\end{itemize}
+
+\section{Lógica Proposicional y su Relación con la IA}
+La lógica proposicional maneja valores de verdad (True/False) y conectores lógicos (AND, OR, NOT). En programación, estos se usan en condiciones. En IA, aparecen en:
+
+\begin{itemize}
+    \item \textbf{Árboles de decisión}: cada nodo interno es una condición lógica sobre una característica.
+    \begin{center}
+    \begin{tikzpicture}[
+        every node/.style={draw, rectangle, rounded corners, align=center},
+        level distance=1.5cm,
+        sibling distance=3cm
+    ]
+    \node {¿Edad > 18?}
+        child { node {¿Género = M?} 
+            child { node {Pred: 0} }
+            child { node {Pred: 1} }
+        }
+        child { node {¿Ingreso > 50k?}
+            child { node {Pred: 1} }
+            child { node {Pred: 0} }
+        };
+    \end{tikzpicture}
+    \end{center}
+    \item \textbf{Sistemas basados en reglas}: motores de inferencia usan reglas lógicas.
+    \item \textbf{Programación lógica}: Prolog, por ejemplo.
+    \item \textbf{Verificación de modelos}: en sistemas críticos.
+\end{itemize}
+
+\section{Notación de Sumatorias y Productorias}
+Son herramientas para expresar sumas y productos de muchos términos de forma compacta.
+
+\subsection{Sumatoria}
+\begin{equation*}
+\sum_{i=1}^{n} x_i = x_1 + x_2 + \dots + x_n
+\end{equation*}
+Ejemplo en una neurona: la suma ponderada de las entradas.
+\begin{equation*}
+z = \sum_{i=1}^{n} w_i x_i + b
+\end{equation*}
+
+\subsection{Productoria}
+\begin{equation*}
+\prod_{i=1}^{n} x_i = x_1 \cdot x_2 \cdots x_n
+\end{equation*}
+Ejemplo: la probabilidad conjunta de eventos independientes.
+\begin{equation*}
+P(X_1, \dots, X_n) = \prod_{i=1}^{n} P(X_i)
+\end{equation*}
+
+\section{Python: Librerías, Frameworks y Herramientas}
+Python es el lenguaje estándar en IA por su ecosistema. Aquí las librerías esenciales.
+
+\subsection{Librerías fundamentales}
+\begin{itemize}
+    \item \textbf{NumPy}: manipulación de tensores, operaciones vectorizadas, álgebra lineal.
+    \item \textbf{SciPy}: funciones científicas (integración, optimización, señales).
+    \item \textbf{Matplotlib} / \textbf{Seaborn}: visualización.
+    \item \textbf{SymPy}: cálculo simbólico.
+\end{itemize}
+
+\subsection{Librerías de machine learning}
+\begin{itemize}
+    \item \textbf{Scikit-learn}: algoritmos clásicos (regresión, clasificación, clustering, PCA, KNN, SVM).
+    \item \textbf{XGBoost}, \textbf{LightGBM}, \textbf{CatBoost}: gradient boosting.
+\end{itemize}
+
+\subsection{Frameworks de deep learning}
+\begin{itemize}
+    \item \textbf{TensorFlow / Keras}: producción, alta API.
+    \item \textbf{PyTorch}: investigación, diferenciación automática dinámica.
+    \item \textbf{JAX}: composición de funciones, aceleración.
+\end{itemize}
+
+\subsection{Librerías especializadas}
+\begin{itemize}
+    \item \textbf{NLP}: Hugging Face Transformers, NLTK, spaCy, Gensim.
+    \item \textbf{Visión}: OpenCV, PIL, torchvision.
+    \item \textbf{Audio}: librosa, torchaudio.
+    \item \textbf{Grafos}: NetworkX, PyTorch Geometric.
+    \item \textbf{Probabilidad}: PyMC3, TensorFlow Probability.
+\end{itemize}
+
+\subsection{Entornos y herramientas}
+\begin{itemize}
+    \item \textbf{Jupyter Notebook / JupyterLab}: experimentación interactiva.
+    \item \textbf{Google Colab}: GPU/TPU gratuitas.
+    \item \textbf{VS Code}, \textbf{PyCharm}: editores.
+    \item \textbf{Docker}: reproducibilidad.
+    \item \textbf{Git}: control de versiones.
+\end{itemize}
+
+\section{Ejemplo Práctico en Python}
+Visualicemos algunas funciones de activación y pérdida con NumPy y Matplotlib.
+
+\begin{lstlisting}[language=Python]
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Funciones de activación
+def sigmoid(x):
+    return 1 / (1 + np.exp(-x))
+
+def tanh(x):
+    return np.tanh(x)
+
+def relu(x):
+    return np.maximum(0, x)
+
+def softmax(x):
+    e_x = np.exp(x - np.max(x))
+    return e_x / e_x.sum()
+
+# Visualización
+x = np.linspace(-5, 5, 100)
+plt.figure(figsize=(12, 4))
+plt.subplot(1, 3, 1)
+plt.plot(x, sigmoid(x), label='Sigmoide')
+plt.plot(x, tanh(x), label='Tanh')
+plt.plot(x, relu(x), label='ReLU')
+plt.legend()
+plt.title('Funciones de activación')
+plt.grid(True)
+
+# Ejemplo de producto punto y similitud de coseno
+u = np.array([1, 2, 3])
+v = np.array([4, 5, 6])
+dot = np.dot(u, v)
+norm_u = np.linalg.norm(u)
+norm_v = np.linalg.norm(v)
+cos_sim = dot / (norm_u * norm_v)
+print(f'Producto punto: {dot}')
+print(f'Similitud de coseno: {cos_sim:.4f}')
+
+# Softmax
+z = np.array([2.0, 1.0, 0.1])
+probs = softmax(z)
+print(f'Softmax: {probs}, suma: {probs.sum():.2f}')
+plt.subplot(1, 3, 2)
+plt.bar(range(len(probs)), probs)
+plt.title('Distribución softmax')
+plt.xticks(range(len(probs)), ['Clase 0', 'Clase 1', 'Clase 2'])
+
+# MSE
+y_true = np.array([3, -0.5, 2, 7])
+y_pred = np.array([2.5, 0.0, 2, 8])
+mse = np.mean((y_true - y_pred)**2)
+print(f'MSE: {mse:.4f}')
+plt.subplot(1, 3, 3)
+plt.scatter(y_true, y_pred)
+plt.plot([-1, 8], [-1, 8], 'r--')
+plt.xlabel('Valor real')
+plt.ylabel('Predicción')
+plt.title('MSE')
+plt.grid(True)
+plt.tight_layout()
+plt.show()
+\end{lstlisting}
+
+\section{Diagrama de una Neurona Artificial}
+Una neurona artificial calcula una combinación lineal de las entradas más un sesgo, y luego aplica una función no lineal $f$:
+\begin{equation*}
+y = f\left( \sum_{i=1}^{n} w_i x_i + b \right)
+\end{equation*}
+
+\begin{center}
+\begin{tikzpicture}[
+    neuron/.style={circle, draw, minimum size=0.8cm},
+    weight/.style={font=\small},
+    sum/.style={circle, draw, minimum size=0.6cm, inner sep=1pt},
+    act/.style={rectangle, draw, rounded corners, minimum size=0.8cm},
+    >=Stealth
+]
+
+% Entradas
+\node[neuron] (x1) at (0,0) {$x_1$};
+\node[neuron] (x2) at (0,-1.2) {$x_2$};
+\node[neuron] (x3) at (0,-2.4) {$x_3$};
+
+% Pesos (etiquetas)
+\node[weight] at (1.2, -0.2) {$w_1$};
+\node[weight] at (1.2, -1.4) {$w_2$};
+\node[weight] at (1.2, -2.6) {$w_3$};
+
+% Sumador
+\node[sum] (sum) at (3, -1.2) {$\sum$};
+
+% Bias
+\node[weight] (bias) at (3, 0.2) {$+b$};
+
+% Activación
+\node[act] (act) at (5, -1.2) {$f$};
+
+% Salida
+\node[neuron] (y) at (7, -1.2) {$y$};
+
+% Conexiones de entrada
+\foreach \i in {1,2,3} {
+    \draw[->] (x\i) -- (sum);
+}
+
+% Conexiones internas
+\draw[->] (sum) -- (act);
+\draw[->] (bias) -- (sum);
+\draw[->] (act) -- (y);
+
+\end{tikzpicture}
+\captionof{figure}{Estructura de una neurona artificial con tres entradas.}
+\end{center}
+
+\section{Conclusión}
+En esta sesión hemos construido un mapa conceptual que relaciona:
+\begin{itemize}
+    \item Las estructuras de datos fundamentales (escalares, vectores, matrices, tensores).
+    \item Las funciones matemáticas que aparecen una y otra vez en IA (activación, pérdida, similitud).
+    \item Los algoritmos y modelos donde se aplican (redes neuronales, SVM, clustering, transformers).
+    \item Las herramientas de Python que usaremos para implementarlos.
+\end{itemize}
+Este conocimiento te servirá de brújula durante el resto del curso. ¡Bienvenido al fascinante mundo de las matemáticas para la inteligencia artificial!
+
+\end{document}
