@@ -1,0 +1,445 @@
+% --- CORRECCION: Forzar interpretacion raw de la entrada ---
+\UseRawInputEncoding
+\documentclass[aspectratio=169, 10pt, xcolor=table]{beamer}
+
+% --- Configuracion del Tema ---
+\usetheme{Madrid}
+\usecolortheme{dolphin}
+
+% --- Paquetes necesarios ---
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{amsmath, amssymb}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta, positioning, shapes.geometric}
+\usepackage{etoolbox}
+
+% --- Ruta de Imagenes ---
+\graphicspath{{./imagenes/}}
+
+% --- Estilo para codigo Python ---
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+\lstset{
+    language=Python,
+    backgroundcolor=\color{backcolour},
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{blue},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\scriptsize,
+    breaklines=true,
+    frame=single,
+    showstringspaces=false,
+    literate={á}{{\'a}}1 {é}{{\'e}}1 {í}{{\'i}}1 {ó}{{\'o}}1 {ú}{{\'u}}1 {ñ}{{\~n}}1 {ü}{{\"u}}1
+}
+
+% --- Pie de pagina personalizado ---
+\makeatletter
+\setbeamertemplate{footline}{
+  \leavevmode%
+  \hbox{%
+  \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,center]{author in head/foot}%
+    \usebeamerfont{author in head/foot}\insertshortauthor
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,center]{title in head/foot}%
+    \usebeamerfont{title in head/foot}Sesion 8
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,right]{date in head/foot}%
+    \usebeamerfont{date in head/foot}CALCULO Y ALGEBRA LINEAL \hfill \insertframenumber/\inserttotalframenumber \hspace*{0.3cm}
+  \end{beamercolorbox}}%
+  \vskip0pt%
+}
+\makeatother
+
+% --- Datos de la portada ---
+\title[SESION 8 CALCULO]{\textbf{Sesion 8}}
+\subtitle{Derivadas Parciales y Vector Gradiente}
+\author[Prof. C. Sanchez]{Carlos Cesar Sanchez Coronel}
+\institute{\textbf{CALCULO Y ALGEBRA LINEAL PARA IA}}
+\date{}
+
+% --- Eliminar barra de navegacion ---
+\setbeamertemplate{navigation symbols}{}
+
+% --- Indice al inicio de cada seccion ---
+\AtBeginSection[]{
+  \begin{frame}
+    \frametitle{Contenido}
+    \tableofcontents[currentsection]
+  \end{frame}
+}
+
+\begin{document}
+
+% --- Portada ---
+\begin{frame}
+    \titlepage
+\end{frame}
+
+% --- Indice general ---
+\begin{frame}{Contenido}
+    \tableofcontents
+\end{frame}
+
+% ============================================================================
+% SECCION 1: INTRODUCCION A DERIVADAS PARCIALES
+% ============================================================================
+\section{Derivadas Parciales: Sensibilidad Individual}
+
+\begin{frame}{Motivacion}
+    \begin{itemize}
+        \item En IA, las funciones dependen de muchas variables (pesos, caracteristicas).
+        \item Necesitamos medir el cambio al variar una variable, manteniendo las demas constantes.
+        \item De ahi nacen las \textbf{derivadas parciales}.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Definicion intuitiva}
+    \begin{block}{Derivada parcial respecto a $x_i$}
+        \[
+        \frac{\partial f}{\partial x_i}(\mathbf{a}) = \lim_{h\to 0} \frac{f(a_1,\dots,a_i+h,\dots,a_n) - f(a_1,\dots,a_n)}{h}
+        \]
+    \end{block}
+    \begin{itemize}
+        \item Mide la tasa de cambio de $f$ cuando solo $x_i$ varia.
+        \item Es la derivada ordinaria de la funcion $g(t)=f(\dots,t,\dots)$ en $t=a_i$.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Ejemplo basico}
+    Sea $f(x,y)=x^2y + \sin(xy)$. Calculamos:
+    \[
+    \frac{\partial f}{\partial x} = 2xy + y\cos(xy),\qquad 
+    \frac{\partial f}{\partial y} = x^2 + x\cos(xy)
+    \]
+    \vspace{0.3cm}
+    \begin{itemize}
+        \item Notacion: tambien $f_x$, $f_y$, $\partial_x f$, etc.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Interpretacion geometrica (2D)}
+    \begin{itemize}
+        \item $z=f(x,y)$ es una superficie.
+        \item $\frac{\partial f}{\partial x}(a,b)$ es la pendiente de la curva al cortar con el plano $y=b$.
+    \end{itemize}
+    \centering
+    \begin{tikzpicture}[scale=0.8]
+        \draw[->] (-1,0) -- (4,0) node[right] {$x$};
+        \draw[->] (0,-1) -- (0,3) node[above] {$z$};
+        \draw[thick, blue] plot[smooth] coordinates {(0,0.5) (1,1) (2,1.8) (3,2.5)} node[right] {$f(x,b)$};
+        \draw[dashed] (1.5,0) -- (1.5,1.4);
+        \draw[dashed] (0,1.4) -- (1.5,1.4);
+        \fill (1.5,1.4) circle (2pt) node[above] {$(a,f(a,b))$};
+    \end{tikzpicture}
+\end{frame}
+
+% ============================================================================
+% SECCION 2: VECTOR GRADIENTE
+% ============================================================================
+\section{Vector Gradiente: Direccion de Maximo Crecimiento}
+
+\begin{frame}{Definicion}
+    \begin{block}{Gradiente de $f:\mathbb{R}^n\to\mathbb{R}$}
+        \[
+        \nabla f(\mathbf{x}) = 
+        \begin{bmatrix}
+            \frac{\partial f}{\partial x_1}(\mathbf{x}) \\[4pt]
+            \frac{\partial f}{\partial x_2}(\mathbf{x}) \\[4pt]
+            \vdots \\[4pt]
+            \frac{\partial f}{\partial x_n}(\mathbf{x})
+        \end{bmatrix}
+        \]
+    \end{block}
+\end{frame}
+
+\begin{frame}{Interpretacion geometrica}
+    \begin{itemize}
+        \item Apunta en la direccion de \textbf{maximo crecimiento} de la funcion.
+        \item Su magnitud $\|\nabla f\|$ indica la tasa de crecimiento en esa direccion.
+        \item Es perpendicular a las curvas de nivel (lineas de $f$ constante).
+    \end{itemize}
+    \centering
+    \includegraphics[width=0.5\textwidth]{gradiente_curvas_nivel.png} % si existe
+\end{frame}
+
+\begin{frame}{Propiedades importantes}
+    \begin{itemize}
+        \item Linealidad: $\nabla(\alpha f + \beta g) = \alpha\nabla f + \beta\nabla g$.
+        \item Regla del producto: $\nabla(fg) = f\nabla g + g\nabla f$.
+        \item Regla de la cadena multivariable: 
+        \[
+        \frac{d}{dt} f(g(t)) = \nabla f(g(t)) \cdot g'(t)
+        \]
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Ejemplo en 2D}
+    Sea $f(x,y)=x^2+y^2$.
+    \[
+    \nabla f = (2x,\, 2y)
+    \]
+    En $(1,1)$: $\nabla f = (2,2)$ (direccion radial).
+    \begin{itemize}
+        \item Opuesto $(-2,-2)$: direccion de maximo decrecimiento.
+    \end{itemize}
+\end{frame}
+
+% ============================================================================
+% SECCION 3: APLICACION EN IA: DESCENSO DE GRADIENTE
+% ============================================================================
+\section{Aplicacion en IA: Descenso de Gradiente}
+
+\begin{frame}{Idea fundamental}
+    \begin{itemize}
+        \item Queremos minimizar la funcion de perdida $\mathcal{L}(\mathbf{w})$.
+        \item Como $\nabla\mathcal{L}$ apunta hacia el maximo, para minimizar avanzamos en direccion opuesta:
+        \[
+        \mathbf{w}_{\text{nuevo}} = \mathbf{w}_{\text{viejo}} - \eta \nabla\mathcal{L}(\mathbf{w}_{\text{viejo}})
+        \]
+        donde $\eta$ es la \textbf{tasa de aprendizaje}.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Ejemplo: regresion lineal con un parametro}
+    Modelo: $\hat{y}=wx$, pérdida MSE para un punto $(x,y)$:
+    \[
+    \mathcal{L}(w) = (wx - y)^2
+    \]
+    Gradiente (1D):
+    \[
+    \frac{d\mathcal{L}}{dw} = 2(wx - y)\,x
+    \]
+    Actualizacion:
+    \[
+    w_{\text{nuevo}} = w_{\text{viejo}} - \eta \cdot 2(w_{\text{viejo}}x - y)x
+    \]
+\end{frame}
+
+\begin{frame}{Ejemplo con dos parametros (intercepto)}
+    Modelo: $\hat{y}=w_1x + w_2$, pérdida MSE:
+    \[
+    \mathcal{L}(w_1,w_2) = (w_1x + w_2 - y)^2
+    \]
+    Derivadas parciales:
+    \[
+    \frac{\partial\mathcal{L}}{\partial w_1} = 2(w_1x + w_2 - y)\,x,\quad
+    \frac{\partial\mathcal{L}}{\partial w_2} = 2(w_1x + w_2 - y)
+    \]
+    \begin{align*}
+        w_1 &\leftarrow w_1 - \eta\,\frac{\partial\mathcal{L}}{\partial w_1},\\
+        w_2 &\leftarrow w_2 - \eta\,\frac{\partial\mathcal{L}}{\partial w_2}
+    \end{align*}
+\end{frame}
+
+\begin{frame}{Visualizacion del proceso}
+    \centering
+    \includegraphics[width=0.7\textwidth]{descenso_gradiente.png} % si existe
+\end{frame}
+
+% ============================================================================
+% SECCION 4: APLICACION EN VISION POR COMPUTADOR: DETECCION DE BORDES
+% ============================================================================
+\section{Aplicacion en Vision por Computador: Deteccion de Bordes}
+
+\begin{frame}{Gradiente de una imagen}
+    \begin{itemize}
+        \item Una imagen en grises $I(x,y)$ es una funcion discreta.
+        \item Las derivadas parciales se aproximan por diferencias finitas:
+        \[
+        G_x = I(x+1,y)-I(x,y),\quad G_y = I(x,y+1)-I(x,y)
+        \]
+        \item Magnitud del gradiente: $G = \sqrt{G_x^2 + G_y^2}$ (alta en bordes).
+        \item Direccion: $\theta = \arctan(G_y/G_x)$ (orientacion del borde).
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Filtros de Sobel}
+    \begin{itemize}
+        \item Kernels que aproximan derivadas con suavizado:
+        \[
+        G_x = \begin{bmatrix}
+            -1 & 0 & 1 \\
+            -2 & 0 & 2 \\
+            -1 & 0 & 1
+        \end{bmatrix} * I,\quad
+        G_y = \begin{bmatrix}
+            -1 & -2 & -1 \\
+             0 &  0 &  0 \\
+             1 &  2 &  1
+        \end{bmatrix} * I
+        \]
+        \item Mas robustos que diferencias simples.
+    \end{itemize}
+\end{frame}
+
+% ============================================================================
+% SECCION 5: EJEMPLOS CON PYTHON
+% ============================================================================
+\section{Ejemplos con Python}
+
+\begin{frame}[fragile]{Calculo de gradientes con SymPy}
+    \begin{lstlisting}
+import sympy as sp
+
+x, y = sp.symbols('x y')
+f = x**2 * sp.sin(y) + sp.exp(x*y)
+
+df_dx = sp.diff(f, x)
+df_dy = sp.diff(f, y)
+print("df/dx =", df_dx)
+print("df/dy =", df_dy)
+
+# Evaluar en un punto
+valores = {x: 2, y: 1}
+print("df/dx(2,1) =", df_dx.subs(valores).evalf())
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Visualizacion de superficie y gradiente}
+    \begin{lstlisting}
+import numpy as np
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
+
+def loss(w1,w2): return (2*w1 + w2 - 5)**2
+
+W1 = np.linspace(-5,5,50)
+W2 = np.linspace(-5,5,50)
+W1, W2 = np.meshgrid(W1,W2)
+Z = loss(W1,W2)
+
+fig = plt.figure(figsize=(12,5))
+ax1 = fig.add_subplot(121, projection='3d')
+ax1.plot_surface(W1,W2,Z, cmap='viridis', alpha=0.7)
+ax1.set_xlabel('w1'); ax1.set_ylabel('w2'); ax1.set_zlabel('Loss')
+
+ax2 = fig.add_subplot(122)
+contour = ax2.contour(W1,W2,Z, levels=20, cmap='viridis')
+ax2.clabel(contour, inline=True, fontsize=8)
+# Dibujar gradiente en algunos puntos
+puntos = [(-4,-4), (-2,3), (3,-2), (2,2)]
+for w1,w2 in puntos:
+    g1 = 4*(2*w1+w2-5)
+    g2 = 2*(2*w1+w2-5)
+    ax2.arrow(w1,w2, g1*0.1, g2*0.1, head_width=0.3, ec='red')
+    ax2.plot(w1,w2,'ro')
+ax2.set_xlabel('w1'); ax2.set_ylabel('w2')
+plt.tight_layout(); plt.show()
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Descenso de gradiente para regresion lineal}
+    \begin{lstlisting}
+import numpy as np
+import matplotlib.pyplot as plt
+
+np.random.seed(42)
+X = 2 * np.random.rand(100, 1)
+y = 4 + 3 * X + np.random.randn(100, 1)
+
+X_b = np.c_[np.ones((100, 1)), X]
+w = np.random.randn(2, 1)
+eta = 0.1
+n_iter = 1000
+w_history = [w.copy()]
+
+for i in range(n_iter):
+    grad = 2/len(X) * X_b.T @ (X_b @ w - y)
+    w = w - eta * grad
+    w_history.append(w.copy())
+
+print("Intercepto:", w[0][0], "Pendiente:", w[1][0])
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Deteccion de bordes con Sobel}
+    \begin{lstlisting}
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy import ndimage
+from skimage import data
+
+image = data.camera()
+
+sx = ndimage.sobel(image, axis=0)
+sy = ndimage.sobel(image, axis=1)
+sobel_mag = np.hypot(sx, sy)
+
+fig, axes = plt.subplots(1,3, figsize=(12,4))
+axes[0].imshow(image, cmap='gray')
+axes[1].imshow(sobel_mag, cmap='gray')
+axes[2].imshow(sx, cmap='gray')
+plt.tight_layout(); plt.show()
+    \end{lstlisting}
+\end{frame}
+
+% ============================================================================
+% SECCION 6: NOTACION EN PAPERS CIENTIFICOS
+% ============================================================================
+\section{Notacion en Papers Cientificos}
+
+\begin{frame}{Notacion comun en IA}
+    \begin{itemize}
+        \item $\nabla_\theta \mathcal{L}$: gradiente de la perdida respecto a parametros $\theta$.
+        \item $\frac{\partial \mathcal{L}}{\partial \mathbf{W}^{(l)}}$: gradiente en la capa $l$.
+        \item $\delta^{(l)}$: error propagado hacia atras.
+        \item $I_x$, $I_y$: derivadas espaciales de una imagen.
+        \item $\nabla^2$: laplaciano (suma de segundas derivadas).
+    \end{itemize}
+\end{frame}
+
+% ============================================================================
+% SECCION 7: EJERCICIOS PROPUESTOS
+% ============================================================================
+\section{Ejercicios Propuestos}
+
+\begin{frame}{Ejercicios}
+    \begin{enumerate}
+        \item Calcula las derivadas parciales y el gradiente de $f(x,y,z)=x^2 e^y + \ln(xz) - \sin(yz)$.
+        \item Para la funcion de perdida $L(\mathbf{w}) = \frac{1}{2}\|X\mathbf{w}-\mathbf{y}\|^2$, demuestra que $\nabla L = X^T(X\mathbf{w}-\mathbf{y})$.
+        \item Implementa descenso de gradiente para la funcion de Himmelblau $f(x,y)=(x^2+y-11)^2+(x+y^2-7)^2$. Visualiza curvas de nivel y trayectoria.
+        \item Explica por que el gradiente es perpendicular a las curvas de nivel.
+        \item En un paper encuentras $\delta^{(l)} = \nabla_{\mathbf{a}^{(l)}}L \odot \sigma'(\mathbf{z}^{(l)})$. Identifica cada termino.
+    \end{enumerate}
+\end{frame}
+
+% ============================================================================
+% SECCION 8: RESUMEN
+% ============================================================================
+\section{Resumen}
+
+\begin{frame}{Lo que hemos aprendido}
+    \begin{exampleblock}{Conceptos clave}
+        \begin{itemize}
+            \item \textbf{Derivadas parciales}: sensibilidad individual.
+            \item \textbf{Vector gradiente}: direccion de maximo crecimiento, perpendicular a curvas de nivel.
+            \item \textbf{Descenso de gradiente}: algoritmo fundamental para minimizar funciones de perdida.
+            \item \textbf{Aplicacion en vision}: deteccion de bordes mediante gradiente de imagen.
+            \item \textbf{Implementacion}: SymPy para calculo simbolico, NumPy para descenso de gradiente, scikit-image para bordes.
+        \end{itemize}
+    \end{exampleblock}
+\end{frame}
+
+\begin{frame}{Conexion con futuros cursos}
+    \begin{itemize}
+        \item \textbf{Deep Learning}: backpropagation se basa en gradientes.
+        \item \textbf{Optimizacion avanzada}: metodos de segundo orden (Newton, quasi-Newton).
+        \item \textbf{Vision por Computador}: flujo optico, descriptores SIFT.
+    \end{itemize}
+\end{frame}
+
+% --- Diapositiva final ---
+\begin{frame}
+    \centering
+    \Huge \textbf{Gracias!}
+
+\end{frame}
+
+\end{document}

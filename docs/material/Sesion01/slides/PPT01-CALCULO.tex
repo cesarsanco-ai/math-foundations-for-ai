@@ -1,0 +1,594 @@
+% --- CORRECCIÓN IMPORTANTE EN LA PRIMERA LÍNEA ---
+% Agregamos "xcolor=table" para que funcione \rowcolor sin errores
+\documentclass[aspectratio=169, 10pt, xcolor=table]{beamer}
+
+% --- Configuración del Tema (estilo profesional como el ejemplo) ---
+\usetheme{Madrid}
+\usecolortheme{dolphin}
+
+% --- Paquetes necesarios ---
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{amsmath, amssymb}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta, positioning, shapes.geometric}
+
+% --- Ruta de Imágenes (crea la carpeta "imagenes" y coloca ahí tus archivos) ---
+\graphicspath{{./imagenes/}}
+
+% --- Estilo para código Python (configurado para evitar problemas con UTF-8) ---
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+\lstset{
+    language=Python,
+    backgroundcolor=\color{backcolour},
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{blue},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\scriptsize,
+    breaklines=true,
+    frame=single,
+    showstringspaces=false,
+    literate={á}{{\'a}}1 {é}{{\'e}}1 {í}{{\'i}}1 {ó}{{\'o}}1 {ú}{{\'u}}1 {ñ}{{\~n}}1 {ü}{{\"u}}1
+}
+
+% --- Pie de página personalizado ---
+\makeatletter
+
+\setbeamertemplate{footline}{
+  \leavevmode%
+  \hbox{%
+  \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,center]{author in head/foot}%
+    \usebeamerfont{author in head/foot}\insertshortauthor
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,center]{title in head/foot}%
+    \usebeamerfont{title in head/foot}Sesi\'on 1
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,right]{date in head/foot}%
+    \usebeamerfont{date in head/foot}CÁLCULO Y ÁLGEBRA LINEAL \hfill \insertframenumber/\inserttotalframenumber \hspace*{0.3cm}
+  \end{beamercolorbox}}%
+  \vskip0pt%
+}
+
+\makeatother
+
+% --- Datos de la portada ---
+\title[SESI\'ON 1 CÁLCULO]{\textbf{Sesi\'on 1}}
+\subtitle{Introducción}
+\author[Prof. C. S\'anchez]{Carlos C\'esar S\'anchez Coronel}
+\institute{\textbf{CÁLCULO Y ÁLGEBRA LINEAL PARA IA}}
+\date{}
+
+% Logo opcional (descomentar si tienes la imagen)
+% \titlegraphic{\includegraphics[height=1.5cm]{logo.png}}
+
+% --- Eliminar la barra de navegación (opcional) ---
+\setbeamertemplate{navigation symbols}{}
+
+% --- Índice al inicio de cada sección ---
+\AtBeginSection[]{
+  \begin{frame}
+    \frametitle{Contenido}
+    \tableofcontents[currentsection]
+  \end{frame}
+}
+
+% ============================================================================
+% INICIO DEL DOCUMENTO
+% ============================================================================
+\begin{document}
+
+% --- Portada ---
+\begin{frame}
+    \titlepage
+\end{frame}
+
+% --- Índice general ---
+\begin{frame}{Contenido}
+    \tableofcontents
+\end{frame}
+
+% ============================================================================
+% SECCIÓN 1: ESTRUCTURAS DE DATOS EN IA
+% ============================================================================
+\section{Estructuras de Datos en IA}
+
+\begin{frame}{Representación de datos en IA}
+    \begin{itemize}
+        \item Los modelos de IA operan con números organizados en estructuras matemáticas.
+        \item \textbf{Escalar}: un solo número real (temperatura, bias).
+            \[
+            x = 5.2
+            \]
+        \item \textbf{Vector}: lista ordenada (punto en espacio de características).
+            \[
+            \mathbf{x} = [2.5, 1.8, 3.0] \quad (\text{altura, peso, edad})
+            \]
+        \item \textbf{Matriz}: tabla bidimensional (imagen en grises, pesos de una capa).
+            \[
+            \mathbf{X} = \begin{pmatrix}
+                1 & 2 \\
+                3 & 4
+            \end{pmatrix}
+            \]
+        \item \textbf{Tensor}: generalización a más dimensiones (lote de imágenes a color).
+            \[
+            \mathcal{T} \in \mathbb{R}^{32 \times 64 \times 64 \times 3}
+            \]
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Ejemplos en problemas de IA}
+    \begin{exampleblock}{Clasificación de imágenes}
+        \begin{itemize}
+            \item Entrada: tensor $\mathcal{T}$ de dimensiones (batch, alto, ancho, canales).
+            \item Pesos de una capa convolucional: tensor 4D.
+        \end{itemize}
+    \end{exampleblock}
+    \begin{exampleblock}{Procesamiento de texto (embeddings)}
+        \begin{itemize}
+            \item Cada palabra se representa como un vector (embedding).
+            \item Una frase es una matriz de (largo\_frase, dim\_embedding).
+        \end{itemize}
+    \end{exampleblock}
+\end{frame}
+
+% ============================================================================
+% SECCIÓN 2: FUNCIONES ELEMENTALES
+% ============================================================================
+\section{Funciones Elementales}
+
+\begin{frame}{Funciones como ``cajas negras'' en IA}
+    \begin{block}{Definición}
+        Una función $f: X \rightarrow Y$ asigna a cada entrada una salida.
+    \end{block}
+    \begin{itemize}
+        \item En IA, los modelos son funciones complejas aprendidas de datos.
+        \item Ejemplo: red neuronal que clasifica imágenes: $\mathbf{y} = f(\mathbf{x})$, donde $\mathbf{x}$ es un tensor de píxeles.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Tipos de funciones y su rol en IA}
+    \begin{columns}[t]
+        \column{0.5\textwidth}
+        \textbf{Lineales} ($f(x)=mx+b$)
+        \begin{itemize}
+            \item Regresión lineal, capas fully-connected.
+        \end{itemize}
+        \textbf{Polinomiales} ($f(x)=a_nx^n+\dots$)
+        \begin{itemize}
+            \item Aproximación de funciones, sobreajuste.
+        \end{itemize}
+        \textbf{Exponenciales} ($e^x$, $a^x$)
+        \begin{itemize}
+            \item Softmax, pérdida cross-entropy, modelos de crecimiento.
+        \end{itemize}
+        \column{0.5\textwidth}
+        \textbf{Logarítmicas} ($\ln x$)
+        \begin{itemize}
+            \item Entropía, verosimilitud, log-loss.
+        \end{itemize}
+        \textbf{Trigonométricas} ($\sin x$, $\cos x$)
+        \begin{itemize}
+            \item Positional encodings en Transformers, procesamiento de señales.
+        \end{itemize}
+    \end{columns}
+\end{frame}
+
+% ============================================================================
+% SECCIÓN 3: FUNCIONES DE ACTIVACIÓN
+% ============================================================================
+\section{Funciones de Activación}
+
+\begin{frame}{¿Por qué necesitamos activaciones no lineales?}
+    \begin{itemize}
+        \item Sin no linealidades, una red profunda sería equivalente a una regresión lineal.
+        \item Las activaciones permiten aprender relaciones complejas.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Principales funciones de activación}
+    \begin{columns}[t]
+        \column{0.33\textwidth}
+        \textbf{Sigmoide}
+        \[
+        \sigma(x) = \frac{1}{1+e^{-x}} \in (0,1)
+        \]
+        \textbf{Tanh}
+        \[
+        \tanh(x) \in (-1,1)
+        \]
+        \column{0.33\textwidth}
+        \textbf{ReLU}
+        \[
+        \max(0,x)
+        \]
+        \textbf{Leaky ReLU}
+        \[
+        \max(\alpha x,x), \ \alpha\approx0.01
+        \]
+        \column{0.33\textwidth}
+        \textbf{ELU}
+        \[
+        \begin{cases}x & x\ge0\\ \alpha(e^x-1) & x<0\end{cases}
+        \]
+        \textbf{GELU}
+        \[
+        x\Phi(x)
+        \]
+    \end{columns}
+\end{frame}
+
+\begin{frame}{Softmax y aplicaciones}
+    \begin{block}{Softmax}
+        Convierte un vector de logits en una distribución de probabilidad:
+        \[
+        \text{softmax}(\mathbf{z})_i = \frac{e^{z_i}}{\sum_{j=1}^{K} e^{z_j}}
+        \]
+    \end{block}
+    \begin{itemize}
+        \item \textbf{Uso}: capa final en clasificación multiclase (ej. reconocimiento de dígitos, clasificación de imágenes).
+        \item Las salidas son positivas y suman 1.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Ejemplo de cálculo con softmax}
+    \begin{exampleblock}
+        {Logits de una red: $\mathbf{z} = [2.0, 1.0, 0.1]$}
+        \begin{align*}
+            e^{2.0} &= 7.389, \quad e^{1.0}=2.718, \quad e^{0.1}=1.105 \\
+            \text{suma} &= 7.389+2.718+1.105 = 11.212 \\
+            \text{softmax} &= [0.659, 0.242, 0.099]
+        \end{align*}
+        La clase más probable es la primera con 65.9\%.
+    \end{exampleblock}
+\end{frame}
+
+\begin{frame}{Propiedades clave de las activaciones}
+    \begin{itemize}
+        \item \textbf{Sigmoide} y \textbf{Tanh} saturan para $|x|$ grandes → gradientes pequeños (desvanecimiento).
+        \item \textbf{ReLU} no satura en $x>0$, eficiente, pero puede morir si $x<0$ siempre.
+        \item \textbf{GELU} combina ReLU y dropout, usada en Transformers (BERT, GPT).
+    \end{itemize}
+\end{frame}
+
+% ============================================================================
+% SECCIÓN 4: FUNCIONES DE PÉRDIDA
+% ============================================================================
+\section{Funciones de Pérdida}
+
+\begin{frame}{¿Qué miden las funciones de pérdida?}
+    \begin{itemize}
+        \item Cuantifican la diferencia entre la predicción del modelo y el valor real.
+        \item Son la base del entrenamiento (gradiente descendente).
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Pérdidas para regresión}
+    \begin{block}{MSE (Error Cuadrático Medio)}
+        \[
+        \text{MSE} = \frac{1}{n}\sum_{i=1}^{n}(y_i - \hat{y}_i)^2
+        \]
+        \begin{itemize}
+            \item Penaliza más los errores grandes (sensible a outliers).
+            \item Diferenciable, fácil de optimizar.
+        \end{itemize}
+    \end{block}
+    \begin{block}{MAE (Error Absoluto Medio)}
+        \[
+        \text{MAE} = \frac{1}{n}\sum_{i=1}^{n}|y_i - \hat{y}_i|
+        \]
+        \begin{itemize}
+            \item Más robusto a outliers.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}{Pérdidas para clasificación}
+    \begin{block}{Cross-Entropy binaria}
+        \[
+        \text{BCE} = -\frac{1}{n}\sum_{i}\left[y_i\log\hat{y}_i + (1-y_i)\log(1-\hat{y}_i)\right]
+        \]
+    \end{block}
+    \begin{block}{Cross-Entropy multiclase}
+        \[
+        \text{CE} = -\sum_{i}\sum_{k=1}^{K} y_{i,k}\log\hat{y}_{i,k}
+        \]
+    \end{block}
+    \begin{itemize}
+        \item Castiga fuertemente predicciones erróneas con alta confianza.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Pérdidas especializadas}
+    \begin{itemize}
+        \item \textbf{Hinge Loss} (SVM): $\max(0, 1 - y_i\hat{y}_i)$ con $y_i \in \{-1,1\}$.
+        \item \textbf{Focal Loss}: para clases desbalanceadas (ej. detección de objetos).
+        \[
+        \text{FL} = -(1-\hat{y}_i)^\gamma \log(\hat{y}_i)
+        \]
+        \item \textbf{Triplet Loss}: para aprendizaje de representaciones (face recognition).
+        \[
+        \mathcal{L} = \max(0, d(a,p) - d(a,n) + \alpha)
+        \]
+    \end{itemize}
+\end{frame}
+
+% ============================================================================
+% SECCIÓN 5: SIMILITUD Y DISTANCIA
+% ============================================================================
+\section{Similitud y Distancia}
+
+\begin{frame}{Comparando vectores en IA}
+    \begin{itemize}
+        \item Miden qué tan cercanos son dos puntos en el espacio de características.
+        \item Aplicaciones: búsqueda semántica, clustering, sistemas de recomendación.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Métricas comunes}
+    \begin{columns}[t]
+        \column{0.5\textwidth}
+        \textbf{Producto punto}
+        \[
+        \langle \mathbf{u},\mathbf{v}\rangle = \sum_i u_i v_i
+        \]
+        \textbf{Similitud de coseno}
+        \[
+        \cos\theta = \frac{\mathbf{u}\cdot\mathbf{v}}{\|\mathbf{u}\|\|\mathbf{v}\|}
+        \]
+        \column{0.5\textwidth}
+        \textbf{Distancia Euclidiana (L2)}
+        \[
+        d_2 = \sqrt{\sum_i (u_i-v_i)^2}
+        \]
+        \textbf{Distancia Manhattan (L1)}
+        \[
+        d_1 = \sum_i |u_i-v_i|
+        \]
+    \end{columns}
+\end{frame}
+
+\begin{frame}{Ejemplo de cálculo}
+    \begin{exampleblock}
+        {Dados $\mathbf{u}=(1,2,3)$, $\mathbf{v}=(4,5,6)$}
+        \begin{align*}
+            \mathbf{u}\cdot\mathbf{v} &= 1\cdot4+2\cdot5+3\cdot6 = 32 \\
+            \|\mathbf{u}\|_2 &= \sqrt{1+4+9}=\sqrt{14}\approx3.742 \\
+            \|\mathbf{v}\|_2 &= \sqrt{16+25+36}=\sqrt{77}\approx8.775 \\
+            \cos\theta &= \frac{32}{3.742\cdot8.775}\approx0.975 \\
+            d_2 &= \sqrt{9+9+9}=\sqrt{27}\approx5.196 \\
+            d_1 &= 3+3+3 = 9
+        \end{align*}
+    \end{exampleblock}
+\end{frame}
+
+\begin{frame}{Kernel RBF}
+    \begin{block}{Radial Basis Function}
+        \[
+        K(\mathbf{u},\mathbf{v}) = \exp\left(-\gamma \|\mathbf{u}-\mathbf{v}\|^2\right)
+        \]
+    \end{block}
+    \begin{itemize}
+        \item Proyecta a un espacio de mayor dimensión implícitamente.
+        \item Usado en SVM y procesos Gaussianos.
+        \item Mide similitud basada en distancia; $\gamma$ controla la suavidad.
+    \end{itemize}
+\end{frame}
+
+% ============================================================================
+% SECCIÓN 6: LÓGICA PROPOSICIONAL
+% ============================================================================
+\section{Lógica Proposicional en IA}
+
+\begin{frame}{Lógica y árboles de decisión}
+    \begin{itemize}
+        \item La lógica proposicional maneja valores verdadero/falso y conectores (AND, OR, NOT).
+        \item En IA, aparece en:
+        \begin{itemize}
+            \item \textbf{Árboles de decisión}: cada nodo es una condición lógica sobre una característica.
+            \item \textbf{Sistemas basados en reglas}.
+            \item \textbf{Programación lógica} (Prolog).
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Ejemplo: Árbol de decisión para aprobar préstamo}
+    \begin{center}
+        \begin{tikzpicture}[
+            every node/.style={draw, rectangle, rounded corners, align=center, font=\small},
+            level distance=1.2cm,
+            sibling distance=2.5cm
+        ]
+        \node {¿Edad > 25?}
+            child { node {¿Ingresos > 50k?}
+                child { node {Aprobar} }
+                child { node {Rechazar} }
+            }
+            child { node {¿Antigüedad laboral > 2 años?}
+                child { node {Aprobar} }
+                child { node {Rechazar} }
+            };
+        \end{tikzpicture}
+    \end{center}
+    Las hojas contienen la decisión final.
+\end{frame}
+
+% ============================================================================
+% SECCIÓN 7: SUMATORIAS Y PRODUCTORIAS
+% ============================================================================
+\section{Sumatorias y Productorias}
+
+\begin{frame}{Notación compacta para operaciones repetitivas}
+    \begin{block}{Sumatoria}
+        \[
+        \sum_{i=1}^{n} x_i = x_1 + x_2 + \cdots + x_n
+        \]
+        Ejemplo en una neurona:
+        \[
+        z = \sum_{i=1}^{n} w_i x_i + b
+        \]
+    \end{block}
+    \begin{block}{Productoria}
+        \[
+        \prod_{i=1}^{n} x_i = x_1 \cdot x_2 \cdots x_n
+        \]
+        Ejemplo: probabilidad conjunta de eventos independientes:
+        \[
+        P(X_1,\dots,X_n) = \prod_{i=1}^{n} P(X_i)
+        \]
+    \end{block}
+\end{frame}
+
+\begin{frame}{Aplicaciones en IA}
+    \begin{itemize}
+        \item Sumatorias: productos escalares, sumas de errores (MSE), sumas de log-verosimilitud.
+        \item Productorias: multiplicación de probabilidades, modelos gráficos (HMM).
+    \end{itemize}
+\end{frame}
+
+% ============================================================================
+% SECCIÓN 8: HERRAMIENTAS DE PYTHON
+% ============================================================================
+\section{Python: Ecosistema para IA}
+
+\begin{frame}{Librerías esenciales}
+    \begin{columns}[t]
+        \column{0.5\textwidth}
+        \textbf{Fundamentales}
+        \begin{itemize}
+            \item NumPy: tensores, álgebra lineal.
+            \item SciPy: optimización, señales.
+            \item Matplotlib/Seaborn: gráficos.
+            \item SymPy: cálculo simbólico.
+        \end{itemize}
+        \textbf{Machine Learning clásico}
+        \begin{itemize}
+            \item Scikit-learn
+            \item XGBoost, LightGBM, CatBoost
+        \end{itemize}
+        \column{0.5\textwidth}
+        \textbf{Deep Learning}
+        \begin{itemize}
+            \item TensorFlow/Keras
+            \item PyTorch
+            \item JAX
+        \end{itemize}
+        \textbf{Especializadas}
+        \begin{itemize}
+            \item NLP: HuggingFace, NLTK, spaCy
+            \item Visión: OpenCV, torchvision
+            \item Audio: librosa
+            \item Grafos: NetworkX, PyG
+        \end{itemize}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{Entornos y herramientas}
+    \begin{itemize}
+        \item \textbf{Jupyter Notebook / JupyterLab}: experimentación interactiva.
+        \item \textbf{Google Colab}: GPU/TPU gratuitas.
+        \item \textbf{VS Code}, \textbf{PyCharm}: editores.
+        \item \textbf{Docker}: reproducibilidad.
+        \item \textbf{Git}: control de versiones.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Ejemplo práctico: visualización de activaciones}
+    \begin{lstlisting}
+import numpy as np
+import matplotlib.pyplot as plt
+
+x = np.linspace(-5,5,100)
+plt.plot(x, 1/(1+np.exp(-x)), label='Sigmoide')
+plt.plot(x, np.tanh(x), label='Tanh')
+plt.plot(x, np.maximum(0,x), label='ReLU')
+plt.legend()
+plt.title('Funciones de activación')
+plt.grid(True)
+plt.show()
+    \end{lstlisting}
+\end{frame}
+
+% ============================================================================
+% SECCIÓN 9: DIAGRAMA DE UNA NEURONA ARTIFICIAL
+% ============================================================================
+\section{Neurona Artificial}
+
+\begin{frame}{Modelo de una neurona}
+    \begin{center}
+        \begin{tikzpicture}[
+            neuron/.style={circle, draw, minimum size=0.8cm},
+            weight/.style={font=\small},
+            sum/.style={circle, draw, minimum size=0.6cm},
+            act/.style={rectangle, draw, rounded corners, minimum size=0.8cm},
+            >=Stealth
+        ]
+        \node[neuron] (x1) at (0,0) {$x_1$};
+        \node[neuron] (x2) at (0,-1.2) {$x_2$};
+        \node[neuron] (x3) at (0,-2.4) {$x_3$};
+        \node[weight] at (1.2, -0.2) {$w_1$};
+        \node[weight] at (1.2, -1.4) {$w_2$};
+        \node[weight] at (1.2, -2.6) {$w_3$};
+        \node[sum] (sum) at (2.5, -1.2) {$\sum$};
+        \node[weight] (bias) at (2.5, 0.2) {$+b$};
+        \node[act] (act) at (4.5, -1.2) {$f$};
+        \node[neuron] (y) at (6.5, -1.2) {$y$};
+        \draw[->] (x1) -- (sum);
+        \draw[->] (x2) -- (sum);
+        \draw[->] (x3) -- (sum);
+        \draw[->] (bias) -- (sum);
+        \draw[->] (sum) -- (act);
+        \draw[->] (act) -- (y);
+        \end{tikzpicture}
+    \end{center}
+    \[
+    y = f\left( \sum_{i=1}^{n} w_i x_i + b \right)
+    \]
+\end{frame}
+
+% ============================================================================
+% SECCIÓN 10: RESUMEN
+% ============================================================================
+\section{Resumen}
+
+\begin{frame}{Lo que hemos visto}
+    \begin{itemize}
+        \item \textbf{Estructuras de datos}: escalares, vectores, matrices, tensores.
+        \item \textbf{Funciones elementales} y su rol en IA.
+        \item \textbf{Funciones de activación}: sigmoide, tanh, ReLU, softmax, GELU.
+        \item \textbf{Funciones de pérdida}: MSE, MAE, cross-entropy, focal loss, triplet loss.
+        \item \textbf{Métricas de similitud}: producto punto, coseno, L1, L2, kernel RBF.
+        \item \textbf{Lógica proposicional} y árboles de decisión.
+        \item \textbf{Sumatorias y productorias}: notación y aplicaciones.
+        \item \textbf{Python}: librerías y herramientas para IA.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Conexión con el resto del curso}
+    \begin{itemize}
+        \item Estos conceptos son la base para entender modelos:
+        \begin{itemize}
+            \item Regresión lineal y logística.
+            \item Redes neuronales y backpropagation.
+            \item Transformers y mecanismos de atención.
+            \item Sistemas de recomendación y clustering.
+        \end{itemize}
+        \item En las próximas sesiones profundizaremos en cálculo diferencial y álgebra lineal aplicados.
+    \end{itemize}
+\end{frame}
+
+% --- Diapositiva final ---
+\begin{frame}
+    \centering
+    \Huge \textbf{¡Gracias!}
+
+\end{frame}
+
+\end{document}

@@ -1,0 +1,391 @@
+% --- CORRECCION: Forzar interpretacion raw de la entrada ---
+\UseRawInputEncoding
+\documentclass[aspectratio=169, 10pt, xcolor=table]{beamer}
+
+% --- Configuracion del Tema ---
+\usetheme{Madrid}
+\usecolortheme{dolphin}
+
+% --- Paquetes necesarios ---
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{amsmath, amssymb}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta, positioning, shapes.geometric}
+\usepackage{etoolbox}
+
+% --- Ruta de Imagenes ---
+\graphicspath{{./imagenes/}}
+
+% --- Estilo para codigo Python ---
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+\lstset{
+    language=Python,
+    backgroundcolor=\color{backcolour},
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{blue},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\scriptsize,
+    breaklines=true,
+    frame=single,
+    showstringspaces=false,
+    literate={á}{{\'a}}1 {é}{{\'e}}1 {í}{{\'i}}1 {ó}{{\'o}}1 {ú}{{\'u}}1 {ñ}{{\~n}}1 {ü}{{\"u}}1
+}
+
+% --- Pie de pagina personalizado ---
+\makeatletter
+\setbeamertemplate{footline}{
+  \leavevmode%
+  \hbox{%
+  \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,center]{author in head/foot}%
+    \usebeamerfont{author in head/foot}\insertshortauthor
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,center]{title in head/foot}%
+    \usebeamerfont{title in head/foot}Sesion 12
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,right]{date in head/foot}%
+    \usebeamerfont{date in head/foot}CALCULO Y ALGEBRA LINEAL \hfill \insertframenumber/\inserttotalframenumber \hspace*{0.3cm}
+  \end{beamercolorbox}}%
+  \vskip0pt%
+}
+\makeatother
+
+% --- Datos de la portada ---
+\title[SESION 12 CALCULO]{\textbf{Sesion 12}}
+\subtitle{Autovalores y Autovectores: Las Direcciones Clave}
+\author[Prof. C. Sanchez]{Carlos Cesar Sanchez Coronel}
+\institute{\textbf{CALCULO Y ALGEBRA LINEAL PARA IA}}
+\date{}
+
+% --- Eliminar barra de navegacion ---
+\setbeamertemplate{navigation symbols}{}
+
+% --- Indice al inicio de cada seccion ---
+\AtBeginSection[]{
+  \begin{frame}
+    \frametitle{Contenido}
+    \tableofcontents[currentsection]
+  \end{frame}
+}
+
+\begin{document}
+
+% --- Portada ---
+\begin{frame}
+    \titlepage
+\end{frame}
+
+% --- Indice general ---
+\begin{frame}{Contenido}
+    \tableofcontents
+\end{frame}
+
+% ============================================================================
+% SECCION 1: DEFINICION Y SIGNIFICADO GEOMETRICO
+% ============================================================================
+\section{Definicion y Significado Geometrico}
+
+\begin{frame}{Definicion de autovalor y autovector}
+    \begin{block}{Definicion}
+        Sea $A\in\mathbb{R}^{n\times n}$ una matriz cuadrada. Un escalar $\lambda$ y un vector no nulo $\mathbf{v}$ tales que
+        \[
+        A\mathbf{v} = \lambda \mathbf{v}
+        \]
+        se denominan \textbf{autovalor} (o valor propio) y \textbf{autovector} (o vector propio) de $A$, respectivamente.
+    \end{block}
+    \begin{itemize}
+        \item $\mathbf{v}$ no cambia de direccion bajo la transformacion lineal.
+        \item $\lambda$ es el factor de escala (puede ser positivo, negativo, cero o complejo).
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Interpretacion geometrica}
+    \centering
+    \begin{tikzpicture}[scale=0.8]
+        \draw[->] (-1,0) -- (3,0) node[right] {$x$};
+        \draw[->] (0,-1) -- (0,3) node[above] {$y$};
+        \draw[thick, blue, ->] (0,0) -- (1,1) node[above] {$\mathbf{v}$};
+        \draw[thick, red, ->] (0,0) -- (2,2) node[above] {$A\mathbf{v}=2\mathbf{v}$};
+        \draw[dashed] (1,1) -- (2,2);
+    \end{tikzpicture}
+    \begin{itemize}
+        \item Si $\lambda>1$: el vector se alarga.
+        \item Si $0<\lambda<1$: el vector se acorta.
+        \item Si $\lambda<0$: el vector se invierte y se escala por $|\lambda|$.
+        \item Si $\lambda=0$: el vector va al origen (nucleo).
+    \end{itemize}
+\end{frame}
+
+% ============================================================================
+% SECCION 2: CALCULO DE AUTOVALORES Y AUTOVECTORES
+% ============================================================================
+\section{Calculo de Autovalores y Autovectores}
+
+\begin{frame}{Ecuacion caracteristica}
+    \begin{block}{Ecuacion caracteristica}
+        De $A\mathbf{v}=\lambda\mathbf{v}$ tenemos $(A-\lambda I)\mathbf{v}=0$. Para que exista $\mathbf{v}\neq0$, la matriz $A-\lambda I$ debe ser singular:
+        \[
+        \det(A-\lambda I)=0
+        \]
+        Este es un polinomio de grado $n$ en $\lambda$, llamado polinomio caracteristico.
+    \end{block}
+\end{frame}
+
+\begin{frame}{Ejemplo manual para $2\times2$}
+    \begin{exampleblock}{Ejemplo}
+        Sea $A = \begin{pmatrix}4&1\\2&3\end{pmatrix}$.
+        \[
+        \det(A-\lambda I) = \det\begin{pmatrix}4-\lambda&1\\2&3-\lambda\end{pmatrix} = (4-\lambda)(3-\lambda)-2 = \lambda^2 -7\lambda +10 = (\lambda-5)(\lambda-2)
+        \]
+        Autovalores: $\lambda_1=5$, $\lambda_2=2$.
+        \vspace{0.2cm}
+        Para $\lambda_1=5$: $(A-5I)\mathbf{v}=0 \Rightarrow \begin{pmatrix}-1&1\\2&-2\end{pmatrix}\begin{pmatrix}x\\y\end{pmatrix}=0 \Rightarrow y=x$, autovector $\mathbf{v}_1=(1,1)^\top$.
+        Para $\lambda_2=2$: $(A-2I)\mathbf{v}=0 \Rightarrow \begin{pmatrix}2&1\\2&1\end{pmatrix}\begin{pmatrix}x\\y\end{pmatrix}=0 \Rightarrow y=-2x$, autovector $\mathbf{v}_2=(1,-2)^\top$.
+    \end{exampleblock}
+\end{frame}
+
+% ============================================================================
+% SECCION 3: PROPIEDADES IMPORTANTES
+% ============================================================================
+\section{Propiedades Importantes}
+
+\begin{frame}{Propiedades de autovalores}
+    \begin{itemize}
+        \item \textbf{Traza}: $\operatorname{tr}(A) = \sum_{i=1}^n A_{ii} = \sum_{i=1}^n \lambda_i$.
+        \item \textbf{Determinante}: $\det(A) = \prod_{i=1}^n \lambda_i$.
+        \item Si $A$ es \textbf{simetrica} ($A^\top = A$), todos los autovalores son reales y los autovectores pueden elegirse ortonormales.
+        \item Si $A$ es \textbf{definida positiva}, todos sus autovalores son positivos.
+    \end{itemize}
+\end{frame}
+
+% ============================================================================
+% SECCION 4: DIAGONALIZACION
+% ============================================================================
+\section{Diagonalizacion}
+
+\begin{frame}{Diagonalizacion de una matriz}
+    \begin{block}{Diagonalizacion}
+        Si $A$ tiene $n$ autovectores linealmente independientes, podemos formar la matriz $P$ con esos autovectores como columnas, y entonces
+        \[
+        A = P\Lambda P^{-1},\quad \Lambda = \operatorname{diag}(\lambda_1,\dots,\lambda_n)
+        \]
+        Esto simplifica el calculo de potencias: $A^k = P\Lambda^k P^{-1}$.
+    \end{block}
+    \begin{itemize}
+        \item Si $A$ es simetrica, $P$ puede ser ortogonal ($P^{-1}=P^\top$).
+    \end{itemize}
+\end{frame}
+
+% ============================================================================
+% SECCION 5: APLICACIONES EN IA
+% ============================================================================
+\section{Aplicaciones en Inteligencia Artificial}
+
+\begin{frame}{PCA (Analisis de Componentes Principales)}
+    \begin{itemize}
+        \item Dados datos centrados $X\in\mathbb{R}^{n\times d}$, la matriz de covarianza es $\Sigma = \frac{1}{n-1}X^\top X$.
+        \item Los autovalores de $\Sigma$ son las varianzas en las direcciones de los autovectores.
+        \item Seleccionamos los $k$ autovectores con mayores autovalores (componentes principales) y proyectamos: $X_{\text{proj}} = X V_k$.
+        \item Reduccion de dimensionalidad conservando la maxima varianza.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{PageRank de Google}
+    \begin{itemize}
+        \item Modela la importancia de paginas web mediante un grafo dirigido.
+        \item La matriz de transicion $G$ es estocastica (columnas suman 1).
+        \item El vector de ranking $\mathbf{r}$ satisface $G\mathbf{r} = \mathbf{r}$, es decir, es autovector con autovalor $\lambda=1$.
+        \item Se calcula iterativamente con el metodo de la potencia.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Analisis de redes neuronales}
+    \begin{itemize}
+        \item En RNN, los autovalores de la matriz de pesos recurrente determinan la estabilidad del gradiente.
+        \item $|\lambda|>1$ $\Rightarrow$ gradiente explosivo; $|\lambda|<1$ $\Rightarrow$ gradiente desvaneciente.
+        \item El espectro del Hessiano de la perdida informa sobre la curvatura y la convergencia.
+    \end{itemize}
+\end{frame}
+
+% ============================================================================
+% SECCION 6: PYTHON CON NUMPY
+% ============================================================================
+\section{Python: Calculo y Aplicaciones}
+
+\begin{frame}[fragile]{Calculo de autovalores y autovectores}
+    \begin{lstlisting}
+import numpy as np
+
+A = np.array([[4,1],[2,3]])
+eigvals, eigvecs = np.linalg.eig(A)
+print("Autovalores:", eigvals)
+print("Autovectores:\n", eigvecs)
+
+# Verificacion
+for i in range(len(eigvals)):
+    v = eigvecs[:,i]
+    lambda_i = eigvals[i]
+    print(f"A @ v_{i} =", A @ v)
+    print(f"lambda_{i} * v_{i} =", lambda_i * v)
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{PCA desde cero en el dataset Iris}
+    \begin{lstlisting}
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.datasets import load_iris
+from sklearn.preprocessing import StandardScaler
+
+iris = load_iris()
+X = iris.data
+scaler = StandardScaler(with_std=False)
+X_centered = scaler.fit_transform(X)
+
+cov = np.cov(X_centered.T)
+eigvals, eigvecs = np.linalg.eig(cov)
+idx = np.argsort(eigvals)[::-1]
+eigvals = eigvals[idx]
+eigvecs = eigvecs[:,idx]
+print("Autovalores:", eigvals)
+print("Proporcion varianza:", eigvals/np.sum(eigvals))
+
+k=2; W = eigvecs[:,:k]; X_pca = X_centered @ W
+plt.scatter(X_pca[:,0], X_pca[:,1], c=iris.target)
+plt.xlabel('PC1'); plt.ylabel('PC2'); plt.show()
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{PCA con SVD (mas estable)}
+    \begin{lstlisting}
+U, S, Vt = np.linalg.svd(X_centered, full_matrices=False)
+# Vt contiene los autovectores (filas)
+X_pca_svd = X_centered @ Vt.T[:,:2]
+# Autovalores desde valores singulares
+eigvals_svd = S**2 / (len(X)-1)
+print("Autovalores desde SVD:", eigvals_svd)
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{PageRank simplificado (metodo de la potencia)}
+    \begin{lstlisting}
+def power_iteration(A, num_iter=100):
+    v = np.random.rand(A.shape[1])
+    v = v / np.linalg.norm(v)
+    for _ in range(num_iter):
+        v = A @ v
+        v = v / np.linalg.norm(v)
+    eigenvalue = v.T @ A @ v
+    return eigenvalue, v
+
+# Matriz de transicion (estocastica)
+A = np.array([[0.1,0.2,0.7],[0.3,0.5,0.2],[0.6,0.3,0.1]])
+A = A / A.sum(axis=0, keepdims=True)
+eigval, eigvec = power_iteration(A)
+ranking = eigvec / eigvec.sum()
+print("Ranking:", ranking)
+    \end{lstlisting}
+\end{frame}
+
+% ============================================================================
+% SECCION 7: NOTACION EN PAPERS
+% ============================================================================
+\section{Notacion en Papers Cientificos}
+
+\begin{frame}{Notacion comun}
+    \begin{itemize}
+        \item $A = Q\Lambda Q^\top$: descomposicion espectral (matriz simetrica).
+        \item $X^\top X \mathbf{v}_j = \lambda_j \mathbf{v}_j$: autovectores de la matriz de covarianza.
+        \item $\Sigma = \sum_{i=1}^d \lambda_i \mathbf{u}_i\mathbf{u}_i^\top$: teorema espectral.
+        \item $G\mathbf{r} = \mathbf{r}$: PageRank.
+        \item $\nabla^2\mathcal{L}(\mathbf{w})$: Hessiano, cuyos autovalores indican curvatura.
+    \end{itemize}
+\end{frame}
+
+% ============================================================================
+% SECCION 8: EJERCICIOS PROPUESTOS
+% ============================================================================
+\section{Ejercicios Propuestos}
+
+\begin{frame}{Ejercicios}
+    \begin{enumerate}
+        \item Calcula autovalores y autovectores de $A = \begin{pmatrix}2&0\\0&-3\end{pmatrix}$ e interpreta geometricamente.
+        \item Demuestra que si $A$ es simetrica, sus autovalores son reales.
+        \item Aplica PCA al dataset de digitos (load\_digits) y visualiza las dos primeras componentes.
+        \item Investiga el metodo de la potencia y por que converge al autovector dominante.
+        \item Lee el paper original de PageRank e identifica la notacion.
+    \end{enumerate}
+\end{frame}
+
+% ============================================================================
+% SECCION 9: CASO PRACTICO INTEGRADOR (PCA en 2D)
+% ============================================================================
+\section{Caso Practico: Analisis de Componentes Principales}
+
+\begin{frame}{Problema}
+    Dada la matriz de covarianza $\Sigma = \begin{pmatrix}5&2\\2&3\end{pmatrix}$, calcular:
+    \begin{enumerate}
+        \item Autovalores y autovectores.
+        \item La primera componente principal.
+        \item Porcentaje de varianza explicada.
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}{Solucion}
+    \begin{block}{a) Ecuacion caracteristica}
+        $\det\begin{pmatrix}5-\lambda&2\\2&3-\lambda\end{pmatrix} = (5-\lambda)(3-\lambda)-4 = \lambda^2-8\lambda+11=0$
+        \[
+        \lambda = \frac{8\pm\sqrt{64-44}}{2} = 4\pm\sqrt{5} \approx 6.236,\; 1.764
+        \]
+    \end{block}
+    \begin{block}{b) Autovectores}
+        Para $\lambda_1=4+\sqrt{5}$: $(5-\lambda_1)x+2y=0 \Rightarrow (1-\sqrt{5})x+2y=0 \Rightarrow y=\frac{\sqrt{5}-1}{2}x$.
+        Un autovector: $\mathbf{v}_1 = \begin{pmatrix}2\\ \sqrt{5}-1\end{pmatrix}$ (o cualquier multiplo).
+    \end{block}
+    \begin{block}{c) Varianza explicada}
+        $\lambda_1+\lambda_2=8$. La primera componente explica $\frac{6.236}{8}\approx 77.95\%$.
+    \end{block}
+\end{frame}
+
+% ============================================================================
+% SECCION 10: RESUMEN
+% ============================================================================
+\section{Resumen}
+
+\begin{frame}{Lo que hemos aprendido}
+    \begin{exampleblock}{Conceptos clave}
+        \begin{itemize}
+            \item \textbf{Autovalores y autovectores}: direcciones que no cambian bajo transformacion lineal.
+            \item \textbf{Calculo}: resolviendo $\det(A-\lambda I)=0$ y luego $(A-\lambda I)\mathbf{v}=0$.
+            \item \textbf{Propiedades}: traza, determinante, matrices simetricas.
+            \item \textbf{Diagonalizacion}: $A = P\Lambda P^{-1}$.
+            \item \textbf{Aplicaciones}: PCA, PageRank, analisis de RNN.
+            \item \textbf{Python}: `np.linalg.eig`, `svd`, PCA, metodo de la potencia.
+        \end{itemize}
+    \end{exampleblock}
+\end{frame}
+
+\begin{frame}{Conexion con futuros cursos}
+    \begin{itemize}
+        \item \textbf{Machine Learning}: PCA, SVD, analisis de componentes.
+        \item \textbf{Deep Learning}: espectro del Hessiano, inicializacion de pesos.
+        \item \textbf{Optimizacion}: condiciones de segundo orden.
+        \item \textbf{Teoria de grafos}: PageRank, centralidad espectral.
+    \end{itemize}
+\end{frame}
+
+% --- Diapositiva final ---
+\begin{frame}
+    \centering
+    \Huge \textbf{Gracias!}
+
+\end{frame}
+
+\end{document}

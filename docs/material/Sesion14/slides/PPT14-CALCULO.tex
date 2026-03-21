@@ -1,0 +1,372 @@
+% --- CORRECCION: Forzar interpretacion raw de la entrada ---
+\UseRawInputEncoding
+\documentclass[aspectratio=169, 10pt, xcolor=table]{beamer}
+
+% --- Configuracion del Tema ---
+\usetheme{Madrid}
+\usecolortheme{dolphin}
+
+% --- Paquetes necesarios ---
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{amsmath, amssymb}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta, positioning, shapes.geometric}
+\usepackage{etoolbox}
+
+% --- Ruta de Imagenes ---
+\graphicspath{{./imagenes/}}
+
+% --- Estilo para codigo Python ---
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+\lstset{
+    language=Python,
+    backgroundcolor=\color{backcolour},
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{blue},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\scriptsize,
+    breaklines=true,
+    frame=single,
+    showstringspaces=false,
+    literate={á}{{\'a}}1 {é}{{\'e}}1 {í}{{\'i}}1 {ó}{{\'o}}1 {ú}{{\'u}}1 {ñ}{{\~n}}1 {ü}{{\"u}}1
+}
+
+% --- Pie de pagina personalizado ---
+\makeatletter
+\setbeamertemplate{footline}{
+  \leavevmode%
+  \hbox{%
+  \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,center]{author in head/foot}%
+    \usebeamerfont{author in head/foot}\insertshortauthor
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,center]{title in head/foot}%
+    \usebeamerfont{title in head/foot}Sesion 14
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,right]{date in head/foot}%
+    \usebeamerfont{date in head/foot}CALCULO Y ALGEBRA LINEAL \hfill \insertframenumber/\inserttotalframenumber \hspace*{0.3cm}
+  \end{beamercolorbox}}%
+  \vskip0pt%
+}
+\makeatother
+
+% --- Datos de la portada ---
+\title[SESION 14 CALCULO]{\textbf{Sesion 14}}
+\subtitle{Integrales y Aplicaciones en Evaluación de Modelos}
+\author[Prof. C. Sanchez]{Carlos Cesar Sanchez Coronel}
+\institute{\textbf{CALCULO Y ALGEBRA LINEAL PARA IA}}
+\date{}
+
+% --- Eliminar barra de navegacion ---
+\setbeamertemplate{navigation symbols}{}
+
+% --- Indice al inicio de cada seccion ---
+\AtBeginSection[]{
+  \begin{frame}
+    \frametitle{Contenido}
+    \tableofcontents[currentsection]
+  \end{frame}
+}
+
+\begin{document}
+
+% --- Portada ---
+\begin{frame}
+    \titlepage
+\end{frame}
+
+% --- Indice general ---
+\begin{frame}{Contenido}
+    \tableofcontents
+\end{frame}
+
+% ============================================================================
+% SECCION 1: IDEA INTUITIVA DE INTEGRAL
+% ============================================================================
+\section{Idea Intuitiva de Integral}
+
+\begin{frame}{Problema del area bajo una curva}
+    \begin{itemize}
+        \item Queremos calcular el area encerrada entre la curva $y=f(x)$ y el eje $x$ en $[a,b]$.
+        \item Aproximamos por rectangulos (suma de Riemann) y tomamos el limite cuando el ancho $\to 0$.
+    \end{itemize}
+    \centering
+    \begin{tikzpicture}[scale=0.8]
+        \draw[->] (-0.5,0) -- (5,0) node[right] {$x$};
+        \draw[->] (0,-0.5) -- (0,3) node[above] {$f(x)$};
+        \draw[domain=0.5:4.5, smooth, thick, blue] plot (\x, {0.5+0.5*sin(\x r)+0.05*\x^2}) node[above] {$f(x)$};
+        \foreach \x in {1,2,3,4} {
+            \draw[fill=red!30] (\x-0.5,0) rectangle (\x, {0.5+0.5*sin(\x r)+0.05*(\x-0.5)^2});
+        }
+        \draw (0,0) node[below left] {$a$};
+        \draw (4.5,0) node[below] {$b$};
+    \end{tikzpicture}
+\end{frame}
+
+% ============================================================================
+% SECCION 2: INTEGRAL INDEFINIDA
+% ============================================================================
+\section{Integral Indefinida (Antiderivada)}
+
+\begin{frame}{Definicion}
+    \begin{block}{Antiderivada}
+        Una funcion $F$ es una antiderivada de $f$ si $F'(x)=f(x)$. La integral indefinida se escribe
+        \[
+        \int f(x)\,dx = F(x) + C,
+        \]
+        donde $C$ es la constante de integracion.
+    \end{block}
+\end{frame}
+
+\begin{frame}{Tabla de integrales basicas}
+    \begin{table}
+        \centering
+        \begin{tabular}{l|l}
+            \toprule
+            $f(x)$ & $\int f(x)\,dx$ \\
+            \midrule
+            $k$ (constante) & $kx + C$ \\
+            $x^n$ ($n\neq -1$) & $\frac{x^{n+1}}{n+1}+C$ \\
+            $\frac{1}{x}$ & $\ln|x|+C$ \\
+            $e^x$ & $e^x+C$ \\
+            $\sin x$ & $-\cos x+C$ \\
+            $\cos x$ & $\sin x+C$ \\
+            $\sec^2 x$ & $\tan x+C$ \\
+            $\frac{1}{1+x^2}$ & $\arctan x+C$ \\
+            \bottomrule
+        \end{tabular}
+    \end{table}
+\end{frame}
+
+\begin{frame}{Propiedades de linealidad}
+    \[
+    \begin{aligned}
+        \int [f(x)\pm g(x)]\,dx &= \int f(x)\,dx \pm \int g(x)\,dx \\
+        \int k f(x)\,dx &= k\int f(x)\,dx
+    \end{aligned}
+    \]
+\end{frame}
+
+% ============================================================================
+% SECCION 3: INTEGRAL DEFINIDA Y TEOREMA FUNDAMENTAL DEL CALCULO
+% ============================================================================
+\section{Integral Definida y Teorema Fundamental del Calculo}
+
+\begin{frame}{Definicion de integral definida}
+    \[
+    \int_a^b f(x)\,dx = \lim_{\max\Delta x_i\to 0} \sum_{i=1}^n f(x_i^*)\Delta x_i
+    \]
+    Representa el area neta bajo la curva $y=f(x)$ entre $a$ y $b$.
+\end{frame}
+
+\begin{frame}{Teorema Fundamental del Calculo (TFC)}
+    \begin{block}{Parte 1}
+        Si $f$ es continua en $[a,b]$ y $F(x)=\int_a^x f(t)\,dt$, entonces $F'(x)=f(x)$.
+    \end{block}
+    \begin{block}{Parte 2}
+        Si $F$ es una antiderivada de $f$ en $[a,b]$, entonces
+        \[
+        \int_a^b f(x)\,dx = F(b)-F(a).
+        \]
+    \end{block}
+\end{frame}
+
+\begin{frame}{Ejemplo paso a paso}
+    \begin{exampleblock}{Calcular $\int_0^1 x^2\,dx$}
+        Una antiderivada: $F(x)=\frac{x^3}{3}$.
+        \[
+        \int_0^1 x^2\,dx = F(1)-F(0)=\frac{1}{3}-0=\frac{1}{3}.
+        \]
+    \end{exampleblock}
+\end{frame}
+
+\begin{frame}{Propiedades de la integral definida}
+    \begin{itemize}
+        \item $\int_a^b f(x)\,dx = -\int_b^a f(x)\,dx$.
+        \item $\int_a^b c f(x)\,dx = c\int_a^b f(x)\,dx$.
+        \item $\int_a^b [f(x)\pm g(x)]\,dx = \int_a^b f(x)\,dx \pm \int_a^b g(x)\,dx$.
+        \item $\int_a^b f(x)\,dx = \int_a^c f(x)\,dx + \int_c^b f(x)\,dx$.
+        \item Si $f(x)\ge 0$ en $[a,b]$, entonces $\int_a^b f(x)\,dx \ge 0$.
+    \end{itemize}
+\end{frame}
+
+% ============================================================================
+% SECCION 4: APLICACIONES EN INTELIGENCIA ARTIFICIAL
+% ============================================================================
+\section{Aplicaciones en Inteligencia Artificial}
+
+\begin{frame}{Curva ROC y AUC}
+    \begin{itemize}
+        \item La curva ROC muestra TPR vs FPR al variar el umbral.
+        \item AUC es el area bajo la curva ROC:
+        \[
+        \text{AUC} = \int_0^1 \text{TPR}(\text{FPR})\,d(\text{FPR}).
+        \]
+        \item AUC = 1: clasificador perfecto; AUC = 0.5: aleatorio.
+    \end{itemize}
+    \centering
+    \includegraphics[width=0.4\textwidth]{roc_auc.png} % si existe
+\end{frame}
+
+\begin{frame}{Probabilidad: PDF, CDF y valor esperado}
+    \begin{itemize}
+        \item PDF $f(x)$: $\int_{-\infty}^{\infty} f(x)\,dx = 1$.
+        \item Probabilidad en intervalo: $P(a\le X\le b)=\int_a^b f(x)\,dx$.
+        \item CDF: $F(x)=\int_{-\infty}^x f(t)\,dt$.
+        \item Valor esperado: $\mathbb{E}[X]=\int_{-\infty}^{\infty} x f(x)\,dx$.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Modelos generativos profundos (VAEs)}
+    \begin{itemize}
+        \item La verosimilitud marginal $p(x)=\int p(x|z)p(z)\,dz$ es una integral intratable.
+        \item Se optimiza la cota inferior ELBO:
+        \[
+        \log p(x) \ge \mathbb{E}_{q(z|x)}[\log p(x|z)] - D_{KL}(q(z|x)\|p(z)).
+        \]
+        \item La esperanza $\mathbb{E}_{q(z|x)}[\cdot]$ es una integral sobre $z$.
+    \end{itemize}
+\end{frame}
+
+% ============================================================================
+% SECCION 5: PYTHON: CALCULO DE INTEGRALES Y AUC
+% ============================================================================
+\section{Python: Calculo de Integrales y AUC}
+
+\begin{frame}[fragile]{Integral definida con scipy.integrate.quad}
+    \begin{lstlisting}
+import numpy as np
+from scipy import integrate
+
+def f(x):
+    return x**2
+
+resultado, error = integrate.quad(f, 0, 1)
+print(f"∫_0^1 x^2 dx = {resultado:.6f} (error {error:.2e})")
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Calculo de AUC desde cero y con sklearn}
+    \begin{lstlisting}
+import numpy as np
+from sklearn import metrics
+import matplotlib.pyplot as plt
+
+np.random.seed(42)
+y_true = np.array([0]*50 + [1]*50)
+y_score = np.concatenate([np.random.normal(0.2,0.3,50),
+                          np.random.normal(0.8,0.2,50)])
+
+fpr, tpr, _ = metrics.roc_curve(y_true, y_score)
+auc_numerico = np.trapz(tpr, fpr)   # regla trapezoidal
+auc_sklearn = metrics.roc_auc_score(y_true, y_score)
+
+print(f"AUC con trapz: {auc_numerico:.4f}")
+print(f"AUC con sklearn: {auc_sklearn:.4f}")
+
+plt.plot(fpr, tpr, label=f'ROC (AUC={auc_sklearn:.4f})')
+plt.plot([0,1],[0,1], 'k--')
+plt.xlabel('FPR'); plt.ylabel('TPR'); plt.legend(); plt.grid()
+plt.show()
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Probabilidad acumulada de una normal}
+    \begin{lstlisting}
+from scipy.stats import norm
+from scipy.integrate import quad
+
+def pdf_normal(x):
+    return (1/np.sqrt(2*np.pi)) * np.exp(-x**2/2)
+
+prob, _ = quad(pdf_normal, 0, 1)
+print(f"P(0<X<1) = {prob:.6f}")
+print(f"Usando CDF: {norm.cdf(1)-norm.cdf(0):.6f}")
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Valor esperado de $X^2$ para $N(0,1)$}
+    \begin{lstlisting}
+def integrando(x):
+    return x**2 * pdf_normal(x)
+
+E_X2, _ = quad(integrando, -np.inf, np.inf)
+print(f"E[X^2] = {E_X2:.6f}")   # debe ser 1
+    \end{lstlisting}
+\end{frame}
+
+% ============================================================================
+% SECCION 6: NOTACION EN PAPERS
+% ============================================================================
+\section{Notacion en Papers Cientificos}
+
+\begin{frame}{Notacion comun}
+    \begin{itemize}
+        \item $\text{AUC} = \int \text{ROC}(t)\,dt$.
+        \item $\mathbb{E}_{p(x)}[f(x)] = \int f(x)p(x)dx$ (esperanza).
+        \item $\log p(x) = \log \int p(x|z)p(z)dz$ (modelos generativos).
+        \item $D_{KL}(p\|q) = \int p(x)\log\frac{p(x)}{q(x)}dx$.
+        \item $H(p) = -\int p(x)\log p(x)dx$ (entropia).
+    \end{itemize}
+\end{frame}
+
+% ============================================================================
+% SECCION 7: EJERCICIOS PROPUESTOS
+% ============================================================================
+\section{Ejercicios Propuestos}
+
+\begin{frame}{Ejercicios}
+    \begin{enumerate}
+        \item Calcula $\int_0^{\pi/2} \sin x\,dx$ manualmente y comprueba con Python.
+        \item Deriva la expresion para el area de un circulo de radio $R$ usando integracion.
+        \item Para un clasificador (ej. regresion logistica en Iris binario), calcula el AUC manualmente con la regla trapezoidal y compara con sklearn.
+        \item Sea $X$ con PDF $f(x)=2x$ en $[0,1]$. Calcula $P(X>0.5)$ y $\mathbb{E}[X]$ con integracion.
+        \item Investiga la regla de Simpson y comparala con la trapezoidal en un ejemplo.
+    \end{enumerate}
+\end{frame}
+
+% ============================================================================
+% SECCION 8: RESUMEN Y CIERRE DEL CURSO
+% ============================================================================
+\section{Resumen y Cierre del Curso}
+
+\begin{frame}{Lo que hemos aprendido}
+    \begin{exampleblock}{Conceptos clave}
+        \begin{itemize}
+            \item \textbf{Integral indefinida}: antiderivada, constante de integracion.
+            \item \textbf{Integral definida}: area bajo la curva, Teorema Fundamental del Calculo.
+            \item \textbf{Aplicaciones}: AUC en clasificacion, probabilidad (PDF, CDF, esperanza), modelos generativos (VAEs).
+            \item \textbf{Python}: `scipy.integrate.quad`, `sklearn.metrics.roc_auc_score`, `np.trapz`.
+        \end{itemize}
+    \end{exampleblock}
+\end{frame}
+
+\begin{frame}{Recorrido del curso}
+    \begin{itemize}
+        \item \textbf{Sesiones 1-3}: Tensores, operaciones, normas.
+        \item \textbf{Sesiones 4-5}: Sistemas lineales, derivadas.
+        \item \textbf{Sesiones 6-9}: Regla de la cadena, backpropagation, gradiente automatico.
+        \item \textbf{Sesiones 10-11}: Espacios vectoriales, determinantes, inversas.
+        \item \textbf{Sesiones 12-13}: Autovalores, SVD.
+        \item \textbf{Sesion 14}: Integrales y evaluacion de modelos.
+    \end{itemize}
+    \vspace{0.3cm}
+    \centering
+    \textbf{¡Gracias por acompanarnos en este viaje matematico!}
+\end{frame}
+
+% --- Diapositiva final ---
+\begin{frame}
+    \centering
+    \Huge \textbf{Gracias!}
+
+\end{frame}
+
+\end{document}

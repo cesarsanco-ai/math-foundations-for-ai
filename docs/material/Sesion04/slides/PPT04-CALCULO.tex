@@ -1,0 +1,414 @@
+% --- CORRECCIÓN IMPORTANTE EN LA PRIMERA LÍNEA ---
+% Agregamos "xcolor=table" para que funcione \rowcolor sin errores
+\documentclass[aspectratio=169, 10pt, xcolor=table]{beamer}
+
+% --- Configuración del Tema (estilo profesional como el ejemplo) ---
+\usetheme{Madrid}
+\usecolortheme{dolphin}
+
+% --- Paquetes necesarios ---
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{amsmath, amssymb}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta, positioning, shapes.geometric}
+
+% --- Ruta de Imágenes (crea la carpeta "imagenes" y coloca ahí tus archivos) ---
+\graphicspath{{./imagenes/}}
+
+% --- Estilo para código Python (configurado para evitar problemas con UTF-8) ---
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+\lstset{
+    language=Python,
+    backgroundcolor=\color{backcolour},
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{blue},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\scriptsize,
+    breaklines=true,
+    frame=single,
+    showstringspaces=false,
+    literate={á}{{\'a}}1 {é}{{\'e}}1 {í}{{\'i}}1 {ó}{{\'o}}1 {ú}{{\'u}}1 {ñ}{{\~n}}1 {ü}{{\"u}}1
+}
+
+% --- Pie de página personalizado ---
+\makeatletter
+
+\setbeamertemplate{footline}{
+  \leavevmode%
+  \hbox{%
+  \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,center]{author in head/foot}%
+    \usebeamerfont{author in head/foot}\insertshortauthor
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,center]{title in head/foot}%
+    \usebeamerfont{title in head/foot}Sesi\'on 4
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,right]{date in head/foot}%
+    \usebeamerfont{date in head/foot}CÁLCULO Y ÁLGEBRA LINEAL \hfill \insertframenumber/\inserttotalframenumber \hspace*{0.3cm}
+  \end{beamercolorbox}}%
+  \vskip0pt%
+}
+
+\makeatother
+
+% --- Datos de la portada ---
+\title[SESI\'ON 4 CÁLCULO]{\textbf{Sesi\'on 4}}
+\subtitle{Sistemas de Ecuaciones y la Base de la Regresión}
+\author[Prof. C. S\'anchez]{Carlos C\'esar S\'anchez Coronel}
+\institute{\textbf{CÁLCULO Y ÁLGEBRA LINEAL PARA IA}}
+\date{}
+
+% Logo opcional (descomentar si tienes la imagen)
+% \titlegraphic{\includegraphics[height=1.5cm]{logo.png}}
+
+% --- Eliminar la barra de navegación (opcional) ---
+\setbeamertemplate{navigation symbols}{}
+
+% --- Índice al inicio de cada sección ---
+\AtBeginSection[]{
+  \begin{frame}
+    \frametitle{Contenido}
+    \tableofcontents[currentsection]
+  \end{frame}
+}
+
+% ============================================================================
+% INICIO DEL DOCUMENTO
+% ============================================================================
+\begin{document}
+
+% --- Portada ---
+\begin{frame}
+    \titlepage
+\end{frame}
+
+% --- Índice general ---
+\begin{frame}{Contenido}
+    \tableofcontents
+\end{frame}
+
+% ============================================================================
+% SECCIÓN 1: REPRESENTACIÓN MATRICIAL DE SISTEMAS LINEALES
+% ============================================================================
+\section{Representación Matricial de Sistemas Lineales}
+
+\begin{frame}{Sistemas de ecuaciones lineales}
+    \begin{block}{Forma general}
+        \[
+        \begin{cases}
+            a_{11}x_1 + a_{12}x_2 + \cdots + a_{1n}x_n = b_1 \\
+            a_{21}x_1 + a_{22}x_2 + \cdots + a_{2n}x_n = b_2 \\
+            \qquad \vdots \\
+            a_{m1}x_1 + a_{m2}x_2 + \cdots + a_{mn}x_n = b_m
+        \end{cases}
+        \]
+    \end{block}
+    \begin{block}{Forma matricial}
+        \[
+        \mathbf{A}\mathbf{x} = \mathbf{b},\quad \mathbf{A}\in\mathbb{R}^{m\times n},\ \mathbf{x}\in\mathbb{R}^n,\ \mathbf{b}\in\mathbb{R}^m
+        \]
+    \end{block}
+\end{frame}
+
+\begin{frame}{Interpretación geométrica}
+    \begin{itemize}
+        \item Cada ecuación representa un hiperplano en $\mathbb{R}^n$.
+        \item Para $n=2$, cada ecuación es una recta en el plano.
+        \item La solución es la intersección de todos los hiperplanos.
+    \end{itemize}
+    \centering
+    \begin{tikzpicture}[scale=0.8]
+        \draw[->] (-0.5,0) -- (4,0) node[right] {$x$};
+        \draw[->] (0,-0.5) -- (0,4) node[above] {$y$};
+        \draw[thick, blue] (0.5,3.5) -- (3.5,0.5) node[right] {$x+y=4$};
+        \draw[thick, red] (0.5,1) -- (3.5,3) node[right] {$x-y=2$};
+        \fill[black] (3,1) circle (2pt) node[above right] {$(3,1)$};
+    \end{tikzpicture}
+\end{frame}
+
+% ============================================================================
+% SECCIÓN 2: SISTEMAS CUADRADOS (m = n)
+% ============================================================================
+\section{Sistemas Cuadrados (m = n)}
+
+\begin{frame}{Eliminación Gaussiana}
+    \begin{itemize}
+        \item Transformar el sistema en uno triangular superior mediante operaciones elementales.
+        \item Luego resolver con sustitución regresiva.
+    \end{itemize}
+    \begin{exampleblock}{Ejemplo}
+        \[
+        \begin{cases}
+            2x + y - z = 8 \\
+            -3x - y + 2z = -11 \\
+            -2x + y + 2z = -3
+        \end{cases}
+        \]
+        Matriz aumentada:
+        \[
+        \left[\begin{array}{ccc|c}
+            2 & 1 & -1 & 8 \\
+            -3 & -1 & 2 & -11 \\
+            -2 & 1 & 2 & -3
+        \end{array}\right]
+        \]
+    \end{exampleblock}
+\end{frame}
+
+\begin{frame}{Eliminación paso a paso}
+    \begin{enumerate}
+        \item Pivote $a_{11}=2$. Hacer ceros debajo:\\
+        $F_2 \leftarrow F_2 + \frac{3}{2}F_1$, $F_3 \leftarrow F_3 + F_1$.
+        \[
+        \left[\begin{array}{ccc|c}
+            2 & 1 & -1 & 8 \\
+            0 & 0.5 & 0.5 & 1 \\
+            0 & 2 & 1 & 5
+        \end{array}\right]
+        \]
+        \item Intercambiar filas 2 y 3.
+        \[
+        \left[\begin{array}{ccc|c}
+            2 & 1 & -1 & 8 \\
+            0 & 2 & 1 & 5 \\
+            0 & 0.5 & 0.5 & 1
+        \end{array}\right]
+        \]
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}{Eliminación y sustitución regresiva}
+    \begin{enumerate}
+        \setcounter{enumi}{2}
+        \item Hacer cero en $(3,2)$: $F_3 \leftarrow F_3 - 0.25F_2$.
+        \[
+        \left[\begin{array}{ccc|c}
+            2 & 1 & -1 & 8 \\
+            0 & 2 & 1 & 5 \\
+            0 & 0 & 0.25 & -0.25
+        \end{array}\right]
+        \]
+        \item Resolver de abajo arriba:
+        \begin{align*}
+            0.25z &= -0.25 \Rightarrow z = -1 \\
+            2y + 1(-1) &= 5 \Rightarrow y = 3 \\
+            2x + 3 - (-1) &= 8 \Rightarrow x = 2
+        \end{align*}
+        Solución: $\mathbf{x} = (2,3,-1)$.
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]{Resolución con NumPy}
+    \begin{lstlisting}
+import numpy as np
+
+A = np.array([[2,1,-1],[-3,-1,2],[-2,1,2]], dtype=float)
+b = np.array([8,-11,-3])
+x = np.linalg.solve(A, b)
+print("Solución:", x)          # [ 2.  3. -1.]
+# Verificar
+print("A @ x - b:", np.dot(A,x)-b)  # casi cero
+    \end{lstlisting}
+\end{frame}
+
+% ============================================================================
+% SECCIÓN 3: SISTEMAS SOBREDETERMINADOS (m > n) Y MÍNIMOS CUADRADOS
+% ============================================================================
+\section{Sistemas Sobredeterminados (m > n)}
+
+\begin{frame}{Problema de mínimos cuadrados}
+    \begin{itemize}
+        \item Cuando $m > n$, normalmente no hay solución exacta.
+        \item Buscamos $\mathbf{x}$ que minimice el error cuadrático:
+        \[
+        \|\mathbf{A}\mathbf{x} - \mathbf{b}\|_2^2 = \sum_{i=1}^m \left( \sum_{j=1}^n A_{ij}x_j - b_i \right)^2
+        \]
+        \item Solución: resolver las \textbf{ecuaciones normales}
+        \[
+        \mathbf{A}^\top \mathbf{A} \mathbf{x} = \mathbf{A}^\top \mathbf{b}
+        \]
+        \[
+        \mathbf{x} = (\mathbf{A}^\top \mathbf{A})^{-1}\mathbf{A}^\top \mathbf{b}
+        \]
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Interpretación geométrica}
+    \begin{itemize}
+        \item La solución proyecta $\mathbf{b}$ sobre el espacio columna de $\mathbf{A}$.
+        \item El residuo $\mathbf{r} = \mathbf{b} - \mathbf{A}\mathbf{x}$ es ortogonal a dicho espacio.
+    \end{itemize}
+    \centering
+    \begin{tikzpicture}[scale=1.2]
+        \draw[->] (0,0) -- (3,0) node[right] {$col_1$};
+        \draw[->] (0,0) -- (0,3) node[above] {$col_2$};
+        \draw[thick, blue] (0,0) -- (2.5,2) node[above right] {Espacio columna};
+        \fill[red] (2.5,2.5) circle (2pt) node[above] {$\mathbf{b}$};
+        \fill[blue] (2,1.6) circle (2pt) node[right] {$\mathbf{A}\mathbf{x}$};
+        \draw[dashed] (2.5,2.5) -- (2,1.6);
+    \end{tikzpicture}
+\end{frame}
+
+\begin{frame}{Ejemplo: Ajuste de una recta por mínimos cuadrados}
+    \begin{itemize}
+        \item Modelo: $y = \beta_0 + \beta_1 x$.
+        \item Para $m$ puntos $(x_i, y_i)$, el sistema es:
+        \[
+        \begin{pmatrix} 1 & x_1 \\ 1 & x_2 \\ \vdots & \vdots \\ 1 & x_m \end{pmatrix}
+        \begin{pmatrix} \beta_0 \\ \beta_1 \end{pmatrix}
+        \approx \begin{pmatrix} y_1 \\ y_2 \\ \vdots \\ y_m \end{pmatrix}
+        \]
+        \item Se resuelve por mínimos cuadrados.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Implementación con ecuaciones normales}
+    \begin{lstlisting}
+import numpy as np
+import matplotlib.pyplot as plt
+
+x = np.array([0,1,2,3,4,5])
+y = np.array([1,3,2,5,4,6])
+
+A = np.vstack([np.ones_like(x), x]).T  # matriz de diseño
+ATA = A.T @ A
+ATb = A.T @ y
+beta = np.linalg.solve(ATA, ATb)
+print(f"Intercepto: {beta[0]:.4f}, Pendiente: {beta[1]:.4f}")
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Gráfica del ajuste}
+    \begin{lstlisting}
+plt.scatter(x, y, label='Datos')
+x_line = np.linspace(0,5,100)
+y_line = beta[0] + beta[1] * x_line
+plt.plot(x_line, y_line, 'r-', label='Ajuste')
+plt.xlabel('x'); plt.ylabel('y'); plt.legend(); plt.grid()
+plt.show()
+    \end{lstlisting}
+    \centering
+    \includegraphics[width=0.5\textwidth]{ejemplo_recta.png} % si la imagen existe
+\end{frame}
+
+\begin{frame}[fragile]{Métodos alternativos: lstsq y sklearn}
+    \begin{lstlisting}
+# Con np.linalg.lstsq (usa QR, más estable)
+beta_qr, _, _, _ = np.linalg.lstsq(A, y, rcond=None)
+
+# Con scikit-learn
+from sklearn.linear_model import LinearRegression
+model = LinearRegression()
+model.fit(x.reshape(-1,1), y)
+print("Intercepto sklearn:", model.intercept_)
+print("Pendiente sklearn:", model.coef_[0])
+    \end{lstlisting}
+\end{frame}
+
+% ============================================================================
+% SECCIÓN 4: APLICACIONES EN IA Y CURSOS FUTUROS
+% ============================================================================
+\section{Aplicaciones en IA y Cursos Futuros}
+
+\begin{frame}{Regresión lineal en machine learning}
+    \begin{itemize}
+        \item Es el modelo más simple y fundacional.
+        \item La solución de mínimos cuadrados es la base de la regresión lineal ordinaria (OLS).
+        \item Cuando se añade regularización L2, se obtiene regresión \textbf{Ridge}.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Otras áreas de aplicación}
+    \begin{itemize}
+        \item \textbf{Robótica}: cinemática, filtros de Kalman.
+        \item \textbf{Optimización}: problemas de mínimos cuadrados como caso convexo.
+        \item \textbf{Procesamiento de señales}: filtros adaptativos (RLS).
+        \item \textbf{Finanzas}: modelos de factores, estimación de betas.
+    \end{itemize}
+\end{frame}
+
+% ============================================================================
+% SECCIÓN 5: EJERCICIO INTEGRADOR
+% ============================================================================
+\section{Ejercicio Integrador: Comparación de Métodos}
+
+\begin{frame}[fragile]{Comparación de métodos de mínimos cuadrados}
+    \begin{lstlisting}
+import numpy as np
+from sklearn.linear_model import LinearRegression
+import time
+
+# Generar datos sintéticos: y = 2 + 3x + ruido
+np.random.seed(42)
+m = 1000
+x = np.random.randn(m,1)
+X = np.hstack([np.ones((m,1)), x])
+beta_true = np.array([2,3])
+y = X @ beta_true + np.random.randn(m,1)*0.5
+
+# 1. Ecuaciones normales
+start = time.time()
+beta_norm = np.linalg.inv(X.T @ X) @ X.T @ y
+t_norm = time.time() - start
+
+# 2. lstsq (QR)
+start = time.time()
+beta_qr, _, _, _ = np.linalg.lstsq(X, y, rcond=None)
+t_qr = time.time() - start
+
+# 3. sklearn
+start = time.time()
+model = LinearRegression(fit_intercept=False)
+model.fit(X, y)
+beta_sk = model.coef_.flatten()
+t_sk = time.time() - start
+
+print("Verdaderos:", beta_true)
+print("Ecuaciones normales:", beta_norm.flatten())
+print("lstsq:", beta_qr.flatten())
+print("sklearn:", beta_sk)
+print("Tiempos: norm={:.6f}s, lstsq={:.6f}s, sklearn={:.6f}s".format(t_norm, t_qr, t_sk))
+    \end{lstlisting}
+\end{frame}
+
+% ============================================================================
+% SECCIÓN 6: RESUMEN
+% ============================================================================
+\section{Resumen}
+
+\begin{frame}{Lo que hemos aprendido}
+    \begin{exampleblock}{Conceptos clave}
+        \begin{itemize}
+            \item \textbf{Sistemas lineales}: representación matricial $\mathbf{A}\mathbf{x}=\mathbf{b}$.
+            \item \textbf{Sistemas cuadrados}: eliminación gaussiana, factorización LU, $\mathbf{x}=\mathbf{A}^{-1}\mathbf{b}$.
+            \item \textbf{Sistemas sobredeterminados}: mínimos cuadrados, ecuaciones normales, descomposición QR.
+            \item \textbf{Regresión lineal}: ajuste de recta por mínimos cuadrados.
+            \item \textbf{Implementaciones}: \texttt{np.linalg.solve}, \texttt{np.linalg.lstsq}, \texttt{sklearn.linear\_model.LinearRegression}.
+        \end{itemize}
+    \end{exampleblock}
+\end{frame}
+
+\begin{frame}{Conexión con futuros cursos}
+    \begin{itemize}
+        \item \textbf{Machine Learning}: regresión lineal, ridge, lasso.
+        \item \textbf{Optimización}: problemas de mínimos cuadrados y gradiente descendente.
+        \item \textbf{Señales y control}: filtros adaptativos, identificación de sistemas.
+        \item \textbf{Deep Learning}: las redes lineales se entrenan con estos conceptos.
+    \end{itemize}
+\end{frame}
+
+% --- Diapositiva final ---
+\begin{frame}
+    \centering
+    \Huge \textbf{¡Gracias!}
+
+\end{frame}
+
+\end{document}

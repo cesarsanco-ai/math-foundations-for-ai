@@ -1,0 +1,560 @@
+% --- CORRECCION: Forzar interpretacion raw de la entrada ---
+\UseRawInputEncoding
+\documentclass[aspectratio=169, 10pt, xcolor=table]{beamer}
+
+% --- Configuracion del Tema ---
+\usetheme{Madrid}
+\usecolortheme{dolphin}
+
+% --- Paquetes necesarios ---
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{amsmath, amssymb}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta, positioning, shapes.geometric}
+\usepackage{etoolbox}
+
+% --- Ruta de Imagenes ---
+\graphicspath{{./imagenes/}}
+
+% --- Estilo para codigo Python ---
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+\lstset{
+    language=Python,
+    backgroundcolor=\color{backcolour},
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{blue},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\scriptsize,
+    breaklines=true,
+    frame=single,
+    showstringspaces=false,
+    literate={á}{{\'a}}1 {é}{{\'e}}1 {í}{{\'i}}1 {ó}{{\'o}}1 {ú}{{\'u}}1 {ñ}{{\~n}}1 {ü}{{\"u}}1
+}
+
+% --- Pie de pagina personalizado ---
+\makeatletter
+\setbeamertemplate{footline}{
+  \leavevmode%
+  \hbox{%
+  \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,center]{author in head/foot}%
+    \usebeamerfont{author in head/foot}\insertshortauthor
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,center]{title in head/foot}%
+    \usebeamerfont{title in head/foot}Sesion 6
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,right]{date in head/foot}%
+    \usebeamerfont{date in head/foot}CALCULO Y ALGEBRA LINEAL \hfill \insertframenumber/\inserttotalframenumber \hspace*{0.3cm}
+  \end{beamercolorbox}}%
+  \vskip0pt%
+}
+\makeatother
+
+% --- Datos de la portada ---
+\title[SESION 6 CALCULO]{\textbf{Sesion 6}}
+\subtitle{La Derivada: Midiendo el Cambio}
+\author[Prof. C. Sanchez]{Carlos Cesar Sanchez Coronel}
+\institute{\textbf{CALCULO Y ALGEBRA LINEAL PARA IA}}
+\date{}
+
+% --- Eliminar barra de navegacion ---
+\setbeamertemplate{navigation symbols}{}
+
+% --- Indice al inicio de cada seccion ---
+\AtBeginSection[]{
+  \begin{frame}
+    \frametitle{Contenido}
+    \tableofcontents[currentsection]
+  \end{frame}
+}
+
+\begin{document}
+
+% --- Portada ---
+\begin{frame}
+    \titlepage
+\end{frame}
+
+% --- Indice general ---
+\begin{frame}{Contenido}
+    \tableofcontents
+\end{frame}
+
+% ============================================================================
+% SECCION 1: INTRODUCCION Y MOTIVACION
+% ============================================================================
+\section{Introduccion y Motivacion}
+
+\begin{frame}{Por que estudiar derivadas?}
+    \begin{itemize}
+        \item La derivada mide el cambio instantaneo.
+        \item Es fundamental en:
+        \begin{itemize}
+            \item \textbf{Ingenieria}: resistencia de materiales.
+            \item \textbf{Economia}: costo marginal, maximizacion de ganancias.
+            \item \textbf{Fisica}: velocidad, aceleracion.
+            \item \textbf{Inteligencia Artificial}: backpropagation, gradiente descendente.
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Origen Geometrico: Secante vs Tangente}
+    \begin{columns}[t]
+        \column{0.5\textwidth}
+        \textbf{Recta Secante}
+        \[
+        m_{\text{sec}} = \frac{f(x_2)-f(x_1)}{x_2-x_1}
+        \]
+        \column{0.5\textwidth}
+        \textbf{Recta Tangente}
+        \[
+        m_{\text{tan}} = \lim_{\Delta x\to 0} \frac{f(x+\Delta x)-f(x)}{\Delta x}
+        \]
+    \end{columns}
+    \vspace{0.3cm}
+    \centering
+    \begin{tikzpicture}[scale=0.8]
+        \draw[->] (-0.5,0) -- (4,0) node[right] {$x$};
+        \draw[->] (0,-0.5) -- (0,3) node[above] {$f(x)$};
+        \draw[domain=0.5:3.5, smooth, thick, blue] plot (\x, {0.5*\x + 0.5}) node[right] {$f(x)$};
+        \draw[red, thick] (1,1) -- (3,2);
+        \draw[red, thick] (2,1.5) -- (2.5,1.75);
+        \fill (2,1.5) circle (2pt) node[above] {$(x,f(x))$};
+        \fill (2.5,1.75) circle (2pt) node[right] {$(x+\Delta x, f(x+\Delta x))$};
+    \end{tikzpicture}
+\end{frame}
+
+\begin{frame}{Definicion formal (metodo Delta)}
+    \begin{block}{Definicion de derivada}
+        \[
+        f'(x) = \lim_{\Delta x \to 0} \frac{f(x+\Delta x) - f(x)}{\Delta x}
+        \]
+    \end{block}
+    \begin{itemize}
+        \item Representa la pendiente instantanea de la curva.
+        \item Si el limite existe, la funcion es derivable en $x$.
+    \end{itemize}
+\end{frame}
+
+% ============================================================================
+% SECCION 2: NOTACION Y APLICACIONES
+% ============================================================================
+\section{Notacion y Aplicaciones}
+
+\begin{frame}{Notaciones de derivadas}
+    \begin{table}
+        \centering
+        \begin{tabular}{l|c|c|c}
+            \toprule
+            Orden & Leibniz & Lagrange & Newton \\
+            \midrule
+            1ª derivada & $\frac{dy}{dx}$ & $f'(x)$ & $\dot{y}$ \\
+            2ª derivada & $\frac{d^2y}{dx^2}$ & $f''(x)$ & $\ddot{y}$ \\
+            3ª derivada & $\frac{d^3y}{dx^3}$ & $f'''(x)$ & - \\
+            n-ésima & $\frac{d^ny}{dx^n}$ & $f^{(n)}(x)$ & - \\
+            \bottomrule
+        \end{tabular}
+    \end{table}
+\end{frame}
+
+\begin{frame}{Ecuacion de la recta tangente}
+    \begin{block}{Formula}
+        \[
+        y - f(a) = f'(a)(x - a)
+        \]
+    \end{block}
+    \begin{exampleblock}{Ejemplo}
+        Para $f(x)=x^2$, $f'(x)=2x$. En $x=2$, $f(2)=4$, $f'(2)=4$.
+        \[
+        y - 4 = 4(x - 2) \quad\Rightarrow\quad y = 4x - 4
+        \]
+    \end{exampleblock}
+\end{frame}
+
+\begin{frame}{Derivadas de orden superior}
+    \begin{exampleblock}{Ejemplo con $f(x)=x^4$}
+        \begin{align*}
+            f'(x) &= 4x^3 \\
+            f''(x) &= 12x^2 \\
+            f'''(x) &= 24x \\
+            f^{(4)}(x) &= 24
+        \end{align*}
+    \end{exampleblock}
+\end{frame}
+
+% ============================================================================
+% SECCION 3: TABLA DE DERIVADAS Y REGLAS
+% ============================================================================
+\section{Tabla de Derivadas y Reglas}
+
+\begin{frame}{Derivadas elementales}
+    \begin{table}
+        \centering
+        \begin{tabular}{l|l}
+            \toprule
+            $f(x)$ & $f'(x)$ \\
+            \midrule
+            $c$ (constante) & $0$ \\
+            $x$ & $1$ \\
+            $x^n$ & $n x^{n-1}$ \\
+            $e^x$ & $e^x$ \\
+            $a^x$ & $a^x \ln a$ \\
+            $\ln x$ & $\frac{1}{x}$ \\
+            $\log_a x$ & $\frac{1}{x \ln a}$ \\
+            $\sin x$ & $\cos x$ \\
+            $\cos x$ & $-\sin x$ \\
+            $\tan x$ & $\sec^2 x$ \\
+            $\arcsin x$ & $\frac{1}{\sqrt{1-x^2}}$ \\
+            $\arccos x$ & $-\frac{1}{\sqrt{1-x^2}}$ \\
+            $\arctan x$ & $\frac{1}{1+x^2}$ \\
+            \bottomrule
+        \end{tabular}
+    \end{table}
+\end{frame}
+
+\begin{frame}{Reglas de derivacion}
+    \begin{block}{Multiplo constante}
+        $[c\cdot f(x)]' = c \cdot f'(x)$
+    \end{block}
+    \begin{block}{Suma/Resta}
+        $(f \pm g)' = f' \pm g'$
+    \end{block}
+    \begin{block}{Producto}
+        $(f\cdot g)' = f'g + fg'$
+    \end{block}
+    \begin{block}{Cociente}
+        $\left(\frac{f}{g}\right)' = \frac{f'g - fg'}{g^2}$
+    \end{block}
+    \begin{block}{Regla de la cadena}
+        $\frac{d}{dx}[f(g(x))] = f'(g(x)) \cdot g'(x)$
+    \end{block}
+\end{frame}
+
+% ============================================================================
+% SECCION 4: EJERCICIOS RESUELTOS
+% ============================================================================
+\section{Ejercicios Resueltos}
+
+\begin{frame}{Caso polinomico y raices}
+    \begin{exampleblock}{Ejemplo 1}
+        Derivar $f(x) = 4x^5 - 2x^2 + \sqrt{x}$.
+    \end{exampleblock}
+    \begin{block}{Solucion}
+        Reescribimos $\sqrt{x}=x^{1/2}$:
+        \[
+        f'(x) = 4\cdot5x^4 - 2\cdot2x^1 + \frac{1}{2}x^{-1/2}
+        = 20x^4 - 4x + \frac{1}{2\sqrt{x}}
+        \]
+    \end{block}
+\end{frame}
+
+\begin{frame}{Caso con regla del producto}
+    \begin{exampleblock}{Ejemplo 2}
+        Derivar $f(x) = x^2 \cos x$.
+    \end{exampleblock}
+    \begin{block}{Solucion}
+        \begin{align*}
+            f'(x) &= (x^2)'\cos x + x^2(\cos x)' \\
+            &= 2x\cos x - x^2\sin x
+        \end{align*}
+    \end{block}
+\end{frame}
+
+\begin{frame}{Caso con regla del cociente}
+    \begin{exampleblock}{Ejemplo 3}
+        Derivar $f(x) = \frac{x^2+1}{x^3-x}$.
+    \end{exampleblock}
+    \begin{block}{Solucion}
+        \begin{align*}
+            f'(x) &= \frac{(2x)(x^3-x) - (x^2+1)(3x^2-1)}{(x^3-x)^2} \\
+            &= \frac{-x^4 -4x^2 +1}{(x^3-x)^2}
+        \end{align*}
+    \end{block}
+\end{frame}
+
+\begin{frame}{Caso con regla de la cadena}
+    \begin{exampleblock}{Ejemplo 4}
+        Derivar $f(x) = \ln(x^3+1)$.
+    \end{exampleblock}
+    \begin{block}{Solucion}
+        \[
+        f'(x) = \frac{1}{x^3+1} \cdot (x^3+1)' = \frac{3x^2}{x^3+1}
+        \]
+    \end{block}
+\end{frame}
+
+\begin{frame}{Caso de la cadena con potencia}
+    \begin{exampleblock}{Ejemplo 5}
+        Derivar $f(x) = (3x^2+1)^4$.
+    \end{exampleblock}
+    \begin{block}{Solucion}
+        \[
+        f'(x) = 4(3x^2+1)^3 \cdot (6x) = 24x(3x^2+1)^3
+        \]
+    \end{block}
+\end{frame}
+
+% ============================================================================
+% SECCION 5: OPTIMIZACION (MAXIMOS Y MINIMOS)
+% ============================================================================
+\section{Optimizacion: Maximos y Minimos}
+
+\begin{frame}{Criterio de la primera derivada}
+    \begin{itemize}
+        \item \textbf{Puntos criticos}: $f'(x)=0$.
+        \item Si $f'$ cambia de $+$ a $-$, es un maximo.
+        \item Si $f'$ cambia de $-$ a $+$, es un minimo.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Criterio de la segunda derivada}
+    \begin{itemize}
+        \item Sea $x_0$ un punto critico ($f'(x_0)=0$).
+        \item Si $f''(x_0) > 0$: minimo local.
+        \item Si $f''(x_0) < 0$: maximo local.
+        \item Si $f''(x_0) = 0$: el criterio no decide.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Ejemplo resuelto: maximizando beneficios}
+    \begin{exampleblock}{Problema}
+        Las ganancias de una empresa son $G(x) = -x^2 + 8x - 12$. Hallar el precio optimo $x$ para maximizar la ganancia.
+    \end{exampleblock}
+    \begin{block}{Solucion}
+        \begin{enumerate}
+            \item Derivamos: $G'(x) = -2x + 8$.
+            \item Punto critico: $-2x+8=0 \Rightarrow x=4$.
+            \item Segunda derivada: $G''(x) = -2 < 0$.
+            \item Como $G''(4)<0$, en $x=4$ hay un maximo.
+        \end{enumerate}
+    \end{block}
+\end{frame}
+
+\begin{frame}{Conexion con IA: la funcion de perdida}
+    \begin{itemize}
+        \item En ML, minimizamos la funcion de perdida $L(w)$.
+        \item Ejemplo: Error Cuadratico Medio (MSE) para una neurona lineal:
+        \[
+        L(w,b) = \frac{1}{N}\sum_{i=1}^{N} (wx_i + b - y_i)^2
+        \]
+        \item Las derivadas parciales $\frac{\partial L}{\partial w}$ y $\frac{\partial L}{\partial b}$ nos indican como ajustar $w$ y $b$.
+    \end{itemize}
+\end{frame}
+
+% ============================================================================
+% SECCION 6: DERIVADAS EN IA: FUNCIONES DE ACTIVACION
+% ============================================================================
+\section{Derivadas en IA: Funciones de Activacion}
+
+\begin{frame}{Funcion Sigmoide}
+    \[
+    \sigma(x) = \frac{1}{1+e^{-x}}
+    \]
+    \begin{block}{Derivada}
+        \[
+        \sigma'(x) = \sigma(x)(1 - \sigma(x))
+        \]
+    \end{block}
+    \begin{itemize}
+        \item Uso: clasificacion binaria, puertas LSTM.
+        \item Dominio: $\mathbb{R}$, Rango: $(0,1)$.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Funcion ReLU}
+    \[
+    \text{ReLU}(x) = \max(0,x)
+    \]
+    \begin{block}{Derivada}
+        \[
+        \text{ReLU}'(x) = \begin{cases} 1, & x>0 \\ 0, & x\le 0 \end{cases}
+        \]
+    \end{block}
+    \begin{itemize}
+        \item Uso: capas ocultas en CNNs, redes profundas.
+        \item No derivable en $x=0$, en practica se define $0$ (o subgradiente).
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Funcion Tanh}
+    \[
+    \tanh x = \frac{e^x - e^{-x}}{e^x + e^{-x}}
+    \]
+    \begin{block}{Derivada}
+        \[
+        \frac{d}{dx}\tanh x = 1 - \tanh^2 x
+        \]
+    \end{block}
+    \begin{itemize}
+        \item Uso: RNNs, capas ocultas.
+        \item Rango: $(-1,1)$.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Funcion Softplus}
+    \[
+    \text{Softplus}(x) = \ln(1+e^x)
+    \]
+    \begin{block}{Derivada}
+        \[
+        \text{Softplus}'(x) = \sigma(x) = \frac{1}{1+e^{-x}}
+        \]
+    \end{block}
+    \begin{itemize}
+        \item Version suave de ReLU.
+        \item Diferenciable en todo $\mathbb{R}$.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Funcion GELU (aproximacion)}
+    \[
+    \text{GELU}(x) \approx 0.5x\left(1 + \tanh\left[\sqrt{\frac{2}{\pi}}(x+0.044715x^3)\right]\right)
+    \]
+    \begin{itemize}
+        \item Uso: Transformers (BERT, GPT).
+        \item Suave y diferenciable.
+    \end{itemize}
+\end{frame}
+
+% ============================================================================
+% SECCION 7: PYTHON: CALCULO DE DERIVADAS
+% ============================================================================
+\section{Python: Calculo de Derivadas}
+
+\begin{frame}[fragile]{Calculo simbolico con SymPy}
+    \begin{lstlisting}
+import sympy as sp
+
+x = sp.Symbol('x')
+
+f = x**3 + 2*x**2 - 5*x + 1
+f_prima = sp.diff(f, x)
+print("f'(x) =", f_prima)
+
+g = sp.sin(x**2)
+g_prima = sp.diff(g, x)
+print("g'(x) =", g_prima)
+
+sig = 1/(1 + sp.exp(-x))
+sig_prima = sp.diff(sig, x)
+print("sig'(x) =", sig_prima)
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Derivacion numerica y comparacion}
+    \begin{lstlisting}
+import numpy as np
+
+def f(x): return x**3
+def f_prima_exacta(x): return 3*x**2
+
+def deriv_num(f, x, h=1e-5):
+    return (f(x+h) - f(x)) / h
+
+x_val = 2.0
+exacta = f_prima_exacta(x_val)
+aprox = deriv_num(f, x_val)
+print("Exacta:", exacta)
+print("Aprox:", aprox)
+print("Error:", abs(aprox - exacta))
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Visualizacion de la derivada}
+    \begin{lstlisting}
+import numpy as np
+import matplotlib.pyplot as plt
+
+x_vals = np.linspace(-2, 2, 100)
+y_vals = f(x_vals)
+y_prima = f_prima_exacta(x_vals)
+
+plt.figure(figsize=(10,4))
+plt.subplot(1,2,1)
+plt.plot(x_vals, y_vals)
+plt.title('f(x) = x^3')
+plt.grid(True)
+
+plt.subplot(1,2,2)
+plt.plot(x_vals, y_prima, 'r')
+plt.title("f'(x)")
+plt.grid(True)
+plt.show()
+    \end{lstlisting}
+\end{frame}
+
+% ============================================================================
+% SECCION 8: NOTACION EN PAPERS
+% ============================================================================
+\section{Notacion en Papers Cientificos}
+
+\begin{frame}{Notacion comun en IA}
+    \begin{itemize}
+        \item $\nabla_w L(w)$: gradiente de la perdida respecto a $w$.
+        \item $w_{t+1} = w_t - \eta \nabla L(w_t)$: actualizacion de pesos.
+        \item $\frac{\partial L}{\partial w_{ij}^{(l)}}$: derivada parcial en la capa $l$.
+        \item $\delta^{(l)}$: error propagado hacia atras (backpropagation).
+    \end{itemize}
+\end{frame}
+
+% ============================================================================
+% SECCION 9: EJERCICIOS PROPUESTOS
+% ============================================================================
+\section{Ejercicios Propuestos}
+
+\begin{frame}{Ejercicios}
+    \begin{enumerate}
+        \item Calcula la derivada de $f(x) = \ln(\sin x)$.
+        \item Deriva la funcion de perdida de entropia cruzada binaria
+        \[
+        L = -y\log\hat{y} - (1-y)\log(1-\hat{y})
+        \]
+        respecto a $\hat{y}$.
+        \item Demuestra que $\frac{d}{dx}\tanh x = 1 - \tanh^2 x$.
+        \item Encuentra los puntos criticos de $f(x) = x^3 - 3x$ y clasificalos.
+        \item Implementa en Python la derivada numerica de $e^{-x^2}$ y compara con la analitica.
+    \end{enumerate}
+\end{frame}
+
+% ============================================================================
+% SECCION 10: RESUMEN
+% ============================================================================
+\section{Resumen}
+
+\begin{frame}{Lo que hemos aprendido}
+    \begin{exampleblock}{Conceptos clave}
+        \begin{itemize}
+            \item Definicion de derivada: pendiente instantanea.
+            \item Reglas: potencia, producto, cociente, cadena.
+            \item Notaciones: Leibniz, Lagrange, Newton.
+            \item Optimizacion: puntos criticos, criterios de 1ª y 2ª derivada.
+            \item Aplicaciones en IA: funciones de activacion (sigmoide, ReLU, tanh), backpropagation.
+            \item Calculo simbolico y numerico con Python (SymPy, NumPy).
+        \end{itemize}
+    \end{exampleblock}
+\end{frame}
+
+\begin{frame}{Conexion con futuros cursos}
+    \begin{itemize}
+        \item \textbf{Deep Learning}: backpropagation, gradiente descendente.
+        \item \textbf{Optimizacion}: algoritmos de optimizacion.
+        \item \textbf{Redes Neuronales}: derivadas de funciones de activacion.
+        \item \textbf{Aprendizaje Estadistico}: estimacion por maxima verosimilitud.
+    \end{itemize}
+\end{frame}
+
+% --- Diapositiva final ---
+\begin{frame}
+    \centering
+    \Huge \textbf{Gracias!}
+
+\end{frame}
+
+\end{document}

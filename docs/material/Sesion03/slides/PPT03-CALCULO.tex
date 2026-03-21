@@ -1,0 +1,278 @@
+\documentclass[aspectratio=169, 10pt, xcolor=table]{beamer}
+
+% --- Configuración del Tema ---
+\usetheme{Madrid}
+\usecolortheme{dolphin}
+
+% --- Paquetes necesarios ---
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{amsmath, amssymb}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta, positioning, shapes.geometric}
+\usepackage{etoolbox}
+
+% --- Estilo para codigo Python ---
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstset{
+    language=Python,
+    backgroundcolor=\color{backcolour},
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{blue},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\scriptsize,
+    breaklines=true,
+    frame=single,
+    showstringspaces=false,
+    literate={á}{{\'a}}1 {é}{{\'e}}1 {í}{{\'i}}1 {ó}{{\'o}}1 {ú}{{\'u}}1 {ñ}{{\~n}}1 {ü}{{\"u}}1
+}
+
+% --- Pie de pagina personalizado ---
+\makeatletter
+\setbeamertemplate{footline}{
+  \leavevmode%
+  \hbox{%
+  \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,center]{author in head/foot}%
+    \usebeamerfont{author in head/foot}\insertshortauthor
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,center]{title in head/foot}%
+    \usebeamerfont{title in head/foot}Sesion 3
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,right]{date in head/foot}%
+    \usebeamerfont{date in head/foot}CALCULO y ALGEBRA LINEAL \hfill \insertframenumber/\inserttotalframenumber \hspace*{0.3cm}
+  \end{beamercolorbox}}%
+  \vskip0pt%
+}
+\makeatother
+
+% --- Datos de la portada ---
+\title[SESION 3 CALCULO]{\textbf{Sesion 3}}
+\subtitle{Operaciones con Tensores}
+\author[Prof. C. Sanchez]{Carlos Cesar Sanchez Coronel}
+\institute{\textbf{CALCULO Y ALGEBRA LINEAL PARA IA}}
+\date{}
+
+\setbeamertemplate{navigation symbols}{}
+
+\AtBeginSection[]{
+  \begin{frame}
+    \frametitle{Contenido}
+    \tableofcontents[currentsection]
+  \end{frame}
+}
+
+\begin{document}
+
+\begin{frame}
+    \titlepage
+\end{frame}
+
+\begin{frame}{Contenido}
+    \tableofcontents
+\end{frame}
+
+\section{Operaciones Elemento a Elemento}
+
+\begin{frame}{Suma, resta y producto Hadamard}
+    \begin{columns}[t]
+        \column{0.5\textwidth}
+        \textbf{Suma:}
+        \[ (A+B)_{ij} = A_{ij} + B_{ij} \]
+        \textbf{Resta:}
+        \[ (A-B)_{ij} = A_{ij} - B_{ij} \]
+        \column{0.5\textwidth}
+        \textbf{Producto Hadamard:}
+        \[ (A \odot B)_{ij} = A_{ij} \cdot B_{ij} \]
+    \end{columns}
+    \vspace{0.3cm}
+    \begin{exampleblock}{Ejemplo con matrices}
+        \[ A = \begin{pmatrix}1&2\\3&4\end{pmatrix},\quad B = \begin{pmatrix}5&6\\7&8\end{pmatrix} \]
+        \[ A+B = \begin{pmatrix}6&8\\10&12\end{pmatrix},\quad A\odot B = \begin{pmatrix}5&12\\21&32\end{pmatrix} \]
+    \end{exampleblock}
+\end{frame}
+
+\begin{frame}[fragile]{En Python con NumPy}
+\begin{lstlisting}
+import numpy as np
+A = np.array([[1,2],[3,4]])
+B = np.array([[5,6],[7,8]])
+print(A + B)
+print(A - B)
+print(A * B)
+\end{lstlisting}
+\end{frame}
+
+\section{Broadcasting}
+
+\begin{frame}{Que es broadcasting?}
+    \begin{itemize}
+        \item Permite operar entre tensores de diferentes formas, estirando el mas pequeño sin copiar datos.
+        \item \textbf{Reglas} (desde el ultimo eje hacia el primero):
+        \begin{enumerate}
+            \item Las dimensiones se comparan de atras hacia adelante.
+            \item Dos dimensiones son compatibles si son iguales o una de ellas es 1.
+            \item Si una dimension falta en un tensor, se trata como 1.
+        \end{enumerate}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Ejemplos de broadcasting}
+    \begin{itemize}
+        \item Escalar + vector: $5 + [1,2,3] = [6,7,8]$.
+        \item Vector + matriz: $[1,2,3] + \begin{pmatrix}10&20&30\\40&50&60\end{pmatrix} = \begin{pmatrix}11&22&33\\41&52&63\end{pmatrix}$.
+        \item Vector columna + matriz: $\begin{pmatrix}1\\2\end{pmatrix} + \begin{pmatrix}10&20\\30&40\end{pmatrix} = \begin{pmatrix}11&21\\32&42\end{pmatrix}$.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Broadcasting en NumPy}
+\begin{lstlisting}
+import numpy as np
+a = 5
+v = np.array([1,2,3])
+print(a + v)
+
+v = np.array([1,2,3])
+M = np.array([[10,20,30],[40,50,60]])
+print(M + v)
+
+v_col = np.array([[1],[2]])
+M = np.array([[10,20],[30,40]])
+print(M + v_col)
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Aplicacion: Batch Normalization}
+    En Batch Normalization, se normaliza cada canal de un lote de imagenes. La media por canal tiene forma $(1,1,1,C)$ y se resta del tensor $(B,H,W,C)$ usando broadcasting.
+    
+    \begin{exampleblock}{Simulacion simplificada}
+\begin{lstlisting}
+import numpy as np
+batch = np.random.rand(32,32,32,3)
+media_por_canal = batch.mean(axis=(1,2), keepdims=True)
+batch_norm = batch - media_por_canal
+\end{lstlisting}
+    \end{exampleblock}
+\end{frame}
+
+\section{Reduccion: Suma y Media por Ejes}
+
+\begin{frame}{Reduccion de tensores}
+    \begin{itemize}
+        \item Consiste en aplicar una operacion (suma, media, maximo) a lo largo de uno o varios ejes.
+        \item El resultado elimina esos ejes (o los mantiene con tamaño 1 si usamos \texttt{keepdims}).
+    \end{itemize}
+    \begin{block}{Suma total}
+        \[ \sum_{i,j} X_{ij} \]
+    \end{block}
+    \begin{block}{Suma por filas (axis=1)}
+        \[ (\sum_{j} X_{ij})_i \]
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Ejemplos con NumPy}
+\begin{lstlisting}
+M = np.array([[1,2,3],[4,5,6]])
+print(M.sum())
+print(M.sum(axis=0))
+print(M.sum(axis=1))
+print(M.mean(axis=0))
+print(M.max(axis=1))
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}{Aplicacion: Perdida promedio en un batch}
+    Durante el entrenamiento, se calcula la perdida para cada muestra y se promedia:
+    \[ \text{loss} = \frac{1}{B}\sum_{i=1}^{B} \ell(y_i, \hat{y}_i) \]
+    En NumPy: \texttt{loss = np.mean(losses)}.
+\end{frame}
+
+\section{Producto Punto}
+
+\begin{frame}{Definicion de producto punto}
+    Para vectores $\mathbf{u}, \mathbf{v} \in \mathbb{R}^n$:
+    \[ \mathbf{u}\cdot\mathbf{v} = \sum_{i=1}^n u_i v_i = \|\mathbf{u}\| \|\mathbf{v}\| \cos\theta \]
+    \begin{itemize}
+        \item Mide la proyeccion de un vector sobre otro.
+        \item Geometricamente, $\theta$ es el angulo entre ellos.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Producto matriz-vector y matriz-matriz}
+    \begin{block}{Matriz-vector}
+        \[ (\mathbf{A}\mathbf{x})_i = \sum_{j=1}^{n} A_{ij} x_j \]
+    \end{block}
+    \begin{block}{Matriz-matriz}
+        \[ (\mathbf{A}\mathbf{B})_{ij} = \sum_{k=1}^{m} A_{ik} B_{kj} \]
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Ejemplos con NumPy}
+\begin{lstlisting}
+u = np.array([1, -2, 3])
+v = np.array([4, 0, -1])
+print(np.dot(u, v))
+
+A = np.array([[1,2],[3,4]])
+x = np.array([2,1])
+print(A @ x)
+
+B = np.array([[0,1],[1,0]])
+print(A @ B)
+print(B @ A)
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}{Similitud de coseno}
+    \[ \cos(\mathbf{u},\mathbf{v}) = \frac{\mathbf{u}\cdot\mathbf{v}}{\|\mathbf{u}\|\,\|\mathbf{v}\|} \]
+    \begin{exampleblock}{Ejemplo}
+        $\mathbf{u}=(1,0,-1)$, $\mathbf{v}=(2,1,0)$:
+        \[ \mathbf{u}\cdot\mathbf{v}=2,\quad \|\mathbf{u}\|=\sqrt{2},\quad \|\mathbf{v}\|=\sqrt{5},\quad \cos\theta=\frac{2}{\sqrt{10}}\approx0.632 \]
+    \end{exampleblock}
+\end{frame}
+
+\begin{frame}{Aplicacion en Transformers: Atencion}
+    \begin{block}{Dot-Product Attention}
+        \[ \text{Attention}(Q,K,V) = \text{softmax}\left(\frac{QK^\top}{\sqrt{d_k}}\right)V \]
+    \end{block}
+    \begin{itemize}
+        \item $Q,K,V$ son matrices.
+        \item $QK^\top$ calcula la similitud entre consultas y claves.
+    \end{itemize}
+\end{frame}
+
+\section{Ejemplo Integrado}
+
+\begin{frame}[fragile]{Implementacion paso a paso}
+\begin{lstlisting}
+import numpy as np
+batch = np.random.rand(2,3,5)
+
+media = batch.mean(axis=2, keepdims=True)
+std = batch.std(axis=2, keepdims=True)
+batch_norm = (batch - media) / (std + 1e-8)
+
+def cos_sim_matrix(seq):
+    norms = np.linalg.norm(seq, axis=1, keepdims=True)
+    sim = np.dot(seq, seq.T) / (norms @ norms.T + 1e-8)
+    return sim
+
+sim_matrices = np.array([cos_sim_matrix(seq) for seq in batch_norm])
+print(sim_matrices.shape)
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}
+    \centering
+    \Huge \textbf{Gracias!}
+
+\end{frame}
+
+\end{document}

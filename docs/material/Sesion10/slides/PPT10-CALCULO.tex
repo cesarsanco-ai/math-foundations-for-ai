@@ -1,0 +1,469 @@
+% --- CORRECCION: Forzar interpretacion raw de la entrada ---
+\UseRawInputEncoding
+\documentclass[aspectratio=169, 10pt, xcolor=table]{beamer}
+
+% --- Configuracion del Tema ---
+\usetheme{Madrid}
+\usecolortheme{dolphin}
+
+% --- Paquetes necesarios ---
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{amsmath, amssymb}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta, positioning, shapes.geometric}
+\usepackage{etoolbox}
+
+% --- Ruta de Imagenes ---
+\graphicspath{{./imagenes/}}
+
+% --- Estilo para codigo Python ---
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+\lstset{
+    language=Python,
+    backgroundcolor=\color{backcolour},
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{blue},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\scriptsize,
+    breaklines=true,
+    frame=single,
+    showstringspaces=false,
+    literate={á}{{\'a}}1 {é}{{\'e}}1 {í}{{\'i}}1 {ó}{{\'o}}1 {ú}{{\'u}}1 {ñ}{{\~n}}1 {ü}{{\"u}}1
+}
+
+% --- Pie de pagina personalizado ---
+\makeatletter
+\setbeamertemplate{footline}{
+  \leavevmode%
+  \hbox{%
+  \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,center]{author in head/foot}%
+    \usebeamerfont{author in head/foot}\insertshortauthor
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,center]{title in head/foot}%
+    \usebeamerfont{title in head/foot}Sesion 10
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,right]{date in head/foot}%
+    \usebeamerfont{date in head/foot}CALCULO Y ALGEBRA LINEAL \hfill \insertframenumber/\inserttotalframenumber \hspace*{0.3cm}
+  \end{beamercolorbox}}%
+  \vskip0pt%
+}
+\makeatother
+
+% --- Datos de la portada ---
+\title[SESION 10 CALCULO]{\textbf{Sesion 10}}
+\subtitle{Espacios Vectoriales, Cambio de Base y Transformaciones Lineales}
+\author[Prof. C. Sanchez]{Carlos Cesar Sanchez Coronel}
+\institute{\textbf{CALCULO Y ALGEBRA LINEAL PARA IA}}
+\date{}
+
+% --- Eliminar barra de navegacion ---
+\setbeamertemplate{navigation symbols}{}
+
+% --- Indice al inicio de cada seccion ---
+\AtBeginSection[]{
+  \begin{frame}
+    \frametitle{Contenido}
+    \tableofcontents[currentsection]
+  \end{frame}
+}
+
+\begin{document}
+
+% --- Portada ---
+\begin{frame}
+    \titlepage
+\end{frame}
+
+% --- Indice general ---
+\begin{frame}{Contenido}
+    \tableofcontents
+\end{frame}
+
+% ============================================================================
+% SECCION 1: ESPACIOS VECTORIALES
+% ============================================================================
+\section{Espacios Vectoriales: El Hogar de los Datos}
+
+\begin{frame}{Definicion intuitiva}
+    \begin{itemize}
+        \item Un espacio vectorial es un conjunto de objetos (vectores) que se pueden sumar y multiplicar por escalares.
+        \item Ejemplos: $\mathbb{R}^2$ (plano), $\mathbb{R}^3$ (espacio), matrices, funciones.
+        \item En IA, los datos son vectores en un espacio de características.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Definicion formal}
+    \begin{block}{Espacio vectorial sobre $\mathbb{R}$}
+        Un conjunto $V$ con dos operaciones:
+        \begin{itemize}
+            \item Suma $+ : V\times V \to V$ (asociativa, conmutativa, neutro, inverso).
+            \item Producto por escalar $\cdot : \mathbb{R}\times V \to V$ (distributivo, asociativo, identidad).
+        \end{itemize}
+    \end{block}
+    \begin{exampleblock}{Ejemplo clasico}
+        $\mathbb{R}^n$ con suma y producto por escalar usuales.
+    \end{exampleblock}
+\end{frame}
+
+\begin{frame}{Subespacios}
+    \begin{itemize}
+        \item $W\subseteq V$ es subespacio si es cerrado bajo suma y producto por escalar.
+        \item Ejemplos en $\mathbb{R}^3$: rectas y planos que pasan por el origen.
+        \item $W = \{(x,y,z): x+y-z=0\}$ es un subespacio (plano).
+    \end{itemize}
+\end{frame}
+
+% ============================================================================
+% SECCION 2: COMBINACION LINEAL, BASE, DIMENSION
+% ============================================================================
+\section{Combinacion Lineal, Independencia, Base y Dimension}
+
+\begin{frame}{Combinacion lineal}
+    Dados vectores $\mathbf{v}_1,\dots,\mathbf{v}_k$ y escalares $c_1,\dots,c_k$,
+    \[
+    c_1\mathbf{v}_1 + \cdots + c_k\mathbf{v}_k
+    \]
+    es una combinacion lineal.
+    \begin{exampleblock}{Ejemplo}
+        $(5,8) = 2(1,2) + 1(3,4)$ es combinacion lineal de $(1,2)$ y $(3,4)$.
+    \end{exampleblock}
+\end{frame}
+
+\begin{frame}{Independencia lineal}
+    \begin{block}{Definicion}
+        $\mathbf{v}_1,\dots,\mathbf{v}_k$ son linealmente independientes si
+        \[
+        c_1\mathbf{v}_1+\cdots+c_k\mathbf{v}_k = \mathbf{0} \Rightarrow c_1=\cdots=c_k=0.
+        \]
+    \end{block}
+    \begin{exampleblock}{Ejemplo en $\mathbb{R}^3$}
+        $(1,0,1)$, $(0,1,1)$, $(1,1,0)$ son independientes (determinante $-2\neq0$).
+    \end{exampleblock}
+\end{frame}
+
+\begin{frame}{Base y dimension}
+    \begin{block}{Base}
+        Un conjunto de vectores que es linealmente independiente y genera todo el espacio.
+    \end{block}
+    \begin{itemize}
+        \item La base canónica de $\mathbb{R}^3$: $(1,0,0)$, $(0,1,0)$, $(0,0,1)$.
+        \item \textbf{Dimension}: numero de elementos de una base.
+        \item $\dim(\mathbb{R}^n)=n$.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Coordenadas de un vector en una base}
+    Si $\mathcal{B}=\{\mathbf{v}_1,\dots,\mathbf{v}_n\}$ es base, cualquier vector $\mathbf{v}$ se escribe de forma unica:
+    \[
+    \mathbf{v} = \alpha_1\mathbf{v}_1 + \cdots + \alpha_n\mathbf{v}_n
+    \]
+    Los $\alpha_i$ son las coordenadas de $\mathbf{v}$ en base $\mathcal{B}$, denotado $[\mathbf{v}]_{\mathcal{B}}$.
+\end{frame}
+
+% ============================================================================
+% SECCION 3: CAMBIO DE BASE
+% ============================================================================
+\section{Cambio de Base}
+
+\begin{frame}{Matriz de cambio de base}
+    \begin{block}{De base $\mathcal{B}$ a base $\mathcal{C}$}
+        Sea $\mathcal{B}=\{\mathbf{u}_1,\dots,\mathbf{u}_n\}$, $\mathcal{C}=\{\mathbf{w}_1,\dots,\mathbf{w}_n\}$. La matriz $\mathbf{P}_{\mathcal{C}\leftarrow\mathcal{B}}$ tiene como columnas $[\mathbf{u}_j]_{\mathcal{C}}$. Entonces
+        \[
+        [\mathbf{v}]_{\mathcal{C}} = \mathbf{P}_{\mathcal{C}\leftarrow\mathcal{B}} [\mathbf{v}]_{\mathcal{B}}.
+        \]
+    \end{block}
+\end{frame}
+
+\begin{frame}{Ejemplo en $\mathbb{R}^2$}
+    \begin{itemize}
+        \item Base canónica $\mathcal{C} = \{(1,0),(0,1)\}$.
+        \item Otra base $\mathcal{B} = \{(1,1),(1,-1)\}$.
+        \item $[(1,1)]_{\mathcal{C}} = (1,1)^T$, $[(1,-1)]_{\mathcal{C}} = (1,-1)^T$.
+        \item $\mathbf{P}_{\mathcal{C}\leftarrow\mathcal{B}} = \begin{pmatrix}1&1\\1&-1\end{pmatrix}$.
+        \item Si $[\mathbf{v}]_{\mathcal{B}} = (2,3)^T$, entonces $[\mathbf{v}]_{\mathcal{C}} = \mathbf{P}_{\mathcal{C}\leftarrow\mathcal{B}}(2,3)^T = (5,-1)^T$.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Aplicacion en NLP: embeddings}
+    \begin{itemize}
+        \item Las palabras se representan como vectores (embeddings).
+        \item La matriz de embedding $E$ transforma un vector one-hot (base de palabras) a un espacio semántico.
+        \item Esto equivale a un cambio de base: de la base de palabras a la base de características semánticas.
+        \item Las operaciones algebraicas (rey - hombre + mujer $\approx$ reina) tienen sentido por las relaciones lineales en ese espacio.
+    \end{itemize}
+\end{frame}
+
+% ============================================================================
+% SECCION 4: TRANSFORMACIONES LINEALES
+% ============================================================================
+\section{Transformaciones Lineales}
+
+\begin{frame}{Definicion}
+    Una funcion $T:V\to W$ entre espacios vectoriales es lineal si:
+    \begin{enumerate}
+        \item $T(\mathbf{u}+\mathbf{v}) = T(\mathbf{u}) + T(\mathbf{v})$.
+        \item $T(c\mathbf{v}) = cT(\mathbf{v})$.
+    \end{enumerate}
+    \begin{alertblock}{Importante}
+        Siempre $T(\mathbf{0}) = \mathbf{0}$.
+    \end{alertblock}
+\end{frame}
+
+\begin{frame}{Representacion matricial}
+    Fijadas bases $\mathcal{B}_V$ y $\mathcal{B}_W$, existe una matriz $\mathbf{A}$ tal que
+    \[
+    [T(\mathbf{v})]_{\mathcal{B}_W} = \mathbf{A} [\mathbf{v}]_{\mathcal{B}_V}.
+    \]
+    \begin{itemize}
+        \item La $j$-esima columna de $\mathbf{A}$ es $[T(\mathbf{v}_j)]_{\mathcal{B}_W}$ donde $\mathbf{v}_j$ es el $j$-esimo vector de la base de $V$.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Ejemplos geometricos en 2D}
+    \begin{columns}[t]
+        \column{0.5\textwidth}
+        \textbf{Rotacion} ($\theta$):
+        \[
+        \begin{pmatrix}\cos\theta & -\sin\theta\\ \sin\theta & \cos\theta\end{pmatrix}
+        \]
+        \textbf{Escalado}:
+        \[
+        \begin{pmatrix}s_x & 0\\ 0 & s_y\end{pmatrix}
+        \]
+        \column{0.5\textwidth}
+        \textbf{Cizallamiento horizontal}:
+        \[
+        \begin{pmatrix}1 & k\\ 0 & 1\end{pmatrix}
+        \]
+        \textbf{Reflexion eje y}:
+        \[
+        \begin{pmatrix}1 & 0\\ 0 & -1\end{pmatrix}
+        \]
+    \end{columns}
+\end{frame}
+
+\begin{frame}{Composicion de transformaciones}
+    La composicion $S\circ T$ corresponde al producto de sus matrices (en el orden correcto):
+    \[
+    [S\circ T] = [S]\,[T].
+    \]
+    \begin{exampleblock}{Ejemplo}
+        Rotar $30^\circ$ y luego escalar $(2,1)$:
+        \[
+        \begin{pmatrix}2&0\\0&1\end{pmatrix}
+        \begin{pmatrix}\cos30^\circ&-\sin30^\circ\\ \sin30^\circ&\cos30^\circ\end{pmatrix}
+        \]
+    \end{exampleblock}
+\end{frame}
+
+% ============================================================================
+% SECCION 5: APLICACIONES EN IA
+% ============================================================================
+\section{Aplicaciones en Inteligencia Artificial}
+
+\begin{frame}{Deep Learning: capas fully connected}
+    \begin{itemize}
+        \item Una capa lineal: $\mathbf{y} = \mathbf{W}\mathbf{x} + \mathbf{b}$.
+        \item $\mathbf{W}$ es una transformacion lineal del espacio de entrada.
+        \item Las columnas de $\mathbf{W}$ son las imagenes de los vectores base.
+    \end{itemize}
+    \begin{center}
+        \begin{tikzpicture}[scale=0.8]
+            \draw[->] (-1,0) -- (2,0) node[right] {$x_1$};
+            \draw[->] (0,-1) -- (0,2) node[above] {$x_2$};
+            \draw[thick, blue] (0,0) -- (1,0) node[below] {$\mathbf{e}_1$};
+            \draw[thick, blue] (0,0) -- (0,1) node[left] {$\mathbf{e}_2$};
+            \draw[->, red] (3,1) -- (5,2) node[midway, above] {$\mathbf{W}$};
+            \draw[->] (6,-1) -- (9,2);
+            \draw[->] (6,2) -- (9,1);
+        \end{tikzpicture}
+    \end{center}
+\end{frame}
+
+\begin{frame}{NLP: embeddings y cambio de base}
+    \begin{itemize}
+        \item Matriz de embedding $E$: cada columna es el embedding de una palabra.
+        \item Operaciones como $\mathbf{rey} - \mathbf{hombre} + \mathbf{mujer} \approx \mathbf{reina}$ son transformaciones lineales en el espacio semántico.
+        \item Un cambio de base corresponde a una reparametrizacion del espacio.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Vision por computador: data augmentation}
+    \begin{itemize}
+        \item Para aumentar datos, aplicamos transformaciones afines a imagenes: rotacion, escalado, cizallamiento.
+        \item Cada transformacion es lineal en coordenadas homogeneas.
+        \item Ejemplo: rotar $45^\circ$ y trasladar $(10,0)$:
+        \[
+        \begin{pmatrix}\cos45^\circ&-\sin45^\circ&10\\ \sin45^\circ&\cos45^\circ&0\\0&0&1\end{pmatrix}
+        \]
+    \end{itemize}
+\end{frame}
+
+% ============================================================================
+% SECCION 6: VISUALIZACION CON PYTHON
+% ============================================================================
+\section{Visualizacion con Python}
+
+\begin{frame}[fragile]{Transformaciones en 2D con Matplotlib}
+    \begin{lstlisting}
+import numpy as np
+import matplotlib.pyplot as plt
+
+def plot_transform(A, puntos, titulo):
+    puntos_trans = A @ puntos
+    plt.figure(figsize=(8,4))
+    plt.subplot(1,2,1)
+    plt.scatter(puntos[0,:], puntos[1,:], c='b', alpha=0.5)
+    plt.quiver(0,0,1,0, angles='xy', scale_units='xy', scale=1, color='r', label='e1')
+    plt.quiver(0,0,0,1, angles='xy', scale_units='xy', scale=1, color='g', label='e2')
+    plt.xlim(-3,3); plt.ylim(-3,3); plt.grid(); plt.axis('equal')
+    plt.title('Original')
+    plt.subplot(1,2,2)
+    plt.scatter(puntos_trans[0,:], puntos_trans[1,:], c='b', alpha=0.5)
+    e1_t = A @ [1,0]
+    e2_t = A @ [0,1]
+    plt.quiver(0,0, e1_t[0], e1_t[1], angles='xy', scale_units='xy', scale=1, color='r')
+    plt.quiver(0,0, e2_t[0], e2_t[1], angles='xy', scale_units='xy', scale=1, color='g')
+    plt.xlim(-3,3); plt.ylim(-3,3); plt.grid(); plt.axis('equal')
+    plt.title('Transformado')
+    plt.suptitle(titulo)
+    plt.tight_layout()
+    plt.show()
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Ejemplos de transformaciones}
+    \begin{lstlisting}
+# Crear puntos de un cuadrado
+x = np.linspace(-1,1,10)
+y = np.linspace(-1,1,10)
+X, Y = np.meshgrid(x,y)
+puntos = np.vstack([X.ravel(), Y.ravel()])
+
+# Rotacion 30 grados
+theta = np.radians(30)
+A_rot = np.array([[np.cos(theta), -np.sin(theta)],
+                  [np.sin(theta), np.cos(theta)]])
+plot_transform(A_rot, puntos, 'Rotación 30°')
+
+# Escalado
+A_scale = np.array([[2,0],[0,0.5]])
+plot_transform(A_scale, puntos, 'Escalado (2x, 0.5y)')
+
+# Cizallamiento horizontal
+A_shear = np.array([[1,1.5],[0,1]])
+plot_transform(A_shear, puntos, 'Cizallamiento horizontal')
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Capa lineal con NumPy}
+    \begin{lstlisting}
+class LinearLayer:
+    def __init__(self, in_features, out_features):
+        self.W = np.random.randn(out_features, in_features) * 0.01
+        self.b = np.zeros((out_features, 1))
+
+    def forward(self, X):
+        # X: (in_features, batch_size)
+        return self.W @ X + self.b
+
+# Ejemplo: batch de 5 vectores de 3 dims, capa de salida 2 dims
+batch = np.random.randn(3,5)
+layer = LinearLayer(3,2)
+salida = layer.forward(batch)
+print("Entrada shape:", batch.shape)
+print("Salida shape:", salida.shape)
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Cambio de base con NumPy}
+    \begin{lstlisting}
+# Base B: columnas (1,1) y (1,-1)
+P = np.array([[1, 1],
+              [1, -1]])
+
+# Vector en base canonica
+v_canon = np.array([5, -1])
+
+# Coordenadas en base B resolviendo P x = v_canon
+v_B = np.linalg.solve(P, v_canon)
+print("Coordenadas en base B:", v_B)   # [2, 3]
+
+# Verificacion
+print("Reconstruccion:", P @ v_B)      # [5, -1]
+    \end{lstlisting}
+\end{frame}
+
+% ============================================================================
+% SECCION 7: NOTACION EN PAPERS
+% ============================================================================
+\section{Notacion en Papers Cientificos}
+
+\begin{frame}{Notacion comun}
+    \begin{itemize}
+        \item $\mathbf{h} = \mathbf{W}\mathbf{x} + \mathbf{b}$: capa lineal (fully connected).
+        \item $\mathbf{W} \in \mathbb{R}^{d_{\text{out}}\times d_{\text{in}}}$ matriz de pesos.
+        \item $\mathbf{E}_{\text{word}}$: matriz de embedding.
+        \item $\mathbf{T}_\theta(\mathbf{p}) = \mathbf{R}_\theta \mathbf{p} + \mathbf{t}$: transformacion afín.
+        \item Descomposicion SVD: $\mathbf{W} = \mathbf{U}\mathbf{D}\mathbf{V}^\top$ (cambio de base ortonormal).
+    \end{itemize}
+\end{frame}
+
+% ============================================================================
+% SECCION 8: EJERCICIOS PROPUESTOS
+% ============================================================================
+\section{Ejercicios Propuestos}
+
+\begin{frame}{Ejercicios}
+    \begin{enumerate}
+        \item Demuestra que el conjunto de matrices $2\times2$ es un espacio vectorial. ¿Cual es su dimension?
+        \item Determina si $(1,2,3)$, $(4,5,6)$, $(7,8,9)$ son linealmente independientes.
+        \item Encuentra la matriz de la transformacion lineal que refleja un vector respecto a la recta $y=x$.
+        \item Genera 100 puntos aleatorios en $[-1,1]\times[-1,1]$ y aplicales una rotacion de $60^\circ$, un escalado $(2,0.5)$ y un cizallamiento $0.8$. Visualiza.
+        \item Investiga como se representa una convolucion como transformacion lineal (matriz de Toeplitz).
+    \end{enumerate}
+\end{frame}
+
+% ============================================================================
+% SECCION 9: RESUMEN
+% ============================================================================
+\section{Resumen}
+
+\begin{frame}{Lo que hemos aprendido}
+    \begin{exampleblock}{Conceptos clave}
+        \begin{itemize}
+            \item \textbf{Espacios vectoriales}: estructura matematica de los datos.
+            \item \textbf{Base y dimension}: coordenadas unicas.
+            \item \textbf{Cambio de base}: matriz $\mathbf{P}_{\mathcal{C}\leftarrow\mathcal{B}}$.
+            \item \textbf{Transformaciones lineales}: representacion matricial, ejemplos geometricos.
+            \item \textbf{Aplicaciones}: capas fully connected, embeddings, data augmentation.
+            \item \textbf{Visualizacion}: Python con NumPy y Matplotlib.
+        \end{itemize}
+    \end{exampleblock}
+\end{frame}
+
+\begin{frame}{Conexion con futuros cursos}
+    \begin{itemize}
+        \item \textbf{Deep Learning}: redes profundas apilan transformaciones lineales.
+        \item \textbf{NLP}: espacios de embeddings, analogias.
+        \item \textbf{Vision}: transformaciones afines y aumento de datos.
+        \item \textbf{Algebra lineal avanzada}: descomposiciones espectrales, PCA.
+    \end{itemize}
+\end{frame}
+
+% --- Diapositiva final ---
+\begin{frame}
+    \centering
+    \Huge \textbf{Gracias!}
+
+\end{frame}
+
+\end{document}

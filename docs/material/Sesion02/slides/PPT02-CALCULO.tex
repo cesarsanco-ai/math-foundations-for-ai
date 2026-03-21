@@ -1,0 +1,489 @@
+% --- CORRECCIÓN IMPORTANTE EN LA PRIMERA LÍNEA ---
+% Agregamos "xcolor=table" para que funcione \rowcolor sin errores
+\documentclass[aspectratio=169, 10pt, xcolor=table]{beamer}
+
+% --- Configuración del Tema (estilo profesional como el ejemplo) ---
+\usetheme{Madrid}
+\usecolortheme{dolphin}
+
+% --- Paquetes necesarios ---
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{amsmath, amssymb}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta, positioning, shapes.geometric}
+
+% --- Ruta de Imágenes (crea la carpeta "imagenes" y coloca ahí tus archivos) ---
+\graphicspath{{./imagenes/}}
+
+% --- Estilo para código Python (configurado para evitar problemas con UTF-8) ---
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+\lstset{
+    language=Python,
+    backgroundcolor=\color{backcolour},
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{blue},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\scriptsize,
+    breaklines=true,
+    frame=single,
+    showstringspaces=false,
+    literate={á}{{\'a}}1 {é}{{\'e}}1 {í}{{\'i}}1 {ó}{{\'o}}1 {ú}{{\'u}}1 {ñ}{{\~n}}1 {ü}{{\"u}}1
+}
+
+% --- Pie de página personalizado ---
+\makeatletter
+
+\setbeamertemplate{footline}{
+  \leavevmode%
+  \hbox{%
+  \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,center]{author in head/foot}%
+    \usebeamerfont{author in head/foot}\insertshortauthor
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,center]{title in head/foot}%
+    \usebeamerfont{title in head/foot}Sesi\'on 2
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,right]{date in head/foot}%
+    \usebeamerfont{date in head/foot}CÁLCULO Y ÁLGEBRA LINEAL \hfill \insertframenumber/\inserttotalframenumber \hspace*{0.3cm}
+  \end{beamercolorbox}}%
+  \vskip0pt%
+}
+
+\makeatother
+
+% --- Datos de la portada ---
+\title[SESI\'ON 2 CÁLCULO]{\textbf{Sesi\'on 2}}
+\subtitle{Tensores: Estructuras de Datos Multidimensionales para IA}
+\author[Prof. C. S\'anchez]{Carlos C\'esar S\'anchez Coronel}
+\institute{\textbf{CÁLCULO Y ÁLGEBRA LINEAL PARA IA}}
+\date{}
+
+% Logo opcional (descomentar si tienes la imagen)
+% \titlegraphic{\includegraphics[height=1.5cm]{logo.png}}
+
+% --- Eliminar la barra de navegación (opcional) ---
+\setbeamertemplate{navigation symbols}{}
+
+% --- Índice al inicio de cada sección ---
+\AtBeginSection[]{
+  \begin{frame}
+    \frametitle{Contenido}
+    \tableofcontents[currentsection]
+  \end{frame}
+}
+
+% ============================================================================
+% INICIO DEL DOCUMENTO
+% ============================================================================
+\begin{document}
+
+% --- Portada ---
+\begin{frame}
+    \titlepage
+\end{frame}
+
+% --- Índice general ---
+\begin{frame}{Contenido}
+    \tableofcontents
+\end{frame}
+
+% ============================================================================
+% SECCIÓN 1: ¿QUÉ ES UN TENSOR?
+% ============================================================================
+\section{¿Qu\'e es un Tensor?}
+
+\begin{frame}{Definici\'on de Tensor}
+    \begin{block}{Tensor}
+        Un tensor es un arreglo multidimensional de números. Su \textbf{orden} (o rango) es el número de dimensiones.
+    \end{block}
+    \begin{itemize}
+        \item \textbf{Orden 0}: escalar. Ej: $x = 5.2$ (bias de una neurona).
+        \item \textbf{Orden 1}: vector. Ej: $\mathbf{x} = [1,2,3]$ (características de una muestra).
+        \item \textbf{Orden 2}: matriz. Ej: $\mathbf{X} = \begin{pmatrix}1&2\\3&4\end{pmatrix}$ (imagen en grises 2x2).
+        \item \textbf{Orden 3}: imagen RGB: $\mathcal{T} \in \mathbb{R}^{h \times w \times 3}$.
+        \item \textbf{Orden 4}: lote de imágenes: $\mathcal{T} \in \mathbb{R}^{b \times h \times w \times c}$.
+        \item \textbf{Orden 5}: lote de videos: $\mathcal{T} \in \mathbb{R}^{b \times f \times h \times w \times c}$.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Representaci\'on visual de tensores}
+    \begin{center}
+        \begin{tikzpicture}[scale=0.7]
+            % Escalar
+            \draw[fill=blue!20] (0,1) circle (0.5);
+            \node at (0,1) {$5.2$};
+            \node at (0,2) {Escalar (0D)};
+            % Vector
+            \draw[fill=green!20] (3,0) rectangle (5,2);
+            \node at (4,1) {$[1,2,3]$};
+            \node at (4,2.5) {Vector (1D)};
+            % Matriz
+            \draw[fill=red!20] (7,0) rectangle (10,2);
+            \draw (7.5,0.5) -- (7.5,2);
+            \draw (8.5,0.5) -- (8.5,2);
+            \draw (9.5,0.5) -- (9.5,2);
+            \node at (8,1.2) {$a$};
+            \node at (9,1.2) {$b$};
+            \node at (8,0.7) {$c$};
+            \node at (9,0.7) {$d$};
+            \node at (8.5,2.5) {Matriz (2D)};
+            % Tensor 3D
+            \draw[fill=yellow!20] (0,-3) rectangle (2,0);
+            \draw (0.5,-3) -- (0.5,0);
+            \draw (1,-3) -- (1,0);
+            \draw (1.5,-3) -- (1.5,0);
+            \node at (1,-1.5) {Tensor 3D};
+        \end{tikzpicture}
+    \end{center}
+\end{frame}
+
+% ============================================================================
+% SECCIÓN 2: NOTACIÓN EN PAPERS DE IA
+% ============================================================================
+\section{Notaci\'on en Papers de IA}
+
+\begin{frame}{Interpretando la notación de tensores}
+    \begin{itemize}
+        \item $\mathbf{X} \in \mathbb{R}^{n \times d}$: matriz con $n$ muestras y $d$ características.
+        \item $\mathcal{T} \in \mathbb{R}^{b \times c \times h \times w}$: tensor de imágenes (batch, canales, alto, ancho).
+        \item $x_i$: $i$-ésimo elemento de un vector.
+        \item $X_{ij}$: elemento en fila $i$, columna $j$ de una matriz.
+        \item $\mathcal{T}_{ijk}$ o $\mathcal{T}_{ij,k}$: elemento de un tensor 3D.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Ejemplo de notación}
+    \begin{exampleblock}{Imágenes}
+        $\mathbf{X} \in \mathbb{R}^{32 \times 3 \times 224 \times 224}$ representa un lote de 32 imágenes RGB de 224x224 píxeles.
+        \begin{itemize}
+            \item 32 = batch size
+            \item 3 = canales (R,G,B)
+            \item 224 = alto
+            \item 224 = ancho
+        \end{itemize}
+    \end{exampleblock}
+    \begin{exampleblock}{Texto}
+        $\mathbf{E} \in \mathbb{R}^{10 \times 300}$: una frase de 10 palabras con embeddings de dimensión 300.
+    \end{exampleblock}
+\end{frame}
+
+% ============================================================================
+% SECCIÓN 3: OPERACIONES FUNDAMENTALES
+% ============================================================================
+\section{Operaciones Fundamentales con Tensores}
+
+\subsection{Transposición}
+
+\begin{frame}{Transposición de matrices y tensores}
+    \begin{block}{Matriz}
+        $(A^T)_{ij} = A_{ji}$
+        \[
+        A = \begin{pmatrix}1&2\\3&4\\5&6\end{pmatrix} \quad A^T = \begin{pmatrix}1&3&5\\2&4&6\end{pmatrix}
+        \]
+    \end{block}
+    \begin{block}{Tensor 3D}
+        Podemos permutar ejes. Ej: tensor de forma $(2,3,4)$ a $(4,2,3)$ con \texttt{tensor.transpose(2,0,1)}.
+    \end{block}
+\end{frame}
+
+\subsection{Redimensionamiento (Reshape)}
+
+\begin{frame}{Cambiar la forma sin alterar los datos}
+    \begin{itemize}
+        \item Ejemplo: imagen de $28 \times 28$ se aplana a un vector de $784$ elementos.
+        \item Condición: el número total de elementos debe conservarse.
+        \item En NumPy: \texttt{vector.reshape(2,3)} si el vector tiene 6 elementos.
+    \end{itemize}
+    \begin{exampleblock}{Ejemplo}
+        \[
+        \mathbf{v} = [1,2,3,4,5,6] \quad \rightarrow \quad \begin{pmatrix}1&2&3\\4&5&6\end{pmatrix}
+        \]
+    \end{exampleblock}
+\end{frame}
+
+\subsection{Normas de Vectores}
+
+\begin{frame}{Normas L1, L2 e infinito}
+    \begin{columns}[t]
+        \column{0.33\textwidth}
+        \textbf{L2 (Euclidiana)}
+        \[
+        \|\mathbf{x}\|_2 = \sqrt{\sum_i x_i^2}
+        \]
+        \column{0.33\textwidth}
+        \textbf{L1 (Manhattan)}
+        \[
+        \|\mathbf{x}\|_1 = \sum_i |x_i|
+        \]
+        \column{0.33\textwidth}
+        \textbf{L-infinito}
+        \[
+        \|\mathbf{x}\|_\infty = \max_i |x_i|
+        \]
+    \end{columns}
+    \vspace{0.3cm}
+    \begin{exampleblock}{Ejemplo con $\mathbf{x} = (3, -4)$}
+        \begin{align*}
+            \|x\|_2 &= \sqrt{3^2+(-4)^2}=5 \\
+            \|x\|_1 &= 3+4=7 \\
+            \|x\|_\infty &= \max(3,4)=4
+        \end{align*}
+    \end{exampleblock}
+\end{frame}
+
+\begin{frame}{Interpretación geométrica de las normas}
+    \begin{center}
+        \begin{tikzpicture}[scale=0.8]
+            % Círculo L2
+            \draw[thick, blue] (0,0) circle (2);
+            \node at (0,0.5) {$L_2$};
+            % Diamante L1
+            \draw[thick, red] (4,0) -- (6,2) -- (8,0) -- (6,-2) -- cycle;
+            \node at (6,0.5) {$L_1$};
+            % Cuadrado L-inf
+            \draw[thick, green] (10,2) -- (14,2) -- (14,-2) -- (10,-2) -- cycle;
+            \node at (12,0.5) {$L_\infty$};
+        \end{tikzpicture}
+    \end{center}
+    \begin{itemize}
+        \item Conjuntos de vectores con norma 1.
+        \item L1 produce soluciones dispersas.
+        \item L2 es el círculo (rotacionalmente invariante).
+        \item L-inf es el cuadrado (ignora valores pequeños).
+    \end{itemize}
+\end{frame}
+
+% ============================================================================
+% SECCIÓN 4: APLICACIONES EN IA
+% ============================================================================
+\section{Aplicaciones en IA}
+
+\subsection{Visión por Computador}
+
+\begin{frame}{Tensores en imágenes y videos}
+    \begin{itemize}
+        \item Imagen en escala de grises: matriz $\in \mathbb{R}^{h \times w}$.
+        \item Imagen RGB: tensor $\in \mathbb{R}^{h \times w \times 3}$.
+        \item Lote de imágenes: tensor $\in \mathbb{R}^{b \times h \times w \times c}$.
+        \item Lote de videos: $\in \mathbb{R}^{b \times f \times h \times w \times c}$.
+    \end{itemize}
+\end{frame}
+
+\subsection{Procesamiento de Lenguaje Natural}
+
+\begin{frame}{Tensores en NLP}
+    \begin{itemize}
+        \item Embedding de palabra: vector $\in \mathbb{R}^{d}$.
+        \item Frase (secuencia): matriz $\in \mathbb{R}^{n \times d}$.
+        \item Lote de frases: tensor $\in \mathbb{R}^{b \times n \times d}$.
+        \item Atención en Transformers: tensores $(batch, heads, seq, seq)$.
+    \end{itemize}
+\end{frame}
+
+\subsection{Regularización en Machine Learning}
+
+\begin{frame}{Regularización L1 y L2}
+    \begin{block}{Ridge (L2)}
+        \[
+        \mathcal{L} = \text{MSE} + \lambda \|\mathbf{w}\|_2^2
+        \]
+        \begin{itemize}
+            \item Favorece pesos pequeños pero no nulos.
+            \item Reduce la varianza del modelo.
+        \end{itemize}
+    \end{block}
+    \begin{block}{Lasso (L1)}
+        \[
+        \mathcal{L} = \text{MSE} + \lambda \|\mathbf{w}\|_1
+        \]
+        \begin{itemize}
+            \item Puede llevar pesos exactamente a cero.
+            \item Realiza selección automática de características.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+% ============================================================================
+% SECCIÓN 5: IMPLEMENTACIÓN EN PYTHON CON NUMPY
+% ============================================================================
+\section{Python con NumPy: Manipulación de Tensores}
+
+\begin{frame}[fragile]{Creación de tensores}
+    \begin{lstlisting}
+import numpy as np
+
+# Escalar (0D)
+escalar = np.array(5)
+print(f"Escalar: {escalar}, dimensiones: {escalar.ndim}")
+
+# Vector (1D)
+vector = np.array([1,2,3,4])
+print(f"Vector shape: {vector.shape}")
+
+# Matriz (2D)
+matriz = np.array([[1,2],[3,4],[5,6]])
+print(f"Matriz shape: {matriz.shape}")
+
+# Tensor 3D (2 imagenes 3x3)
+tensor_3d = np.random.rand(2,3,3)
+print(f"Tensor 3D shape: {tensor_3d.shape}")
+
+# Tensor 4D (lote de 2 imagenes RGB 32x32)
+tensor_4d = np.random.rand(2,32,32,3)
+print(f"Tensor 4D shape: {tensor_4d.shape}")
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Atributos importantes}
+    \begin{lstlisting}
+a = np.array([[1,2,3],[4,5,6]])
+print(f"Forma: {a.shape}")        # (2,3)
+print(f"Dimensiones: {a.ndim}")    # 2
+print(f"Tamaño total: {a.size}")   # 6
+print(f"Tipo de datos: {a.dtype}") # int64
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Transposición y reshape}
+    \begin{lstlisting}
+# Transposición
+matriz = np.array([[1,2],[3,4],[5,6]])
+print("Transpuesta:\n", matriz.T)
+
+# Permutar ejes en tensor 3D
+tensor = np.random.rand(2,3,4)
+permutado = tensor.transpose(2,0,1)
+print(f"Original shape: {tensor.shape}")
+print(f"Nuevo shape: {permutado.shape}")  # (4,2,3)
+
+# Redimensionamiento (reshape)
+vector = np.array([1,2,3,4,5,6])
+matriz_2x3 = vector.reshape(2,3)
+print(matriz_2x3)
+# Usar -1 para inferir dimensión
+otra = vector.reshape(3,-1)  # 3 filas, 2 columnas
+print(otra)
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Cálculo de normas}
+    \begin{lstlisting}
+v = np.array([3, -4])
+
+norma_l2 = np.linalg.norm(v, ord=2)    # 5.0
+norma_l1 = np.linalg.norm(v, ord=1)    # 7.0
+norma_inf = np.linalg.norm(v, ord=np.inf) # 4.0
+norma_l2_cuad = np.sum(v**2)            # 25
+
+print(f"L2: {norma_l2}, L1: {norma_l1}, L-inf: {norma_inf}")
+
+# Normas por filas en una matriz
+matriz = np.array([[1,2],[3,4],[5,6]])
+normas_filas = np.linalg.norm(matriz, axis=1)
+print("Normas por fila:", normas_filas)
+    \end{lstlisting}
+\end{frame}
+
+% ============================================================================
+% SECCIÓN 6: EJEMPLO INTEGRADO
+% ============================================================================
+\section{Ejemplo Integrado: Procesamiento de un Lote de Imágenes}
+
+\begin{frame}[fragile]{Simulación de lote de imágenes}
+    \begin{lstlisting}
+import numpy as np
+
+# Crear lote de 3 imagenes en grises de 4x4 (valores 0-255)
+batch = np.random.randint(0, 256, size=(3,4,4)).astype(np.float32)
+print(f"Forma del lote: {batch.shape}")  # (3,4,4)
+
+# Aplanar cada imagen para calcular norma
+imagenes_aplanadas = batch.reshape(3, -1)
+normas = np.linalg.norm(imagenes_aplanadas, axis=1)
+print("Normas L2 de cada imagen:", normas)
+
+# Normalizar cada imagen (dividir por su norma)
+batch_normalizado = batch / normas[:, np.newaxis, np.newaxis]
+
+# Verificar normas después de normalizar (deben ser 1)
+nuevas_normas = np.linalg.norm(batch_normalizado.reshape(3,-1), axis=1)
+print("Nuevas normas (deberian ser 1):", nuevas_normas)
+    \end{lstlisting}
+\end{frame}
+
+% ============================================================================
+% SECCIÓN 7: INTERPRETANDO NOTACIÓN EN PAPERS
+% ============================================================================
+\section{Interpretando Notación en Papers}
+
+\begin{frame}{Ejemplo de ecuación con tensores}
+    \begin{block}{Atención en Transformers}
+        \[
+        \text{Attention}(Q, K, V) = \text{softmax}\left(\frac{QK^\top}{\sqrt{d_k}}\right)V
+        \]
+    \end{block}
+    \begin{itemize}
+        \item $Q, K, V$ son tensores de dimensión $(batch, seqlen, d_{model})$.
+        \item $QK^\top$ produce un tensor de atención $(batch, seqlen, seqlen)$.
+        \item El producto final combina los valores ponderados.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Ejemplo de función de pérdida regularizada}
+    \[
+    \mathcal{L}(\mathbf{w}) = \frac{1}{N}\sum_{i=1}^{N} \|\mathbf{y}_i - \hat{\mathbf{y}}_i\|_2^2 + \lambda \|\mathbf{w}\|_1
+    \]
+    \begin{itemize}
+        \item $\mathbf{y}_i, \hat{\mathbf{y}}_i$ son vectores de etiquetas y predicciones.
+        \item $\|\cdot\|_2^2$ es la norma L2 al cuadrado (suma de cuadrados).
+        \item $\|\mathbf{w}\|_1$ es la norma L1 (regularización Lasso).
+        \item $\lambda$ controla la fuerza de la regularización.
+    \end{itemize}
+\end{frame}
+
+% ============================================================================
+% SECCIÓN 8: RESUMEN
+% ============================================================================
+\section{Resumen}
+
+\begin{frame}{Lo que hemos aprendido}
+    \begin{exampleblock}{Conceptos clave}
+        \begin{itemize}
+            \item \textbf{Tensores}: generalización de escalares, vectores y matrices a más dimensiones.
+            \item \textbf{Notación}: $\mathbb{R}^{d_1\times\cdots\times d_k}$ y cómo interpretarla en papers.
+            \item \textbf{Operaciones}: transposición, reshape, normas L1, L2, L∞.
+            \item \textbf{Aplicaciones}: visión (imágenes), NLP (embeddings), regularización (Ridge, Lasso).
+            \item \textbf{NumPy}: creación, atributos, transposición, reshape, cálculo de normas.
+            \item \textbf{Caso integrado}: procesamiento y normalización de un lote de imágenes.
+            \item \textbf{Lectura de ecuaciones}: atención, pérdida regularizada.
+        \end{itemize}
+    \end{exampleblock}
+\end{frame}
+
+\begin{frame}{Conexión con cursos futuros}
+    \begin{itemize}
+        \item Estos conceptos son la base para:
+        \begin{itemize}
+            \item Redes convolucionales (CNN): tensores de imágenes.
+            \item Transformers: tensores de atención.
+            \item Regularización en modelos lineales y redes profundas.
+            \item Preprocesamiento de datos en pipelines de ML.
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+% --- Diapositiva final ---
+\begin{frame}
+    \centering
+    \Huge \textbf{¡Gracias!}
+
+\end{frame}
+
+\end{document}

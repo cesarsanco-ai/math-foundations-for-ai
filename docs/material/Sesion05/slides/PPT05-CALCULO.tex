@@ -1,0 +1,435 @@
+% --- CORRECCIÓN IMPORTANTE EN LA PRIMERA LÍNEA ---
+% Agregamos "xcolor=table" para que funcione \rowcolor sin errores
+\documentclass[aspectratio=169, 10pt, xcolor=table]{beamer}
+
+% --- Configuración del Tema (estilo profesional como el ejemplo) ---
+\usetheme{Madrid}
+\usecolortheme{dolphin}
+
+% --- Paquetes necesarios ---
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{amsmath, amssymb}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta, positioning, shapes.geometric}
+
+% --- Ruta de Imágenes (crea la carpeta "imagenes" y coloca ahí tus archivos) ---
+\graphicspath{{./imagenes/}}
+
+% --- Estilo para código Python (configurado para evitar problemas con UTF-8) ---
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+\lstset{
+    language=Python,
+    backgroundcolor=\color{backcolour},
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{blue},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\scriptsize,
+    breaklines=true,
+    frame=single,
+    showstringspaces=false,
+    literate={á}{{\'a}}1 {é}{{\'e}}1 {í}{{\'i}}1 {ó}{{\'o}}1 {ú}{{\'u}}1 {ñ}{{\~n}}1 {ü}{{\"u}}1
+}
+
+% --- Pie de página personalizado ---
+\makeatletter
+
+\setbeamertemplate{footline}{
+  \leavevmode%
+  \hbox{%
+  \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,center]{author in head/foot}%
+    \usebeamerfont{author in head/foot}\insertshortauthor
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,center]{title in head/foot}%
+    \usebeamerfont{title in head/foot}Sesi\'on 5
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,right]{date in head/foot}%
+    \usebeamerfont{date in head/foot}CÁLCULO Y ÁLGEBRA LINEAL \hfill \insertframenumber/\inserttotalframenumber \hspace*{0.3cm}
+  \end{beamercolorbox}}%
+  \vskip0pt%
+}
+
+\makeatother
+
+% --- Datos de la portada ---
+\title[SESI\'ON 5 CÁLCULO]{\textbf{Sesi\'on 5}}
+\subtitle{Límites y Continuidad: Aplicaciones en IA}
+\author[Prof. C. S\'anchez]{Carlos C\'esar S\'anchez Coronel}
+\institute{\textbf{CÁLCULO Y ÁLGEBRA LINEAL PARA IA}}
+\date{}
+
+% Logo opcional (descomentar si tienes la imagen)
+% \titlegraphic{\includegraphics[height=1.5cm]{logo.png}}
+
+% --- Eliminar la barra de navegación (opcional) ---
+\setbeamertemplate{navigation symbols}{}
+
+% --- Índice al inicio de cada sección ---
+\AtBeginSection[]{
+  \begin{frame}
+    \frametitle{Contenido}
+    \tableofcontents[currentsection]
+  \end{frame}
+}
+
+% ============================================================================
+% INICIO DEL DOCUMENTO
+% ============================================================================
+\begin{document}
+
+% --- Portada ---
+\begin{frame}
+    \titlepage
+\end{frame}
+
+% --- Índice general ---
+\begin{frame}{Contenido}
+    \tableofcontents
+\end{frame}
+
+% ============================================================================
+% SECCIÓN 1: IDEA INTUITIVA DE LÍMITE
+% ============================================================================
+\section{Idea Intuitiva de Límite}
+
+\begin{frame}{¿Qué es un límite?}
+    \begin{block}{Ejemplo introductorio}
+        Consideremos $f(x) = \dfrac{x^2-1}{x-1}$. No está definida en $x=1$, pero ¿a qué valor se aproxima cuando $x$ se acerca a 1?
+    \end{block}
+    \begin{center}
+        \begin{tabular}{c|c}
+            $x$ & $f(x)$ \\
+            \hline
+            0.9 & 1.9 \\
+            0.99 & 1.99 \\
+            0.999 & 1.999 \\
+            1.001 & 2.001 \\
+            1.01 & 2.01 \\
+            1.1 & 2.1
+        \end{tabular}
+    \end{center}
+    \[
+    \lim_{x\to 1} \frac{x^2-1}{x-1} = 2
+    \]
+\end{frame}
+
+\begin{frame}{Definición informal}
+    \begin{itemize}
+        \item $\displaystyle \lim_{x\to a} f(x) = L$ significa que podemos hacer que $f(x)$ esté tan cerca de $L$ como queramos, tomando $x$ suficientemente cerca de $a$ (pero no igual).
+        \item La función no necesita estar definida en $x=a$.
+    \end{itemize}
+    \centering
+    \includegraphics[width=0.5\textwidth]{limite_grafico.png} % si existe
+\end{frame}
+
+\begin{frame}{Límites laterales}
+    \begin{columns}[t]
+        \column{0.5\textwidth}
+        \textbf{Límite por la izquierda}
+        \[
+        \lim_{x\to a^-} f(x)
+        \]
+        $x$ se acerca a $a$ con valores menores.
+        \column{0.5\textwidth}
+        \textbf{Límite por la derecha}
+        \[
+        \lim_{x\to a^+} f(x)
+        \]
+        $x$ se acerca a $a$ con valores mayores.
+    \end{columns}
+    \vspace{0.3cm}
+    El límite bilateral existe si y solo si los laterales existen y son iguales.
+\end{frame}
+
+\begin{frame}{Ejemplo: función escalón (Heaviside)}
+    \[
+    H(x) = \begin{cases}
+        0, & x < 0 \\
+        1, & x \ge 0
+    \end{cases}
+    \]
+    \begin{align*}
+        \lim_{x\to 0^-} H(x) &= 0 \\
+        \lim_{x\to 0^+} H(x) &= 1
+    \end{align*}
+    Como son distintos, $\displaystyle \lim_{x\to 0} H(x)$ no existe.
+    \centering
+    \includegraphics[width=0.5\textwidth]{escalon.png} % si existe
+\end{frame}
+
+% ============================================================================
+% SECCIÓN 2: LÍMITES AL INFINITO Y ASÍNTOTAS
+% ============================================================================
+\section{Límites al Infinito y Asíntotas}
+
+\begin{frame}{Límites cuando $x \to \pm\infty$}
+    \begin{itemize}
+        \item $\displaystyle \lim_{x\to\infty} f(x) = L$ significa que $f(x)$ se acerca a $L$ cuando $x$ crece indefinidamente.
+        \item Ejemplo: $\displaystyle \lim_{x\to\infty} \frac{1}{x} = 0$.
+    \end{itemize}
+    \vspace{0.3cm}
+    \begin{block}{Asíntotas horizontales}
+        Si $\displaystyle \lim_{x\to\infty} f(x) = L$ o $\displaystyle \lim_{x\to -\infty} f(x) = L$, la recta $y=L$ es una asíntota horizontal.
+    \end{block}
+\end{frame}
+
+\begin{frame}{Asíntotas verticales}
+    \begin{itemize}
+        \item Si $\displaystyle \lim_{x\to a} f(x) = \pm\infty$, entonces $x=a$ es una asíntota vertical.
+        \item Ejemplo: $f(x)=\frac{1}{x}$ tiene asíntota vertical en $x=0$.
+    \end{itemize}
+    \centering
+    \includegraphics[width=0.5\textwidth]{asintotas.png} % si existe
+\end{frame}
+
+\begin{frame}{Ejemplo numérico}
+    Calcular $\displaystyle \lim_{x\to\infty} \frac{3x^2+2x}{5x^2-1}$.
+    \[
+    \lim_{x\to\infty} \frac{3x^2+2x}{5x^2-1}
+    = \lim_{x\to\infty} \frac{3 + \frac{2}{x}}{5 - \frac{1}{x^2}} = \frac{3}{5}
+    \]
+    Así, $y = \frac{3}{5}$ es una asíntota horizontal.
+\end{frame}
+
+% ============================================================================
+% SECCIÓN 3: CONTINUIDAD
+% ============================================================================
+\section{Continuidad}
+
+\begin{frame}{Definición de continuidad en un punto}
+    Una función $f$ es continua en $x=a$ si:
+    \begin{enumerate}
+        \item $f(a)$ está definida.
+        \item $\displaystyle \lim_{x\to a} f(x)$ existe.
+        \item $\displaystyle \lim_{x\to a} f(x) = f(a)$.
+    \end{enumerate}
+    Intuitivamente: podemos dibujar la gráfica sin levantar el lápiz.
+\end{frame}
+
+\begin{frame}{Tipos de discontinuidades}
+    \begin{columns}[t]
+        \column{0.33\textwidth}
+        \textbf{Evitable}
+        \begin{itemize}
+            \item El límite existe, pero no coincide con $f(a)$ o $f(a)$ no está definida.
+            \item Ej: $\frac{x^2-1}{x-1}$ en $x=1$.
+        \end{itemize}
+        \column{0.33\textwidth}
+        \textbf{De salto}
+        \begin{itemize}
+            \item Límites laterales existen pero son distintos.
+            \item Ej: función escalón.
+        \end{itemize}
+        \column{0.33\textwidth}
+        \textbf{Eencial (infinita)}
+        \begin{itemize}
+            \item Al menos un límite lateral es infinito.
+            \item Ej: $\frac{1}{x}$ en $x=0$.
+        \end{itemize}
+    \end{columns}
+\end{frame}
+
+% ============================================================================
+% SECCIÓN 4: APLICACIONES EN IA
+% ============================================================================
+\section{Aplicaciones en Inteligencia Artificial}
+
+\begin{frame}{Funciones de activación: continuidad y diferenciabilidad}
+    \begin{itemize}
+        \item En deep learning, usamos funciones continuas y diferenciables para poder aplicar gradiente descendente.
+        \item La función escalón (discontinua) no sirve.
+        \item La sigmoide $\sigma(x)=\frac{1}{1+e^{-x}}$ es continua y diferenciable.
+    \end{itemize}
+    \begin{align*}
+        \lim_{x\to\infty} \sigma(x) &= 1 \\
+        \lim_{x\to -\infty} \sigma(x) &= 0
+    \end{align*}
+    \centering
+    \includegraphics[width=0.4\textwidth]{sigmoid.png} % si existe
+\end{frame}
+
+\begin{frame}{ReLU: continua pero no diferenciable en 0}
+    \[
+    \text{ReLU}(x) = \max(0,x)
+    \]
+    \begin{itemize}
+        \item Es continua en todo $\mathbb{R}$.
+        \item No es diferenciable en $x=0$ (derivada izquierda 0, derecha 1).
+        \item En la práctica, se usa una subderivada (ej. 0 en 0) y funciona bien.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Comportamiento asintótico de la pérdida}
+    Entropía cruzada binaria para $y=1$:
+    \[
+    L(\hat{y}) = -\log(\hat{y}), \quad \hat{y}\in(0,1)
+    \]
+    \begin{align*}
+        \lim_{\hat{y}\to 1} L(\hat{y}) &= 0 \\
+        \lim_{\hat{y}\to 0^+} L(\hat{y}) &= +\infty
+    \end{align*}
+    Penaliza fuertemente predicciones erróneas y seguras.
+\end{frame}
+
+\begin{frame}{Convergencia de algoritmos de optimización}
+    En gradiente descendente, la sucesión de parámetros $\mathbf{w}^{(t)}$ debe cumplir
+    \[
+    \lim_{t\to\infty} \|\mathbf{w}^{(t+1)} - \mathbf{w}^{(t)}\| = 0
+    \]
+    Esto indica que el algoritmo ha convergido a un punto estacionario.
+\end{frame}
+
+\begin{frame}{Notación en papers}
+    \begin{itemize}
+        \item $\displaystyle f'(x) = \lim_{h\to 0} \frac{f(x+h)-f(x)}{h}$ (derivada)
+        \item $\displaystyle \lim_{n\to\infty} \frac{1}{n}\sum_{i=1}^n \ell(y_i, f(x_i)) = L^*$ (convergencia del error empírico)
+        \item $\displaystyle \lim_{x\to\infty} \sigma(x) = 1$ (comportamiento asintótico)
+    \end{itemize}
+\end{frame}
+
+% ============================================================================
+% SECCIÓN 5: EJEMPLOS CON PYTHON
+% ============================================================================
+\section{Ejemplos con Python}
+
+\begin{frame}[fragile]{Cálculo simbólico con SymPy}
+    \begin{lstlisting}
+import sympy as sp
+
+x = sp.Symbol('x')
+
+# Límite de (x^2-1)/(x-1) en x=1
+f = (x**2 - 1)/(x - 1)
+limite = sp.limit(f, x, 1)
+print("Límite:", limite)  # 2
+
+# Límite de sin(2x)/x en 0
+g = sp.sin(2*x)/x
+limite2 = sp.limit(g, x, 0)
+print("Límite sin(2x)/x:", limite2)  # 2
+
+# Límites laterales de la función escalón
+h = sp.Piecewise((0, x<0), (1, x>=0))
+lim_izq = sp.limit(h, x, 0, dir='-')
+lim_der = sp.limit(h, x, 0, dir='+')
+print("Izquierda:", lim_izq, "Derecha:", lim_der)
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Visualización de discontinuidades con Matplotlib}
+    \begin{lstlisting}
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Discontinuidad evitable
+x = np.linspace(0, 2, 400)
+y = (x**2 - 1)/(x - 1)
+plt.figure(figsize=(12,4))
+plt.subplot(1,3,1)
+plt.plot(x, y, 'b-')
+plt.plot(1, 2, 'ro', markersize=8)
+plt.title('Evitable')
+plt.grid(True)
+
+# Función escalón
+x1 = np.linspace(-2,0,100, endpoint=False)
+x2 = np.linspace(0,2,100)
+plt.subplot(1,3,2)
+plt.plot(x1, np.zeros_like(x1), 'g-')
+plt.plot(x2, np.ones_like(x2), 'g-')
+plt.plot(0,0,'go', markersize=8)
+plt.plot(0,1,'go', markersize=8)
+plt.title('Salto')
+plt.grid(True)
+
+# 1/x (infinita)
+x3 = np.linspace(-2,-0.1,100)
+x4 = np.linspace(0.1,2,100)
+plt.subplot(1,3,3)
+plt.plot(x3, 1/x3, 'r-')
+plt.plot(x4, 1/x4, 'r-')
+plt.axvline(0, color='k', linestyle='--')
+plt.title('Infinita')
+plt.grid(True)
+plt.tight_layout()
+plt.show()
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Comportamiento asintótico de la entropía cruzada}
+    \begin{lstlisting}
+p = np.linspace(0.001, 1, 100)
+loss = -np.log(p)
+
+plt.figure()
+plt.plot(p, loss)
+plt.xlabel('$\hat{y}$')
+plt.ylabel('Pérdida')
+plt.title('Entropía cruzada para y=1')
+plt.axvline(1, color='r', linestyle='--')
+plt.grid(True)
+plt.show()
+    \end{lstlisting}
+\end{frame}
+
+% ============================================================================
+% SECCIÓN 6: EJERCICIOS PROPUESTOS (SIMILARES A LA PRÁCTICA)
+% ============================================================================
+\section{Ejercicios propuestos}
+
+\begin{frame}{Ejercicios}
+    \begin{enumerate}
+        \item Calcula los siguientes límites usando SymPy y verifica gráficamente:
+        \[
+        \lim_{x\to 0} \frac{\sin(2x)}{x},\quad
+        \lim_{x\to\infty} \frac{e^x}{x^2},\quad
+        \lim_{x\to 0} \frac{1-\cos x}{x^2}
+        \]
+        \item Determina los puntos de discontinuidad de $f(x)=|x|$ y clasifícalos.
+        \item Investiga por qué la función ReLU es continua pero no diferenciable en 0. ¿Cómo se maneja en la práctica?
+        \item En un paper encuentras $\displaystyle \lim_{n\to\infty} \frac{1}{n}\sum_{i=1}^n \ell(y_i, f(x_i))$. ¿Qué significa? Relaciónalo con la convergencia del error empírico.
+    \end{enumerate}
+\end{frame}
+
+% ============================================================================
+% SECCIÓN 7: RESUMEN
+% ============================================================================
+\section{Resumen}
+
+\begin{frame}{Lo que hemos aprendido}
+    \begin{exampleblock}{Conceptos clave}
+        \begin{itemize}
+            \item \textbf{Límite}: valor al que se aproxima una función cerca de un punto.
+            \item \textbf{Límites laterales}: necesarios para la existencia del límite bilateral.
+            \item \textbf{Límites al infinito}: comportamiento para $x$ grande; asíntotas horizontales y verticales.
+            \item \textbf{Continuidad}: una función es continua si no tiene saltos, huecos ni asíntotas.
+            \item \textbf{Aplicaciones en IA}: funciones de activación continuas, análisis de pérdida, convergencia de algoritmos.
+            \item \textbf{Python}: SymPy para límites simbólicos, Matplotlib para visualización.
+        \end{itemize}
+    \end{exampleblock}
+\end{frame}
+
+\begin{frame}{Conexión con futuros cursos}
+    \begin{itemize}
+        \item \textbf{Cálculo diferencial}: la derivada se define mediante un límite.
+        \item \textbf{Optimización}: condiciones de optimalidad y convergencia.
+        \item \textbf{Deep Learning}: backpropagation y análisis de gradientes.
+        \item \textbf{Aprendizaje estadístico}: convergencia de estimadores.
+    \end{itemize}
+\end{frame}
+
+% --- Diapositiva final ---
+\begin{frame}
+    \centering
+    \Huge \textbf{¡Gracias!}
+
+\end{frame}
+
+\end{document}

@@ -1,0 +1,440 @@
+% --- CORRECCION: Forzar interpretacion raw de la entrada ---
+\UseRawInputEncoding
+\documentclass[aspectratio=169, 10pt, xcolor=table]{beamer}
+
+% --- Configuracion del Tema ---
+\usetheme{Madrid}
+\usecolortheme{dolphin}
+
+% --- Paquetes necesarios ---
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{amsmath, amssymb}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta, positioning, shapes.geometric}
+\usepackage{etoolbox}
+
+% --- Ruta de Imagenes ---
+\graphicspath{{./imagenes/}}
+
+% --- Estilo para codigo Python ---
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+\lstset{
+    language=Python,
+    backgroundcolor=\color{backcolour},
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{blue},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\scriptsize,
+    breaklines=true,
+    frame=single,
+    showstringspaces=false,
+    literate={á}{{\'a}}1 {é}{{\'e}}1 {í}{{\'i}}1 {ó}{{\'o}}1 {ú}{{\'u}}1 {ñ}{{\~n}}1 {ü}{{\"u}}1
+}
+
+% --- Pie de pagina personalizado ---
+\makeatletter
+\setbeamertemplate{footline}{
+  \leavevmode%
+  \hbox{%
+  \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,center]{author in head/foot}%
+    \usebeamerfont{author in head/foot}\insertshortauthor
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,center]{title in head/foot}%
+    \usebeamerfont{title in head/foot}Sesion 9
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,right]{date in head/foot}%
+    \usebeamerfont{date in head/foot}CALCULO Y ALGEBRA LINEAL \hfill \insertframenumber/\inserttotalframenumber \hspace*{0.3cm}
+  \end{beamercolorbox}}%
+  \vskip0pt%
+}
+\makeatother
+
+% --- Datos de la portada ---
+\title[SESION 9 CALCULO]{\textbf{Sesion 9}}
+\subtitle{Automatizando el Gradiente: PyTorch/TensorFlow y Descenso de Gradiente}
+\author[Prof. C. Sanchez]{Carlos Cesar Sanchez Coronel}
+\institute{\textbf{CALCULO Y ALGEBRA LINEAL PARA IA}}
+\date{}
+
+% --- Eliminar barra de navegacion ---
+\setbeamertemplate{navigation symbols}{}
+
+% --- Indice al inicio de cada seccion ---
+\AtBeginSection[]{
+  \begin{frame}
+    \frametitle{Contenido}
+    \tableofcontents[currentsection]
+  \end{frame}
+}
+
+\begin{document}
+
+% --- Portada ---
+\begin{frame}
+    \titlepage
+\end{frame}
+
+% --- Indice general ---
+\begin{frame}{Contenido}
+    \tableofcontents
+\end{frame}
+
+% ============================================================================
+% SECCION 1: DESCENSO DE GRADIENTE: RECORDATORIO Y VARIANTES
+% ============================================================================
+\section{Descenso de Gradiente: Recordatorio y Variantes}
+
+\begin{frame}{El algoritmo basico}
+    \begin{block}{Descenso de gradiente}
+        \[
+        \mathbf{w}_{t+1} = \mathbf{w}_t - \eta \nabla \mathcal{L}(\mathbf{w}_t)
+        \]
+        donde $\eta$ es la tasa de aprendizaje y $\nabla \mathcal{L}(\mathbf{w}_t)$ es el gradiente de la perdida.
+    \end{block}
+\end{frame}
+
+\begin{frame}{Epocas, batches y variantes}
+    \begin{columns}[t]
+        \column{0.33\textwidth}
+        \textbf{Batch GD}
+        \begin{itemize}
+            \item Usa todo el dataset.
+            \item Estable, costoso.
+        \end{itemize}
+        \column{0.33\textwidth}
+        \textbf{SGD (estocastico)}
+        \begin{itemize}
+            \item Una muestra por iteracion.
+            \item Rapido, ruidoso.
+        \end{itemize}
+        \column{0.33\textwidth}
+        \textbf{Mini-batch GD}
+        \begin{itemize}
+            \item Subconjunto (batch).
+            \item Compromiso ideal.
+        \end{itemize}
+    \end{columns}
+    \vspace{0.3cm}
+    Una \textbf{epoca} = recorrer todo el dataset una vez.
+\end{frame}
+
+% ============================================================================
+% SECCION 2: DIFERENCIACION AUTOMATICA Y GRAFOS COMPUTACIONALES
+% ============================================================================
+\section{Diferenciacion Automatica y Grafos Computacionales}
+
+\begin{frame}{Comparativa de metodos de diferenciacion}
+    \begin{table}
+        \centering
+        \begin{tabular}{l|c|c|c}
+            \toprule
+            Metodo & Exactitud & Costo & Ventaja \\
+            \midrule
+            Numerico (dif. finitas) & Baja & Medio & Facil implementacion \\
+            Simbolico (SymPy) & Exacta & Muy alto & Expresion analitica \\
+            Automatico (Autodiff) & Exacta & Bajo & Eficiencia en $n$ vars \\
+            \bottomrule
+        \end{tabular}
+    \end{table}
+\end{frame}
+
+\begin{frame}{Grafos computacionales}
+    \begin{itemize}
+        \item Representacion de operaciones como grafo dirigido aciclico (DAG).
+        \item Cada nodo: operacion o variable.
+        \item Permite aplicar regla de la cadena automaticamente.
+    \end{itemize}
+    \centering
+    \begin{tikzpicture}[node distance=1.2cm, auto]
+        \node (x) {$x$};
+        \node (w) [right of=x] {$w$};
+        \node (b) [right of=w] {$b$};
+        \node (mul) [below of=w] {$\times$};
+        \node (sum) [below of=b] {$+$};
+        \node (y) [below of=sum] {$y$};
+        \draw[->] (x) -- (mul);
+        \draw[->] (w) -- (mul);
+        \draw[->] (mul) -- (sum);
+        \draw[->] (b) -- (sum);
+        \draw[->] (sum) -- (y);
+    \end{tikzpicture}
+\end{frame}
+
+\begin{frame}{Anatomia de una funcion en grafos: $f(x)=\ln(x^2+1)$}
+    \begin{columns}[t]
+        \column{0.5\textwidth}
+        \textbf{Forward pass (primals)}
+        \begin{align*}
+            v_1 &= x^2 = 4 \\
+            v_2 &= v_1 + 1 = 5 \\
+            v_3 &= \ln(v_2) \approx 1.6094
+        \end{align*}
+        \column{0.5\textwidth}
+        \textbf{Backward pass (sensibilidad)}
+        \begin{align*}
+            \frac{\partial f}{\partial v_3} &= 1 \\
+            \frac{\partial f}{\partial v_2} &= 1\cdot \frac{1}{v_2}=0.2 \\
+            \frac{\partial f}{\partial v_1} &= 0.2\cdot 1 = 0.2 \\
+            \frac{df}{dx} &= 0.2\cdot 2x = 0.8
+        \end{align*}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{Reglas del backward pass}
+    \begin{enumerate}
+        \item Empezar con 1 al final del grafo.
+        \item En cada flecha hacia atras, multiplicar el gradiente acumulado por la derivada local de la operacion.
+        \item Usar valores del forward pass para evaluar derivadas locales.
+    \end{enumerate}
+\end{frame}
+
+% ============================================================================
+% SECCION 3: IMPLEMENTACION MANUAL CON NUMPY
+% ============================================================================
+\section{Implementacion Manual con NumPy}
+
+\begin{frame}[fragile]{Generacion de datos sinteticos}
+    \begin{lstlisting}
+import numpy as np
+import matplotlib.pyplot as plt
+
+np.random.seed(42)
+X = 2 * np.random.rand(100, 1)
+y = 2 + 3 * X + np.random.randn(100, 1)
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Clase LinearRegressionSGD}
+    \begin{lstlisting}
+class LinearRegressionSGD:
+    def __init__(self, lr=0.01, epochs=100, batch_size=32):
+        self.lr = lr
+        self.epochs = epochs
+        self.batch_size = batch_size
+        self.w = None
+        self.b = None
+        self.loss_history = []
+
+    def fit(self, X, y):
+        n_samples, n_features = X.shape
+        self.w = np.random.randn(n_features, 1) * 0.01
+        self.b = 0.0
+        for epoch in range(self.epochs):
+            indices = np.random.permutation(n_samples)
+            X_shuffled = X[indices]
+            y_shuffled = y[indices]
+            epoch_loss = 0.0
+            for i in range(0, n_samples, self.batch_size):
+                X_batch = X_shuffled[i:i+self.batch_size]
+                y_batch = y_shuffled[i:i+self.batch_size]
+                y_pred = X_batch @ self.w + self.b
+                loss = np.mean((y_pred - y_batch)**2)
+                grad_w = 2 * X_batch.T @ (y_pred - y_batch) / len(X_batch)
+                grad_b = 2 * np.mean(y_pred - y_batch)
+                self.w -= self.lr * grad_w.reshape(-1,1)
+                self.b -= self.lr * grad_b
+                epoch_loss += loss * len(X_batch)
+            self.loss_history.append(epoch_loss / n_samples)
+    \end{lstlisting}
+\end{frame}
+
+% ============================================================================
+% SECCION 4: INTRODUCCION A PYTORCH
+% ============================================================================
+\section{Introduccion a PyTorch}
+
+\begin{frame}[fragile]{Tensores en PyTorch}
+    \begin{lstlisting}
+import torch
+
+x = torch.tensor([1.0, 2.0, 3.0])
+w = torch.tensor([0.5, -0.2, 0.1], requires_grad=True)
+b = torch.tensor(0.0, requires_grad=True)
+y = (x * w).sum() + b
+print(y.item())
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Calculo de gradientes con autograd}
+    \begin{lstlisting}
+x = torch.tensor(2.0, requires_grad=True)
+y = torch.log(x**2 + 1)
+y.backward()
+print(f"Gradiente en x=2: {x.grad}")  # 0.8
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Entrenamiento de regresion lineal con PyTorch}
+    \begin{lstlisting}
+import torch.nn as nn
+import torch.optim as optim
+
+X_t = torch.tensor(X, dtype=torch.float32)
+y_t = torch.tensor(y, dtype=torch.float32)
+
+model = nn.Linear(1, 1)
+criterion = nn.MSELoss()
+optimizer = optim.SGD(model.parameters(), lr=0.1)
+
+dataset = torch.utils.data.TensorDataset(X_t, y_t)
+dataloader = torch.utils.data.DataLoader(dataset, batch_size=16, shuffle=True)
+
+for epoch in range(50):
+    for X_batch, y_batch in dataloader:
+        y_pred = model(X_batch)
+        loss = criterion(y_pred, y_batch)
+        optimizer.zero_grad()
+        loss.backward()
+        optimizer.step()
+    \end{lstlisting}
+\end{frame}
+
+% ============================================================================
+% SECCION 5: INTRODUCCION A TENSORFLOW / KERAS
+% ============================================================================
+\section{Introduccion a TensorFlow / Keras}
+
+\begin{frame}[fragile]{Modelo secuencial en Keras}
+    \begin{lstlisting}
+import tensorflow as tf
+from tensorflow import keras
+
+model = keras.Sequential([
+    keras.layers.Dense(1, input_shape=(1,))
+])
+model.compile(optimizer='sgd', loss='mse')
+history = model.fit(X, y, epochs=50, batch_size=16, verbose=0)
+print("Peso:", model.layers[0].weights[0].numpy()[0,0])
+print("Intercepto:", model.layers[0].weights[1].numpy()[0])
+    \end{lstlisting}
+\end{frame}
+
+% ============================================================================
+% SECCION 6: OPTIMIZADORES MODERNOS
+% ============================================================================
+\section{Optimizadores Modernos}
+
+\begin{frame}{Momentum}
+    Acumula una media exponencial de gradientes:
+    \[
+    v_{t+1} = \beta v_t + \nabla\mathcal{L}(w_t),\quad w_{t+1}=w_t-\eta v_{t+1}
+    \]
+\end{frame}
+
+\begin{frame}{Adam (Adaptive Moment Estimation)}
+    Combina Momentum y RMSprop:
+    \begin{align*}
+        m_t &= \beta_1 m_{t-1} + (1-\beta_1)g_t \\
+        v_t &= \beta_2 v_{t-1} + (1-\beta_2)g_t^2 \\
+        \hat{m}_t &= \frac{m_t}{1-\beta_1^t},\quad \hat{v}_t = \frac{v_t}{1-\beta_2^t} \\
+        \theta_{t+1} &= \theta_t - \eta \frac{\hat{m}_t}{\sqrt{\hat{v}_t}+\epsilon}
+    \end{align*}
+    $\beta_1=0.9$, $\beta_2=0.999$, $\epsilon=10^{-8}$.
+\end{frame}
+
+\begin{frame}[fragile]{Uso de Adam en PyTorch y Keras}
+    PyTorch:
+    \begin{lstlisting}
+optimizer = optim.Adam(model.parameters(), lr=0.001)
+    \end{lstlisting}
+    Keras:
+    \begin{lstlisting}
+optimizer = keras.optimizers.Adam(learning_rate=0.001)
+    \end{lstlisting}
+\end{frame}
+
+% ============================================================================
+% SECCION 7: COMPARACION DE IMPLEMENTACIONES
+% ============================================================================
+\section{Comparacion de Implementaciones}
+
+\begin{frame}{Tabla comparativa}
+    \begin{table}
+        \centering
+        \begin{tabular}{l|c|c|c}
+            \toprule
+            Caracteristica & NumPy manual & PyTorch & TensorFlow/Keras \\
+            \midrule
+            Calculo de gradientes & Manual & Automatico & Automatico \\
+            Soporte GPU & No & Si & Si \\
+            Facilidad de prototipado & Baja & Alta & Muy alta \\
+            Control detallado & Total & Total & Medio \\
+            Curva de aprendizaje & Alta & Media & Baja \\
+            \bottomrule
+        \end{tabular}
+    \end{table}
+\end{frame}
+
+% ============================================================================
+% SECCION 8: NOTACION EN PAPERS CIENTIFICOS
+% ============================================================================
+\section{Notacion en Papers Cientificos}
+
+\begin{frame}{Notacion comun en deep learning}
+    \begin{itemize}
+        \item $\theta_{t+1} = \theta_t - \eta \nabla_\theta \mathcal{L}_B(\theta_t)$: actualizacion con mini-batch $B$.
+        \item $\delta^{(l)}$: error propagado hacia atras en capa $l$.
+        \item $\frac{\partial \mathcal{L}}{\partial \mathbf{W}^{(l)}} = \delta^{(l)} (\mathbf{a}^{(l-1)})^\top$.
+        \item Adam y otros optimizadores suelen describirse con sus ecuaciones.
+    \end{itemize}
+\end{frame}
+
+% ============================================================================
+% SECCION 9: EJERCICIOS PROPUESTOS
+% ============================================================================
+\section{Ejercicios Propuestos}
+
+\begin{frame}{Ejercicios}
+    \begin{enumerate}
+        \item Implementa SGD puro (batch=1) con NumPy y observa la varianza.
+        \item Modifica el codigo PyTorch para usar Adam y compara convergencia con SGD.
+        \item Construye el grafo computacional de $f(x)=e^{\sin(x^2)}$ y calcula su derivada en $x=1$ paso a paso; verifica con PyTorch.
+        \item Investiga el problema del \textit{vanishing gradient} y como los optimizadores modernos ayudan a mitigarlo.
+        \item Lee la seccion de optimizacion del paper original de Adam e identifica la notacion.
+    \end{enumerate}
+\end{frame}
+
+% ============================================================================
+% SECCION 10: RESUMEN
+% ============================================================================
+\section{Resumen}
+
+\begin{frame}{Lo que hemos aprendido}
+    \begin{exampleblock}{Conceptos clave}
+        \begin{itemize}
+            \item Variantes de descenso de gradiente (batch, SGD, mini-batch).
+            \item Diferenciacion automatica y grafos computacionales.
+            \item Implementacion manual con NumPy.
+            \item Fundamentos de PyTorch (tensores, autograd, entrenamiento).
+            \item Fundamentos de TensorFlow/Keras.
+            \item Optimizadores modernos: Momentum, Adam.
+            \item Comparacion de frameworks.
+            \item Notacion en papers.
+        \end{itemize}
+    \end{exampleblock}
+\end{frame}
+
+\begin{frame}{Conexion con futuros cursos}
+    \begin{itemize}
+        \item \textbf{Deep Learning}: redes profundas, backpropagation.
+        \item \textbf{Optimizacion avanzada}: AdamW, RMSprop, etc.
+        \item \textbf{Implementacion de modelos}: uso de frameworks en proyectos reales.
+    \end{itemize}
+\end{frame}
+
+% --- Diapositiva final ---
+\begin{frame}
+    \centering
+    \Huge \textbf{Gracias!}
+
+\end{frame}
+
+\end{document}

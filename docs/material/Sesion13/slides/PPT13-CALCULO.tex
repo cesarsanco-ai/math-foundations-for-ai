@@ -1,0 +1,418 @@
+% --- CORRECCION: Forzar interpretacion raw de la entrada ---
+\UseRawInputEncoding
+\documentclass[aspectratio=169, 10pt, xcolor=table]{beamer}
+
+% --- Configuracion del Tema ---
+\usetheme{Madrid}
+\usecolortheme{dolphin}
+
+% --- Paquetes necesarios ---
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{amsmath, amssymb}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta, positioning, shapes.geometric}
+\usepackage{etoolbox}
+
+% --- Ruta de Imagenes ---
+\graphicspath{{./imagenes/}}
+
+% --- Estilo para codigo Python ---
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+\lstset{
+    language=Python,
+    backgroundcolor=\color{backcolour},
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{blue},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\scriptsize,
+    breaklines=true,
+    frame=single,
+    showstringspaces=false,
+    literate={á}{{\'a}}1 {é}{{\'e}}1 {í}{{\'i}}1 {ó}{{\'o}}1 {ú}{{\'u}}1 {ñ}{{\~n}}1 {ü}{{\"u}}1
+}
+
+% --- Pie de pagina personalizado ---
+\makeatletter
+\setbeamertemplate{footline}{
+  \leavevmode%
+  \hbox{%
+  \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,center]{author in head/foot}%
+    \usebeamerfont{author in head/foot}\insertshortauthor
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,center]{title in head/foot}%
+    \usebeamerfont{title in head/foot}Sesion 13
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,right]{date in head/foot}%
+    \usebeamerfont{date in head/foot}CALCULO Y ALGEBRA LINEAL \hfill \insertframenumber/\inserttotalframenumber \hspace*{0.3cm}
+  \end{beamercolorbox}}%
+  \vskip0pt%
+}
+\makeatother
+
+% --- Datos de la portada ---
+\title[SESION 13 CALCULO]{\textbf{Sesion 13}}
+\subtitle{Descomposición en Valores Singulares (SVD)}
+\author[Prof. C. Sanchez]{Carlos Cesar Sanchez Coronel}
+\institute{\textbf{CALCULO Y ALGEBRA LINEAL PARA IA}}
+\date{}
+
+% --- Eliminar barra de navegacion ---
+\setbeamertemplate{navigation symbols}{}
+
+% --- Indice al inicio de cada seccion ---
+\AtBeginSection[]{
+  \begin{frame}
+    \frametitle{Contenido}
+    \tableofcontents[currentsection]
+  \end{frame}
+}
+
+\begin{document}
+
+% --- Portada ---
+\begin{frame}
+    \titlepage
+\end{frame}
+
+% --- Indice general ---
+\begin{frame}{Contenido}
+    \tableofcontents
+\end{frame}
+
+% ============================================================================
+% SECCION 1: TEOREMA DE LA DESCOMPOSICION EN VALORES SINGULARES
+% ============================================================================
+\section{Teorema de la Descomposicion en Valores Singulares}
+
+\begin{frame}{Enunciado del teorema}
+    \begin{block}{SVD (Singular Value Decomposition)}
+        Toda matriz $A\in\mathbb{R}^{m\times n}$ de rango $r$ se puede factorizar como
+        \[
+        A = U\Sigma V^\top
+        \]
+        donde:
+        \begin{itemize}
+            \item $U\in\mathbb{R}^{m\times m}$ ortogonal: columnas = vectores singulares izquierdos.
+            \item $V\in\mathbb{R}^{n\times n}$ ortogonal: columnas = vectores singulares derechos.
+            \item $\Sigma\in\mathbb{R}^{m\times n}$ diagonal: $\sigma_1\ge\sigma_2\ge\cdots\ge\sigma_r>0$ (valores singulares).
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}{Interpretacion geometrica}
+    \centering
+    \begin{tikzpicture}[scale=0.8]
+        \draw[->] (-1,0) -- (3,0) node[right] {$\mathbb{R}^n$};
+        \draw[->] (0,-1) -- (0,3) node[above] {$\mathbb{R}^m$};
+        \draw[thick, blue] (0,0) -- (2,1) node[midway, above] {$V^\top$};
+        \draw[thick, red] (2,1) -- (4,2) node[midway, above] {$\Sigma$};
+        \draw[thick, green] (4,2) -- (6,3) node[midway, above] {$U$};
+    \end{tikzpicture}
+    \begin{itemize}
+        \item $V^\top$: rotacion en el espacio de entrada.
+        \item $\Sigma$: escalado por $\sigma_i$ (y cambio de dimension).
+        \item $U$: rotacion en el espacio de salida.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Forma reducida (economy SVD)}
+    \begin{itemize}
+        \item Cuando $m>n$, la SVD completa tiene muchos ceros en $\Sigma$.
+        \item SVD reducida: $A = U_r\Sigma_r V^\top$, con $U_r\in\mathbb{R}^{m\times r}$, $\Sigma_r\in\mathbb{R}^{r\times r}$, $V\in\mathbb{R}^{n\times r}$.
+        \item Ahorra memoria y computo.
+    \end{itemize}
+    \begin{exampleblock}{Ejemplo}
+        Para $A$ de $1000\times 20$, SVD reducida requiere $U_r(1000\times20)$, $\Sigma_r(20\times20)$, $V(20\times20)$.
+    \end{exampleblock}
+\end{frame}
+
+% ============================================================================
+% SECCION 2: PROPIEDADES IMPORTANTES
+% ============================================================================
+\section{Propiedades Importantes}
+
+\begin{frame}{Propiedades de la SVD}
+    \begin{itemize}
+        \item Los valores singulares son unicos (salvo orden).
+        \item $\|A\|_2 = \sigma_1$ (norma espectral).
+        \item $\|A\|_F = \sqrt{\sum_{i=1}^r \sigma_i^2}$ (norma de Frobenius).
+        \item El rango de $A$ es el numero de valores singulares no nulos.
+        \item Las columnas de $U$ asociadas a $\sigma_i>0$ forman base ortonormal del espacio columna.
+        \item Las columnas de $V$ asociadas a $\sigma_i>0$ forman base ortonormal del espacio fila.
+    \end{itemize}
+\end{frame}
+
+% ============================================================================
+% SECCION 3: APROXIMACION DE BAJO RANGO Y COMPRESION
+% ============================================================================
+\section{Aproximacion de Bajo Rango y Compresion}
+
+\begin{frame}{Teorema de Eckart-Young-Mirsky}
+    \begin{block}{Mejor aproximacion de rango $k$}
+        La matriz $A_k = \sum_{i=1}^k \sigma_i \mathbf{u}_i \mathbf{v}_i^\top = U_k\Sigma_k V_k^\top$ es la mejor aproximacion de rango $k$ a $A$ en norma espectral o de Frobenius.
+    \end{block}
+    \begin{itemize}
+        \item $U_k$, $V_k$: primeras $k$ columnas de $U$, $V$.
+        \item $\Sigma_k$: submatriz diagonal con los $k$ mayores valores singulares.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Aplicacion: Compresion de imagenes}
+    \begin{itemize}
+        \item Una imagen en grises es una matriz $A\in\mathbb{R}^{h\times w}$.
+        \item SVD: $A = U\Sigma V^\top$.
+        \item Truncamos a $k$ valores singulares: $A_k = U_k\Sigma_k V_k^\top$.
+        \item Se almacenan $h\cdot k + k + k\cdot w$ numeros en lugar de $h\cdot w$.
+        \item Mayor $k$ $\Rightarrow$ mejor calidad, menor compresion.
+    \end{itemize}
+    \centering
+    \includegraphics[width=0.5\textwidth]{svd_compresion.png} % si existe
+\end{frame}
+
+% ============================================================================
+% SECCION 4: PSEUDOINVERSA DE MOORE-PENROSE
+% ============================================================================
+\section{Pseudoinversa de Moore-Penrose}
+
+\begin{frame}{Definicion mediante SVD}
+    \begin{block}{Pseudoinversa $A^+$}
+        Si $A = U\Sigma V^\top$, entonces
+        \[
+        A^+ = V \Sigma^+ U^\top,
+        \]
+        donde $\Sigma^+$ se obtiene tomando el reciproco de cada $\sigma_i>0$ y dejando ceros en los demas.
+    \end{block}
+    \begin{itemize}
+        \item $x = A^+b$ minimiza $\|Ax-b\|_2$ y, entre las soluciones optimas, tiene la menor norma.
+        \item Util para sistemas sobredeterminados o indeterminados.
+    \end{itemize}
+\end{frame}
+
+% ============================================================================
+% SECCION 5: APLICACIONES EN IA
+% ============================================================================
+\section{Aplicaciones en Inteligencia Artificial}
+
+\begin{frame}{Compresion de imagenes (Vision por Computador)}
+    \begin{itemize}
+        \item Se aplica SVD a cada canal de la imagen.
+        \item Se descartan valores singulares pequeños (ruido).
+        \item La imagen reconstruida $A_k$ mantiene la estructura principal.
+        \item Relacion compresion/calidad controlable via $k$.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Sistemas de recomendacion (Filtrado colaborativo)}
+    \begin{itemize}
+        \item Matriz $R$ de usuarios $\times$ productos (con valores faltantes).
+        \item Se aproxima $R \approx UV^\top$ con $U\in\mathbb{R}^{m\times k}$, $V\in\mathbb{R}^{n\times k}$.
+        \item La SVD truncada proporciona la mejor aproximacion de rango $k$ en minimos cuadrados (rellenando ceros o usando metodos iterativos).
+        \item Base del algoritmo ganador del Netflix Prize.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Analisis Semantico Latente (LSA) en NLP}
+    \begin{itemize}
+        \item Matriz terminos-documentos $A$ (tf-idf).
+        \item SVD: $A = U\Sigma V^\top$.
+        \item Las columnas de $U$ representan terminos en espacio de conceptos.
+        \item Las filas de $V^\top$ (o columnas de $V$) representan documentos.
+        \item Truncar a $k$ dimensiones agrupa terminos y documentos relacionados semanticamente.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Deep Learning}
+    \begin{itemize}
+        \item \textbf{Inicializacion ortogonal}: usar $U$ o $V$ para inicializar pesos, preservando normas y gradientes.
+        \item \textbf{Compresion de modelos}: aproximar capas fully connected grandes mediante SVD de bajo rango, reduciendo parametros y acelerando inferencia.
+        \item \textbf{Pseudoinversa} en algunas arquitecturas (extreme learning machines).
+    \end{itemize}
+\end{frame}
+
+% ============================================================================
+% SECCION 6: PYTHON CON NUMPY
+% ============================================================================
+\section{Python: SVD con NumPy y Aplicaciones}
+
+\begin{frame}[fragile]{Calculo de SVD basico}
+    \begin{lstlisting}
+import numpy as np
+
+A = np.array([[1,2,3],[4,5,6],[7,8,9]], dtype=float)
+U, s, Vt = np.linalg.svd(A, full_matrices=False)
+print("U:\n", U)
+print("Valores singulares:", s)
+print("V^T:\n", Vt)
+
+# Reconstruccion
+Sigma = np.diag(s)
+A_rec = U @ Sigma @ Vt
+print("Error:", np.linalg.norm(A - A_rec))
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Compresion de imagenes con SVD}
+    \begin{lstlisting}
+import matplotlib.pyplot as plt
+from skimage import data
+
+img = data.camera().astype(float) / 255.0
+U, s, Vt = np.linalg.svd(img, full_matrices=False)
+
+k_values = [5,20,50,100]
+plt.figure(figsize=(12,6))
+for i,k in enumerate(k_values):
+    Uk = U[:,:k]
+    sk = s[:k]
+    Vtk = Vt[:k,:]
+    img_k = Uk @ np.diag(sk) @ Vtk
+    plt.subplot(2,len(k_values),i+1)
+    plt.imshow(img_k, cmap='gray')
+    plt.title(f'k={k}'); plt.axis('off')
+    plt.subplot(2,len(k_values),i+1+len(k_values))
+    error = np.linalg.norm(img - img_k)/np.linalg.norm(img)
+    plt.bar(i, error); plt.xticks([])
+plt.tight_layout(); plt.show()
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Pseudoinversa y regresion lineal}
+    \begin{lstlisting}
+def pseudoinverse(A, tol=1e-10):
+    U, s, Vt = np.linalg.svd(A, full_matrices=False)
+    s_inv = np.array([1/v if v>tol else 0 for v in s])
+    return Vt.T @ np.diag(s_inv) @ U.T
+
+np.random.seed(42)
+m,n = 20,5
+A = np.random.randn(m,n)
+x_true = np.random.randn(n)
+b = A @ x_true + 0.1*np.random.randn(m)
+
+x_pinv = pseudoinverse(A) @ b
+x_lstsq, _, _, _ = np.linalg.lstsq(A, b, rcond=None)
+print("Error pseudoinv:", np.linalg.norm(x_pinv - x_true))
+print("Error lstsq:", np.linalg.norm(x_lstsq - x_true))
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Simulacion de sistema de recomendacion}
+    \begin{lstlisting}
+n_users, n_items, k_true = 100, 80, 5
+np.random.seed(42)
+U_true = np.random.randn(n_users, k_true)
+V_true = np.random.randn(n_items, k_true)
+R = U_true @ V_true.T + 0.5*np.random.randn(n_users, n_items)
+mask = np.random.rand(n_users, n_items) > 0.3
+R_obs = R * mask
+
+U, s, Vt = np.linalg.svd(R_obs, full_matrices=False)
+k = 5
+R_pred = U[:,:k] @ np.diag(s[:k]) @ Vt[:k,:]
+test_mask = ~mask
+rmse = np.sqrt(np.mean((R[test_mask] - R_pred[test_mask])**2))
+print("RMSE en test:", rmse)
+    \end{lstlisting}
+\end{frame}
+
+% ============================================================================
+% SECCION 7: NOTACION EN PAPERS
+% ============================================================================
+\section{Notacion en Papers Cientificos}
+
+\begin{frame}{Notacion comun}
+    \begin{itemize}
+        \item $A = U\Sigma V^\top$: descomposicion en valores singulares.
+        \item $A_k = \sum_{i=1}^k \sigma_i \mathbf{u}_i \mathbf{v}_i^\top$: aproximacion de rango $k$.
+        \item $\sigma_i$: valores singulares.
+        \item $A^+ = V\Sigma^+ U^\top$: pseudoinversa.
+        \item En LSA: $X \approx T\cdot S\cdot D^\top$ (terminos, conceptos, documentos).
+    \end{itemize}
+\end{frame}
+
+% ============================================================================
+% SECCION 8: EJERCICIOS PROPUESTOS
+% ============================================================================
+\section{Ejercicios Propuestos}
+
+\begin{frame}{Ejercicios}
+    \begin{enumerate}
+        \item Calcula la SVD de la matriz $\begin{pmatrix}0&2\\0&0\\0&0\end{pmatrix}$ a mano.
+        \item Demuestra que $A^+A = V_r V_r^\top$ (proyeccion sobre espacio fila).
+        \item Usa SVD para comprimir una imagen a color (tres canales). Visualiza resultados con distintos $k$.
+        \item Implementa un sistema de recomendacion simple con SVD sobre MovieLens (subconjunto). Divide en train/test y evalua RMSE.
+        \item Investiga el algoritmo de ``randomized SVD'' y cuando es preferible usarlo.
+    \end{enumerate}
+\end{frame}
+
+% ============================================================================
+% SECCION 9: CASO PRACTICO INTEGRADOR
+% ============================================================================
+\section{Caso Practico: Analisis de Documentos con LSA}
+
+\begin{frame}{Problema}
+    \begin{itemize}
+        \item Matriz terminos-documentos con valores singulares: $[200, 150, 80, 50, 30, 2, 1, 0.5, \dots]$.
+        \item Determinar rango efectivo.
+        \item Visualizar documentos en 2D.
+        \item Calcular varianza explicada por los primeros 2 y 5 componentes.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Solucion}
+    \begin{block}{a) Rango efectivo}
+        Los primeros 5 valores son grandes; los siguientes son muy pequeños. Rango efectivo = 5 (se puede tomar un umbral, ej. > 10).
+    \end{block}
+    \begin{block}{b) Visualizacion}
+        Se usan las primeras 2 columnas de $V$ (vectores singulares derechos). Cada documento se representa por su fila en $V_k$.
+    \end{block}
+    \begin{block}{c) Varianza explicada}
+        Suma de cuadrados de los primeros $k$ valores singulares / suma total.
+        Total aproximado: $200^2+150^2+80^2+50^2+30^2+...\approx 73000$.
+        Con 5: $40000+22500+6400+2500+900 = 72300$, $\approx 99\%$.
+        Con 2: $40000+22500 = 62500$, $\approx 85.6\%$.
+    \end{block}
+\end{frame}
+
+% ============================================================================
+% SECCION 10: RESUMEN
+% ============================================================================
+\section{Resumen}
+
+\begin{frame}{Lo que hemos aprendido}
+    \begin{exampleblock}{Conceptos clave}
+        \begin{itemize}
+            \item \textbf{SVD}: factorizacion $A = U\Sigma V^\top$, interpretacion geometrica.
+            \item \textbf{Aproximacion de bajo rango}: $A_k = U_k\Sigma_k V_k^\top$ (Eckart-Young).
+            \item \textbf{Pseudoinversa}: $A^+ = V\Sigma^+ U^\top$, solucion de minimos cuadrados.
+            \item \textbf{Aplicaciones}: compresion de imagenes, sistemas de recomendacion, LSA, deep learning.
+            \item \textbf{Python}: `np.linalg.svd`, `lstsq`, compresion, pseudoinversa.
+        \end{itemize}
+    \end{exampleblock}
+\end{frame}
+
+\begin{frame}{Conexion con futuros cursos}
+    \begin{itemize}
+        \item \textbf{Machine Learning}: PCA, LSA, recomendacion.
+        \item \textbf{Vision por Computador}: compresion, analisis de componentes.
+        \item \textbf{NLP}: espacios semanticos, recuperacion de informacion.
+        \item \textbf{Deep Learning}: inicializacion ortogonal, compresion de modelos.
+    \end{itemize}
+\end{frame}
+
+% --- Diapositiva final ---
+\begin{frame}
+    \centering
+    \Huge \textbf{Gracias!}
+
+\end{frame}
+
+\end{document}

@@ -1,0 +1,418 @@
+% --- CORRECCION: Forzar interpretacion raw de la entrada ---
+\UseRawInputEncoding
+\documentclass[aspectratio=169, 10pt, xcolor=table]{beamer}
+
+% --- Configuracion del Tema ---
+\usetheme{Madrid}
+\usecolortheme{dolphin}
+
+% --- Paquetes necesarios ---
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{amsmath, amssymb}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta, positioning, shapes.geometric}
+\usepackage{etoolbox}
+
+% --- Ruta de Imagenes ---
+\graphicspath{{./imagenes/}}
+
+% --- Estilo para codigo Python ---
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+\lstset{
+    language=Python,
+    backgroundcolor=\color{backcolour},
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{blue},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\scriptsize,
+    breaklines=true,
+    frame=single,
+    showstringspaces=false,
+    literate={á}{{\'a}}1 {é}{{\'e}}1 {í}{{\'i}}1 {ó}{{\'o}}1 {ú}{{\'u}}1 {ñ}{{\~n}}1 {ü}{{\"u}}1
+}
+
+% --- Pie de pagina personalizado ---
+\makeatletter
+\setbeamertemplate{footline}{
+  \leavevmode%
+  \hbox{%
+  \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,center]{author in head/foot}%
+    \usebeamerfont{author in head/foot}\insertshortauthor
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,center]{title in head/foot}%
+    \usebeamerfont{title in head/foot}Sesion 7
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,right]{date in head/foot}%
+    \usebeamerfont{date in head/foot}CALCULO Y ALGEBRA LINEAL \hfill \insertframenumber/\inserttotalframenumber \hspace*{0.3cm}
+  \end{beamercolorbox}}%
+  \vskip0pt%
+}
+\makeatother
+
+% --- Datos de la portada ---
+\title[SESION 7 CALCULO]{\textbf{Sesion 7}}
+\subtitle{Regla de la Cadena y Derivadas de Orden Superior}
+\author[Prof. C. Sanchez]{Carlos Cesar Sanchez Coronel}
+\institute{\textbf{CALCULO Y ALGEBRA LINEAL PARA IA}}
+\date{}
+
+% --- Eliminar barra de navegacion ---
+\setbeamertemplate{navigation symbols}{}
+
+% --- Indice al inicio de cada seccion ---
+\AtBeginSection[]{
+  \begin{frame}
+    \frametitle{Contenido}
+    \tableofcontents[currentsection]
+  \end{frame}
+}
+
+\begin{document}
+
+% --- Portada ---
+\begin{frame}
+    \titlepage
+\end{frame}
+
+% --- Indice general ---
+\begin{frame}{Contenido}
+    \tableofcontents
+\end{frame}
+
+% ============================================================================
+% SECCION 1: COMPOSICION DE FUNCIONES
+% ============================================================================
+\section{Composicion de Funciones}
+
+\begin{frame}{Funcion compuesta}
+    \begin{block}{Definicion}
+        Dadas dos funciones $f$ y $g$, la composicion $f\circ g$ se define como
+        \[
+        (f\circ g)(x) = f(g(x))
+        \]
+        Primero se aplica $g$, luego $f$ al resultado.
+    \end{block}
+    \begin{exampleblock}{Ejemplo}
+        Sean $g(x)=x^2+1$ y $f(u)=\sin u$. Entonces
+        \[
+        h(x)=f(g(x))=\sin(x^2+1)
+        \]
+    \end{exampleblock}
+    \begin{itemize}
+        \item Las redes neuronales son composiciones enormes de funciones.
+    \end{itemize}
+\end{frame}
+
+% ============================================================================
+% SECCION 2: REGLA DE LA CADENA
+% ============================================================================
+\section{Regla de la Cadena}
+
+\begin{frame}{Formulaciones de la regla de la cadena}
+    \begin{columns}[t]
+        \column{0.5\textwidth}
+        \textbf{Forma de Leibniz}
+        \[
+        \frac{dy}{dx} = \frac{dy}{du}\cdot\frac{du}{dx}
+        \]
+        \column{0.5\textwidth}
+        \textbf{Forma de Lagrange}
+        \[
+        (f\circ g)'(x) = f'(g(x))\cdot g'(x)
+        \]
+    \end{columns}
+    \vspace{0.3cm}
+    \begin{exampleblock}{Ejemplo}
+        Derivar $h(x)=\sin(x^2+1)$.
+        \begin{align*}
+            u &= x^2+1,\quad h=\sin u \\
+            h'(x) &= \cos u \cdot (2x) = 2x\cos(x^2+1)
+        \end{align*}
+    \end{exampleblock}
+\end{frame}
+
+\begin{frame}{Regla de la cadena generalizada}
+    Para composiciones multiples, se aplica sucesivamente:
+    \[
+    \frac{d}{dx}f(g(h(x))) = f'(g(h(x))) \cdot g'(h(x)) \cdot h'(x)
+    \]
+    \begin{exampleblock}{Ejemplo con tres niveles}
+        Derivar $k(x)=e^{\cos(x^2)}$.
+        \begin{align*}
+            a &= x^2,\quad b=\cos a,\quad k=e^b \\
+            k'(x) &= e^b \cdot (-\sin a) \cdot 2x \\
+            &= -2x e^{\cos(x^2)} \sin(x^2)
+        \end{align*}
+    \end{exampleblock}
+\end{frame}
+
+% ============================================================================
+% SECCION 3: APLICACION EN IA: BACKPROPAGATION
+% ============================================================================
+\section{Aplicacion en IA: Backpropagation}
+
+\begin{frame}{Red neuronal simple}
+    \begin{itemize}
+        \item Una entrada $x$, una capa oculta con una neurona (activacion sigmoide) y una salida lineal.
+    \end{itemize}
+    \begin{align*}
+        z &= w_1 x + b_1 \\
+        a &= \sigma(z) = \frac{1}{1+e^{-z}} \\
+        \hat{y} &= w_2 a + b_2 \\
+        L &= \frac{1}{2}(\hat{y}-y)^2 \quad\text{(MSE)}
+    \end{align*}
+    \begin{center}
+        \begin{tikzpicture}[
+            neuron/.style={circle, draw, minimum size=0.7cm},
+            font=\small
+        ]
+        \node[neuron] (x) at (0,0) {$x$};
+        \node[neuron] (z) at (2,0.5) {$z$};
+        \node[neuron] (a) at (4,0) {$a$};
+        \node[neuron] (y) at (6,0) {$\hat{y}$};
+        \draw[->] (x) -- node[above]{$w_1$} (z);
+        \draw[->] (z) -- node[above]{$\sigma$} (a);
+        \draw[->] (a) -- node[above]{$w_2$} (y);
+        \end{tikzpicture}
+    \end{center}
+\end{frame}
+
+\begin{frame}{Calculo de gradientes por regla de la cadena}
+    \begin{block}{Derivadas parciales}
+        \begin{align*}
+            \frac{\partial L}{\partial \hat{y}} &= \hat{y}-y \\
+            \frac{\partial L}{\partial w_2} &= \frac{\partial L}{\partial \hat{y}}\cdot\frac{\partial \hat{y}}{\partial w_2} = (\hat{y}-y)\,a \\
+            \frac{\partial L}{\partial b_2} &= \hat{y}-y
+        \end{align*}
+        Para $w_1$:
+        \[
+        \frac{\partial L}{\partial w_1} = \frac{\partial L}{\partial \hat{y}}\cdot\frac{\partial \hat{y}}{\partial a}\cdot\frac{\partial a}{\partial z}\cdot\frac{\partial z}{\partial w_1}
+        \]
+        donde $\frac{\partial \hat{y}}{\partial a}=w_2$, $\frac{\partial a}{\partial z}=a(1-a)$, $\frac{\partial z}{\partial w_1}=x$.
+    \end{block}
+\end{frame}
+
+\begin{frame}{Ejemplo numerico paso a paso}
+    \begin{exampleblock}{Datos: $x=2$, $w_1=0.5$, $b_1=0.1$, $w_2=1.0$, $b_2=0.0$, $y=5.0$}
+        \begin{align*}
+            z &= 0.5\cdot2 + 0.1 = 1.1 \\
+            a &= \sigma(1.1) = \frac{1}{1+e^{-1.1}}\approx 0.75026 \\
+            \hat{y} &= 1.0\cdot0.75026 + 0.0 = 0.75026 \\
+            L &= \frac{1}{2}(0.75026-5)^2 \approx 9.031
+        \end{align*}
+        \begin{align*}
+            \frac{\partial L}{\partial \hat{y}} &= -4.24974 \\
+            \frac{\partial L}{\partial w_2} &= -4.24974 \times 0.75026 \approx -3.188 \\
+            \frac{\partial L}{\partial w_1} &= (-4.24974) \times 1.0 \times 0.75026(1-0.75026) \times 2 \approx -1.593
+        \end{align*}
+    \end{exampleblock}
+\end{frame}
+
+% ============================================================================
+% SECCION 4: DERIVADAS DE ORDEN SUPERIOR
+% ============================================================================
+\section{Derivadas de Orden Superior}
+
+\begin{frame}{Segunda derivada y curvatura}
+    \begin{block}{Definicion}
+        $f''(x) = \frac{d}{dx}\left(\frac{df}{dx}\right) = \frac{d^2f}{dx^2}$
+    \end{block}
+    \begin{itemize}
+        \item $f''(x) > 0$: funcion convexa (curva hacia arriba).
+        \item $f''(x) < 0$: funcion concava (curva hacia abajo).
+        \item $f''(x) = 0$: posible punto de inflexion.
+    \end{itemize}
+    \begin{exampleblock}{Ejemplo}
+        $f(x)=x^3-3x$:
+        \[
+        f'(x)=3x^2-3,\quad f''(x)=6x
+        \]
+        En $x=1$: $f''(1)=6>0$ (minimo). En $x=-1$: $f''(-1)=-6<0$ (maximo). En $x=0$: $f''(0)=0$ (punto de inflexion).
+    \end{exampleblock}
+\end{frame}
+
+\begin{frame}{Matriz Hessiana}
+    \begin{block}{Para funciones de varias variables}
+        La matriz Hessiana $\mathbf{H}$ contiene las segundas derivadas parciales:
+        \[
+        \mathbf{H}_{ij} = \frac{\partial^2 f}{\partial x_i \partial x_j}
+        \]
+    \end{block}
+    \begin{itemize}
+        \item En optimizacion, el Hessiano indica la curvatura de la funcion de perdida.
+        \item Metodos de segundo orden (Newton) usan el Hessiano para acelerar convergencia.
+        \item Los puntos de silla (comunes en altas dimensiones) tienen Hessiano indefinido.
+    \end{itemize}
+\end{frame}
+
+% ============================================================================
+% SECCION 5: EJEMPLOS CON PYTHON
+% ============================================================================
+\section{Ejemplos con Python}
+
+\begin{frame}[fragile]{Derivadas de orden superior con SymPy}
+    \begin{lstlisting}
+import sympy as sp
+
+x = sp.Symbol('x')
+f = x**3 * sp.exp(x) - sp.ln(x)
+
+# Primera derivada
+f1 = sp.diff(f, x)
+print("f'(x) =", f1)
+
+# Segunda derivada
+f2 = sp.diff(f, x, 2)
+print("f''(x) =", f2)
+
+# Evaluar en un punto
+valor = f2.subs(x, 1).evalf()
+print("f''(1) =", valor)
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Derivadas parciales y Hessiano simbolico}
+    \begin{lstlisting}
+import sympy as sp
+
+x, y = sp.symbols('x y')
+f = x**2 * y + sp.sin(y)
+
+# Derivadas parciales
+df_dx = sp.diff(f, x)
+df_dy = sp.diff(f, y)
+print("df/dx =", df_dx)
+print("df/dy =", df_dy)
+
+# Hessiano
+hess = sp.hessian(f, (x, y))
+print("Hessiano:\n", hess)
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Backpropagation manual en Python}
+    \begin{lstlisting}
+import numpy as np
+
+x, y_true = 2.0, 5.0
+w1, b1 = 0.5, 0.1
+w2, b2 = 1.0, 0.0
+
+# Forward
+z = w1 * x + b1
+a = 1 / (1 + np.exp(-z))
+y_pred = w2 * a + b2
+loss = 0.5 * (y_pred - y_true)**2
+
+print(f"Prediccion: {y_pred:.4f}, Loss: {loss:.4f}")
+
+# Backward
+dL_dy = y_pred - y_true
+dy_da = w2
+da_dz = a * (1 - a)
+dz_dw1 = x
+dz_db1 = 1.0
+grad_w1 = dL_dy * dy_da * da_dz * dz_dw1
+grad_b1 = dL_dy * dy_da * da_dz * dz_db1
+grad_w2 = dL_dy * a
+grad_b2 = dL_dy
+
+print("Gradientes:", grad_w1, grad_b1, grad_w2, grad_b2)
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Verificacion con JAX (diferenciacion automatica)}
+    \begin{lstlisting}
+import jax
+import jax.numpy as jnp
+
+def forward(params, x):
+    w1, b1, w2, b2 = params
+    z = w1 * x + b1
+    a = 1 / (1 + jnp.exp(-z))
+    y_pred = w2 * a + b2
+    return y_pred
+
+def loss(params, x, y_true):
+    y_pred = forward(params, x)
+    return 0.5 * (y_pred - y_true)**2
+
+params = (0.5, 0.1, 1.0, 0.0)
+x_val, y_val = 2.0, 5.0
+
+grad_loss = jax.grad(loss)
+grads = grad_loss(params, x_val, y_val)
+print("Gradientes con JAX:", grads)
+    \end{lstlisting}
+\end{frame}
+
+% ============================================================================
+% SECCION 6: NOTACION EN PAPERS
+% ============================================================================
+\section{Notacion en Papers Cientificos}
+
+\begin{frame}{Notacion comun en Deep Learning}
+    \begin{itemize}
+        \item $\frac{\partial \mathcal{L}}{\partial \mathbf{W}^{(l)}} = \delta^{(l)} (\mathbf{a}^{(l-1)})^{\top}$: gradiente de la perdida respecto a pesos de la capa $l$.
+        \item $\delta^{(l)}$: error propagado hacia atras.
+        \item $\mathbf{H} = \nabla^2_{\mathbf{w}} \mathcal{L}(\mathbf{w})$: matriz Hessiana.
+        \item Actualizacion de Newton: $\mathbf{w}_{t+1} = \mathbf{w}_t - \eta \mathbf{H}^{-1} \nabla \mathcal{L}(\mathbf{w}_t)$.
+    \end{itemize}
+\end{frame}
+
+% ============================================================================
+% SECCION 7: EJERCICIOS PROPUESTOS
+% ============================================================================
+\section{Ejercicios Propuestos}
+
+\begin{frame}{Ejercicios}
+    \begin{enumerate}
+        \item Deriva $f(x) = \ln(\sin(e^x))$ usando regla de la cadena paso a paso.
+        \item Calcula la segunda derivada de $g(x) = e^{x^2+1}$.
+        \item Para la red neuronal del ejemplo, obtén las derivadas parciales si la activacion fuera ReLU en lugar de sigmoide. ¿Que cambios observas?
+        \item Implementa en Python una red con dos neuronas en la capa oculta y calcula los gradientes manualmente (usa un bucle sobre las neuronas).
+        \item Investiga: ¿que es el "vanishing gradient" y como se relaciona con la regla de la cadena?
+    \end{enumerate}
+\end{frame}
+
+% ============================================================================
+% SECCION 8: RESUMEN
+% ============================================================================
+\section{Resumen}
+
+\begin{frame}{Lo que hemos aprendido}
+    \begin{exampleblock}{Conceptos clave}
+        \begin{itemize}
+            \item \textbf{Regla de la cadena}: derivada de funciones compuestas, base del backpropagation.
+            \item \textbf{Aplicacion en IA}: calculo de gradientes en redes neuronales simples.
+            \item \textbf{Derivadas de orden superior}: curvatura, segunda derivada, matriz Hessiana.
+            \item \textbf{Optimizacion}: criterios de minimos/maximos y metodos de segundo orden.
+            \item \textbf{Implementacion}: SymPy para derivadas simbolicas, NumPy para backprop manual, JAX para diferenciacion automatica.
+        \end{itemize}
+    \end{exampleblock}
+\end{frame}
+
+\begin{frame}{Conexion con futuros cursos}
+    \begin{itemize}
+        \item \textbf{Deep Learning}: backpropagation en redes profundas.
+        \item \textbf{Optimizacion avanzada}: metodos de Newton, quasi-Newton.
+        \item \textbf{Teoria del aprendizaje}: analisis de convergencia y puntos criticos.
+    \end{itemize}
+\end{frame}
+
+% --- Diapositiva final ---
+\begin{frame}
+    \centering
+    \Huge \textbf{Gracias!}
+
+\end{frame}
+
+\end{document}

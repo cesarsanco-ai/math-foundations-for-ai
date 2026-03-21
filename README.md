@@ -1,17 +1,20 @@
-# Curso de Cálculo (CALCULO)
+# Curso de Matmática para IA
 
 Bienvenido(a) al repositorio del **Curso de Cálculo para IA**. Este espacio contiene el material teórico y los solucionarios de las prácticas del curso, junto con el código fuente en LaTeX, organizado por sesiones para facilitar su seguimiento y estudio.
 
 ## 📂 Estructura del Directorio
 
-El curso consta de 14 sesiones documentadas (de la `Sesion1` a la `Sesion14`) y una carpeta con los archivos fuente:
+- **`docs/`**: Índice y navegación para **GitHub Pages** (misma convención que `5_ML`).
+  - [`docs/index.md`](docs/index.md) — Tabla de sesiones.
+  - `docs/sesiones/` — Una página por semana (`sesion-01.md` … `sesion-14.md`).
+  - `docs/material/Sesion01` … `Sesion14` (y `Sesion0`) — Material por sesión.
+- **`FUENTE/`** y **`REFERENCIAS/`**: Fuentes y referencias externas.
 
-- **`Sesion1` a `Sesion14`**: Contienen el material de presentación, los notebooks prácticos y las soluciones a las prácticas de cada clase.
-- **`FUENTE/TEORIA`**: Código fuente en LaTeX utilizado en el desarrollo del material teórico del curso.
+El curso consta de **14 sesiones** semanales en `docs/material/Sesion01` … `Sesion14`.
 
-### 📄 Contenido por Sesión
+### 📄 Contenido por Sesión (en `docs/material/SesionNN/`)
 
-Dentro de la carpeta de cada sesión, encontrarás únicamente los siguientes archivos clave que estructuran la clase:
+Dentro de la carpeta de cada sesión encontrarás en particular:
 
 - **Material de Clase**:
   - `PPT*-CAL.pdf`: Diapositivas utilizadas durante la sesión.
@@ -24,11 +27,12 @@ Dentro de la carpeta de cada sesión, encontrarás únicamente los siguientes ar
 
 ## 📚 Cómo empezar
 
-1. Dirígete a la carpeta de la sesión que deseas revisar, empezando por la `Sesion1`.
-2. Utiliza las presentaciones (`PPT*.pdf`) para repasar la teoría de cada clase.
-3. Ejecuta los Jupyter Notebooks (`.ipynb`) (si los hay) para ver ejemplos en código relativos a la clase.
-4. Evalúa tu conocimiento consultando los solucionarios de las prácticas (`SOL*.pdf`).
-5. Si te interesa el desarrollo del material, revisa el código LaTeX en la carpeta `FUENTE/TEORIA`.
+1. Abre el índice: [`docs/index.md`](docs/index.md) (o la raíz `/docs` con GitHub Pages).
+2. Navega por `docs/sesiones/sesion-NN.md` o por `docs/material/SesionNN/`.
+3. Revisa diapositivas en `slides/` (PDF o fuente LaTeX según la sesión).
+4. Ejecuta los notebooks en `practica/`.
+5. Consulta material adicional en `recursos/` y `teoria/` en tu copia local.
+6. Para desarrollo del material, revisa `FUENTE/`.
 
 ¡Mucho éxito en tu proceso de aprendizaje de Matemática para Inteligencia Artificial!
 
