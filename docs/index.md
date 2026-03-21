@@ -1,7 +1,6 @@
-[⬅️ Volver al Inicio](https://cesarsanco-ai.github.io/)
-
-
 # Cálculo y Álgebra Lineal para IA
+
+[⬅️ Volver al Inicio](/)
 
 Bienvenido al material del curso **Cálculo y Álgebra Lineal para Inteligencia Artificial**. 
 
@@ -10,21 +9,21 @@ Bienvenido al material del curso **Cálculo y Álgebra Lineal para Inteligencia 
 Cada sesión incluye material teórico, notebooks de práctica (implementación en Python), ejercicios y recursos complementarios que conectan la matemática con la IA.
 
 | Semana | Tema |
-|--------|------|
-| 01 | [Fundamentos Matemáticos](Sesion01/teoria/) |
-| 02 | [Fundamentos de IA](Sesion02/teoria/) |
-| 03 | [Matrices](Sesion03/teoria/) |
-| 04 | [Sistemas de Ecuaciones Lineales](Sesion04/teoria/) |
-| 05 | [Espacios Vectoriales](Sesion05/teoria/) |
-| 06 | [Transformaciones Lineales](Sesion06/teoria/) |
-| 07 | [Autovalores, Autovectores](Sesion07/teoria/) |
-| 08 | [Descomposición de Matrices](Sesion08/teoria/) |
-| 09 | [Tensores](Sesion09/teoria/) |
-| 10 | [Probabilidades en IA](Sesion10/teoria/) |
-| 11 | [Límites y Continuidad](Sesion11/teoria/) |
-| 12 | [Derivadas e Integrales](Sesion12/teoria/) |
-| 13 | [Cálculo Multivariable](Sesion13/teoria/) |
-| 14 | [Optimización](Sesion14/teoria/) |
+|--------|--------|
+| 01 | [Fundamentos Matemáticos](sesiones/sesion-01.md) |
+| 02 | [Fundamentos de IA](sesiones/sesion-02.md) |
+| 03 | [Matrices](sesiones/sesion-03.md) |
+| 04 | [Sistemas de Ecuaciones Lineales](sesiones/sesion-04.md) |
+| 05 | [Espacios Vectoriales](sesiones/sesion-05.md) |
+| 06 | [Transformaciones Lineales](sesiones/sesion-06.md) |
+| 07 | [Autovalores, Autovectores](sesiones/sesion-07.md) |
+| 08 | [Descomposición de Matrices](sesiones/sesion-08.md) |
+| 09 | [Tensores](sesiones/sesion-09.md) |
+| 10 | [Probabilidades en IA](sesiones/sesion-10.md) |
+| 11 | [Límites y Continuidad](sesiones/sesion-11.md) |
+| 12 | [Derivadas e Integrales](sesiones/sesion-12.md) |
+| 13 | [Cálculo Multivariable](sesiones/sesion-13.md) |
+| 14 | [Optimización](sesiones/sesion-14.md) |
 
 > **Nota:** Se recomienda contar con conocimientos básicos de Python y haber utilizado bibliotecas numéricas como NumPy.
 
@@ -42,13 +41,12 @@ Todo el código fuente, notebooks y materiales adicionales están disponibles en
 
 [https://github.com/cesarsanco-ai/calculus-for-ai](https://github.com/cesarsanco-ai/calculus-for-ai)
 
-
 ---
 
 ### 👤 Autor
 
-**Carlos César Sánchez Coronel** | *Data Scientist & AI Engineer*
+**Carlos César Sánchez Coronel** | *Data Scientist & AI Engineer*  
 
-*Lima, Perú*
+*Lima, Perú*  
 
 🔗 [LinkedIn](https://www.linkedin.com/in/cesar-sanchez-c/) | 📁 [GitHub](https://github.com/cesarsanco-ai)

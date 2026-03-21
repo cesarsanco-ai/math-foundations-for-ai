@@ -22,14 +22,14 @@ Material de apoyo y referencias de la semana.
 
 *Nivel: Intermedio* ⭐⭐⭐
 
-* 📓 **Notebook Fundamentos:** [Notebook 1](https://github.com/cesarsanco-ai/calculus-for-ai/blob/main/docs/material/Sesion01/practica/SESION1_NTB1_CALCULO.ipynb)
-* 📓 **Notebook Aplicaciones:** [Notebook 2](https://github.com/cesarsanco-ai/calculus-for-ai/blob/main/docs/material/Sesion01/practica/SESION1_NTB2_CALCULO.ipynb)
+* 📓 **Notebook Fundamentos:** [Notebook 1](https://github.com/cesarsanco-ai/math-foundations-for-ai/blob/main/docs/material/Sesion01/practica/SESION1_NTB1_CALCULO.ipynb)
+* 📓 **Notebook Aplicaciones:** [Notebook 2](https://github.com/cesarsanco-ai/math-foundations-for-ai/blob/main/docs/material/Sesion01/practica/SESION1_NTB2_CALCULO.ipynb)
 
 ---
 
 ## 🔗 Recursos complementarios
 
-* 📁 **[Repositorio del curso](https://github.com/cesarsanco-ai/calculus-for-ai)** — Código y materiales en GitHub.
+* 📁 **[Repositorio del curso](https://github.com/cesarsanco-ai/math-foundations-for-ai)** — Código y materiales en GitHub.
 
 ---
 
