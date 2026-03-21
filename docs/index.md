@@ -1,38 +1,44 @@
 [⬅️ Volver al Inicio](https://cesarsanco-ai.github.io/)
 
 
-# Cálculo para IA
+# Cálculo y Álgebra Lineal para IA
 
-Bienvenido al material del curso **Cálculo para IA**.
-
-> Ajusta la URL del repositorio en este archivo si tu repo tiene otro nombre.
+Bienvenido al material del curso **Cálculo y Álgebra Lineal para Inteligencia Artificial**. 
 
 ## 📖 Sesiones
 
-Cada sesión enlaza a diapositivas (cuando hay PDF o fuente LaTeX), carpeta de cheatsheet, anexos y notebooks de laboratorio.
+Cada sesión incluye material teórico, notebooks de práctica (implementación en Python), ejercicios y recursos complementarios que conectan la matemática con la IA.
 
 | Semana | Tema |
 |--------|------|
-| 01 | [Semana 01](sesiones/sesion-01.md) |
-| 02 | [Semana 02](sesiones/sesion-02.md) |
-| 03 | [Semana 03](sesiones/sesion-03.md) |
-| 04 | [Semana 04](sesiones/sesion-04.md) |
-| 05 | [Semana 05](sesiones/sesion-05.md) |
-| 06 | [Semana 06](sesiones/sesion-06.md) |
-| 07 | [Semana 07](sesiones/sesion-07.md) |
-| 08 | [Semana 08](sesiones/sesion-08.md) |
-| 09 | [Semana 09](sesiones/sesion-09.md) |
-| 10 | [Semana 10](sesiones/sesion-10.md) |
-| 11 | [Semana 11](sesiones/sesion-11.md) |
-| 12 | [Semana 12](sesiones/sesion-12.md) |
-| 13 | [Semana 13](sesiones/sesion-13.md) |
-| 14 | [Semana 14](sesiones/sesion-14.md) |
+| 01 | [Fundamentos Matemáticos](Sesion01/teoria/) |
+| 02 | [Fundamentos de IA](Sesion02/teoria/) |
+| 03 | [Matrices](Sesion03/teoria/) |
+| 04 | [Sistemas de Ecuaciones Lineales](Sesion04/teoria/) |
+| 05 | [Espacios Vectoriales](Sesion05/teoria/) |
+| 06 | [Transformaciones Lineales](Sesion06/teoria/) |
+| 07 | [Autovalores, Autovectores](Sesion07/teoria/) |
+| 08 | [Descomposición de Matrices](Sesion08/teoria/) |
+| 09 | [Tensores](Sesion09/teoria/) |
+| 10 | [Probabilidades en IA](Sesion10/teoria/) |
+| 11 | [Límites y Continuidad](Sesion11/teoria/) |
+| 12 | [Derivadas e Integrales](Sesion12/teoria/) |
+| 13 | [Cálculo Multivariable](Sesion13/teoria/) |
+| 14 | [Optimización](Sesion14/teoria/) |
 
-> **Nota:** Se recomienda repaso de álgebra lineal básica y uso de Python con bibliotecas numéricas.
+> **Nota:** Se recomienda contar con conocimientos básicos de Python y haber utilizado bibliotecas numéricas como NumPy.
 
-## 🔗 Repositorio
+## 📂 Recursos generales
 
-Todo el código fuente, notebooks y materiales adicionales están en GitHub:
+- **Cheatsheet**: Resumen de fórmulas de álgebra lineal, derivadas multivariables y algoritmos de optimización.  
+  [Descargar cheatsheet](cheatsheet/Math_for_AI_Cheatsheet.pdf)
+
+- **Proyecto Integrador**: Implementación de un optimizador desde cero y análisis de superficies de pérdida.  
+  [Ver proyecto integrador](proyecto-integrador/README.md)
+
+## 🔗 Repositorio 
+
+Todo el código fuente, notebooks y materiales adicionales están disponibles en GitHub:
 
 [https://github.com/cesarsanco-ai/calculus-for-ai](https://github.com/cesarsanco-ai/calculus-for-ai)
 
