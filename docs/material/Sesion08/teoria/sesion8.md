@@ -1,4 +1,4 @@
-## Semana 8: Descomposición de Matrices (SVD)
+## Semana 8: Descomposición de Matrices
 
 ### Teoría
 

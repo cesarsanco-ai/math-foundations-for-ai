@@ -1,4 +1,4 @@
-## Semana 5: Espacios Vectoriales y Normas
+## Semana 5: Espacios Vectoriales
 
 ### Teoría
 

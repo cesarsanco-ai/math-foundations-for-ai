@@ -1,223 +1,374 @@
-## Semana 1 — Fundamentos Matemáticos I: Funciones y Modelamiento
+# Semana 1: Fundamentos Matemáticos
 
-**Objetivo:** Construir el lenguaje matemático necesario para representar datos y modelos en inteligencia artificial. Al finalizar esta semana, el estudiante será capaz de comprender y utilizar la notación matemática básica, identificar diferentes tipos de funciones, y relacionar estos conceptos con la formulación de problemas de machine learning, incluyendo funciones de pérdida, optimización y la estructura general de un modelo.
+## Teoría
 
----
+### 1. Notación matemática
 
-### 1. Notación Matemática Básica
+#### Índices
+Los índices se utilizan para referirse a elementos de una secuencia, conjunto o estructura de datos. Se denotan típicamente con subíndices: \(x_1, x_2, x_3, \dots, x_n\).
 
-#### Índices y subíndices
-En matemáticas y en machine learning, usamos índices para referirnos a elementos específicos dentro de un conjunto o secuencia. Por ejemplo:
-- \(x_i\) representa el i-ésimo elemento de un vector o conjunto de datos.
-- \(w_{ij}\) puede ser el peso que conecta la neurona i con la neurona j en una red neuronal.
+**Ejemplo paso a paso:**  
+Consideremos las calificaciones de 5 estudiantes: 15, 18, 14, 20, 16.  
+Podemos denotar: \(x_1 = 15\), \(x_2 = 18\), \(x_3 = 14\), \(x_4 = 20\), \(x_5 = 16\).  
+Para referirnos al tercer elemento: \(x_3 = 14\).
 
-#### Sumatorias y productorias
-- **Sumatoria simple:** \(\sum_{i=1}^{n} x_i = x_1 + x_2 + \dots + x_n\)  
-  Se usa para acumular valores, por ejemplo, en el cálculo de promedios o en funciones de costo.
-- **Sumatoria doble:** \(\sum_{i=1}^{n}\sum_{j=1}^{m} a_{ij}\) suma todos los elementos de una matriz.
-- **Productoria:** \(\prod_{i=1}^{n} x_i = x_1 \cdot x_2 \cdots x_n\)  
-  Aparece en probabilidades (por ejemplo, la verosimilitud de una muestra independiente).
+#### Sucesiones
+Una sucesión es una función cuyo dominio son los números naturales. Se denota \(\{a_n\}_{n=1}^{\infty}\).
 
-#### Notación vectorial
-Un vector \(\mathbf{x} \in \mathbb{R}^n\) se escribe como \(\mathbf{x} = (x_1, x_2, \dots, x_n)\). En machine learning, los datos suelen representarse como vectores de características.
+**Ejemplo:** \(a_n = \frac{1}{n}\) produce: \(1, \frac{1}{2}, \frac{1}{3}, \frac{1}{4}, \dots\)
 
-#### Conjuntos numéricos
-- \(\mathbb{R}\): números reales. La mayoría de los parámetros y datos en ML son reales.
-- \(\mathbb{C}\): números complejos. Menos comunes en ML básico, pero aparecen en procesamiento de señales y algunas transformadas.
+#### Series
+Una serie es la suma de los términos de una sucesión: \(\sum_{n=1}^{\infty} a_n\).
 
----
+**Ejemplo:** Serie geométrica: \(\sum_{n=0}^{\infty} r^n = \frac{1}{1-r}\) para \(|r| < 1\).
 
-### 2. Funciones Básicas
+#### Sumatorias simples
+La sumatoria simple suma una secuencia de términos:
 
-Una función \(f: A \to B\) asigna a cada elemento de un conjunto \(A\) (dominio) un único elemento en \(B\) (codominio). El rango es el conjunto de valores que realmente toma la función.
+\[\sum_{i=1}^{n} x_i = x_1 + x_2 + \cdots + x_n\]
 
-#### Tipos fundamentales
+**Ejemplo paso a paso:**  
+Calcular \(\sum_{i=1}^{4} i^2\):
+- \(i=1\): \(1^2 = 1\)
+- \(i=2\): \(2^2 = 4\)
+- \(i=3\): \(3^2 = 9\)
+- \(i=4\): \(4^2 = 16\)
+Suma total: \(1 + 4 + 9 + 16 = 30\)
 
-| Función        | Forma general               | Dominio típico | Rango típico | Ejemplo de uso en IA                          |
-|----------------|------------------------------|----------------|--------------|------------------------------------------------|
-| Lineal         | \(f(x) = mx + b\)            | \(\mathbb{R}\) | \(\mathbb{R}\) | Modelos de regresión lineal                    |
-| Polinomial     | \(f(x) = a_n x^n + \dots + a_0\) | \(\mathbb{R}\) | \(\mathbb{R}\) | Aproximación de curvas, features polinomiales  |
-| Exponencial    | \(f(x) = a e^{kx}\)           | \(\mathbb{R}\) | \((0,\infty)\) | Crecimiento, decaimiento, softmax              |
-| Logarítmica    | \(f(x) = \log_a x\)           | \((0,\infty)\) | \(\mathbb{R}\) | Transformación de datos, entropía, verosimilitud |
+#### Sumatorias dobles
+Se utilizan para recorrer dos índices, típicamente filas y columnas de una matriz:
 
-**Ejemplo:** En regresión logística, la probabilidad de una clase se modela con una función logística (sigmoide) que es una combinación de funciones lineales y exponenciales.
+\[\sum_{i=1}^{m} \sum_{j=1}^{n} a_{ij}\]
 
----
+**Ejemplo paso a paso:**  
+Dada la matriz \(A = \begin{pmatrix} 1 & 2 & 3 \\ 4 & 5 & 6 \end{pmatrix}\), calcular \(\sum_{i=1}^{2} \sum_{j=1}^{3} a_{ij}\):
+- \(i=1, j=1\): 1
+- \(i=1, j=2\): 2
+- \(i=1, j=3\): 3
+- \(i=2, j=1\): 4
+- \(i=2, j=2\): 5
+- \(i=2, j=3\): 6
+Suma total: \(1+2+3+4+5+6 = 21\)
 
-### 3. Funciones de Activación en Redes Neuronales
+#### Sumatorias triples
+Aparecen en problemas con tres dimensiones, como tensores:
 
-Las funciones de activación introducen no linealidades en las redes neuronales, permitiendo que aprendan relaciones complejas.
+\[\sum_{i=1}^{l} \sum_{j=1}^{m} \sum_{k=1}^{n} a_{ijk}\]
 
-- **Sigmoide:** \(\sigma(x) = \frac{1}{1+e^{-x}}\)  
-  Rango: (0,1). Se usa en capas de salida para probabilidades. Problema: saturación y desvanecimiento del gradiente.
-- **Tanh:** \(\tanh(x) = \frac{e^x - e^{-x}}{e^x + e^{-x}}\)  
-  Rango: (-1,1). Centrada en cero, pero también satura.
-- **ReLU (Rectified Linear Unit):** \(f(x) = \max(0, x)\)  
-  Rango: \([0,\infty)\). Muy usada en capas ocultas por su eficiencia y porque evita la saturación para valores positivos. Variantes: Leaky ReLU, ELU, etc.
+#### Productorias
+Similar a las sumatorias, pero multiplicando:
 
----
+\[\prod_{i=1}^{n} x_i = x_1 \cdot x_2 \cdots x_n\]
 
-### 4. Aplicaciones en IA: Modelamiento y Funciones de Pérdida
+**Ejemplo:** \(\prod_{i=1}^{4} i = 1 \cdot 2 \cdot 3 \cdot 4 = 24\)
 
-#### Modelamiento de relaciones entre variables
-En inteligencia artificial, buscamos modelos \(f(x;\theta)\) que aproximen relaciones entre variables de entrada \(x\) y salidas \(y\). Los parámetros \(\theta\) se ajustan para minimizar una función de pérdida.
+### 2. Sistemas de dimensiones
 
-#### Introducción a la optimización
-Casi todos los problemas de machine learning se formulan como:
-\[
-\min_{\theta} L(\theta)
-\]
-donde \(L\) es la función de pérdida (o costo) y \(\theta\) son los parámetros del modelo.
+#### 2D (bidimensional)
+Un sistema 2D tiene dos ejes coordenados (x, y). Ejemplos: puntos en un plano, imágenes en escala de grises (alto × ancho).
 
-#### Funciones de pérdida según el objetivo
-La pérdida mide qué tan equivocada está la predicción del modelo. Según el tipo de problema, la pérdida tiene diferentes interpretaciones:
+**Ejemplo:** El punto \(P = (3, 4)\) está a 3 unidades en el eje x y 4 en el eje y.
 
-1. **Distancia entre números** (regresión):  
-   - **MSE (Mean Squared Error):** \(\frac{1}{n}\sum (y_i - \hat{y}_i)^2\)  
-   - **MAE (Mean Absolute Error):** \(\frac{1}{n}\sum |y_i - \hat{y}_i|\)
+#### 3D (tridimensional)
+Añade un tercer eje z. Ejemplos: puntos en el espacio, videos (frames, alto, ancho), imágenes a color (alto, ancho, canales RGB).
 
-2. **Diferencia entre probabilidades** (clasificación):  
-   - **Cross-Entropy / Log Loss:** \(-\sum y_i \log(p_i)\) (para clasificación binaria o multiclase)
+**Ejemplo:** El punto \(P = (1, 2, 3)\) en el espacio 3D.
 
-3. **Margen geométrico** (máquinas de soporte vectorial):  
-   - **Hinge Loss:** \(\max(0, 1 - y_i \hat{y}_i)\) (con \(y_i \in \{-1,1\}\))
+#### n-dimensional
+Generalización a n dimensiones. Un punto se representa como \((x_1, x_2, \dots, x_n)\). En IA, cada punto es una observación con n características (features).
 
-4. **Compactación de clusters** (clustering):  
-   - **SSE (Sum of Squared Errors):** \(\sum \|x_i - \mu_k\|^2\) (donde \(\mu_k\) es el centroide del cluster)
+**Ejemplo:** Un paciente con edad, peso, altura, presión sistólica y diastólica → \( \text{paciente} = (45, 70, 1.75, 120, 80) \) en \(\mathbb{R}^5\).
 
-| Tipo de problema | ¿Qué mide la pérdida?               |
-|------------------|--------------------------------------|
-| Regresión        | Distancia entre números              |
-| Clasificación    | Diferencia entre probabilidades      |
-| Clustering       | Compactación de clusters             |
-| Deep Learning    | Cualquiera de las anteriores         |
-| Reinforcement    | Error de estimación de valor         |
+### 3. Estructura de datos: Grafos
 
----
+Un grafo es un conjunto de nodos (vértices) conectados por aristas. Se denota \(G = (V, E)\).
 
-### 5. Estructura General de un Problema de Machine Learning
+- **V**: conjunto de vértices
+- **E**: conjunto de aristas (pares de vértices)
 
-La mayoría de los modelos siguen el esquema **Empirical Risk Minimization (ERM)**:
+**Ejemplo:** Red social: personas como nodos, amistades como aristas.
 
-\[
-\min_{\theta} \frac{1}{n}\sum_{i=1}^{n} l\big(y_i, f(x_i; \theta)\big)
-\]
+**Tipos:**
+- **Dirigido:** las aristas tienen dirección (ej: Twitter, sigues a alguien).
+- **No dirigido:** las aristas no tienen dirección (ej: Facebook, amistad mutua).
 
-- \(f(x; \theta)\): modelo (por ejemplo, una red neuronal, regresión lineal, etc.)
-- \(l(y, \hat{y})\): pérdida individual (loss)
-- \(\frac{1}{n}\sum l\): costo total (cost function)
-- \(L(\theta)\): función objetivo (puede incluir regularización)
+**Aplicación en IA:** Los grafos se usan en redes neuronales de grafos (GNN), sistemas de recomendación, análisis de redes sociales, etc.
 
-**Observación:** Aunque a menudo se usa \(L(\theta)\) para todo, es útil distinguir:
-- **Loss function:** error por ejemplo individual.
-- **Cost function:** promedio o suma del error en el dataset.
-- **Objective function:** función total a optimizar (pérdida + regularización).
+### 4. Objetos matemáticos
 
----
+#### Escalares
+Un número real o complejo. Denotado por letras sin negrita: \(a, b, c, \alpha, \beta\).
 
-### 6. Casos Específicos por Tipo de Modelo
+**Ejemplo:** \(x = 5\), \(\lambda = 0.01\) (learning rate en ML).
 
-#### 6.1 Regresión
-- **Modelo típico:** \(\hat{y} = f(x; \theta)\) con \(\theta = (w, b)\) (pesos y sesgo).
-- **Pérdida común:** MSE.
-- **Optimización:**
-  - **Closed form** (ecuaciones normales) para regresión lineal simple.
-  - **Gradient Descent** para datasets grandes o modelos no lineales.
-  - **SGD (Stochastic Gradient Descent)** para aprendizaje en línea.
+#### Vectores
+Lista ordenada de números. Se denotan con negrita: \(\mathbf{v} = (v_1, v_2, \dots, v_n)\) o \(\vec{v}\).
 
-#### 6.2 Clasificación
-- **Modelo típico:** \(p(y|x; \theta)\) (por ejemplo, regresión logística).
-- **Pérdida común:** Cross-entropy.
-- **Parámetros:** \(\theta = (w, b)\) (aunque el modelo produce probabilidades).
-- **Optimización:** Gradient Descent, LBFGS, SGD.
+**Ejemplo:** \(\mathbf{v} = [2, -1, 4]\) en \(\mathbb{R}^3\).
 
-#### 6.3 Clustering (no supervisado)
-- **Modelo:** asigna cada punto a un cluster: \(cluster(x)\).
-- **Pérdida típica:** SSE (suma de distancias al centroide).
-- **Parámetros:** centroides \(\{\mu_1, \dots, \mu_k\}\).
-- **Optimización:** Algoritmo iterativo (K-means) o EM (Expectation-Maximization). No usan gradiente normalmente.
+En ML, un vector representa una observación: \(\mathbf{x}^{(i)} = [x_1^{(i)}, x_2^{(i)}, \dots, x_n^{(i)}]\) son las características del i-ésimo ejemplo.
 
-#### 6.4 Árboles de decisión
-- **Pérdida:** Gini impurity o entropía.
-  - \(Entropy = -\sum p_i \log p_i\)
-- **Parámetros:** variables de split y umbrales (no continuos).
-- **Optimización:** Algoritmo greedy que busca la mejor partición en cada nodo.
-
-#### 6.5 Deep Learning
-- **Modelo:** red neuronal profunda con millones de parámetros \(\theta\).
-- **Pérdida:** según la tarea (MSE para regresión, cross-entropy para clasificación, focal loss para detección, etc.)
-- **Optimización:** Gradiente descendiente con **backpropagation**. Optimizadores populares:
-  - SGD (con o sin momentum)
-  - Adam
-  - RMSprop
-
----
-
-### 7. Regularización
-
-Para evitar overfitting, se añade un término de regularización a la función objetivo:
+#### Matrices
+Tabla rectangular de números con filas y columnas. Se denotan con mayúsculas: \(A, B, W\).
 
 \[
-L(\theta) = \text{Loss} + \lambda R(\theta)
+A = \begin{pmatrix}
+a_{11} & a_{12} & \cdots & a_{1n} \\
+a_{21} & a_{22} & \cdots & a_{2n} \\
+\vdots & \vdots & \ddots & \vdots \\
+a_{m1} & a_{m2} & \cdots & a_{mn}
+\end{pmatrix}
 \]
 
-- \(R(\theta)\) puede ser la norma L2 (\(\|\theta\|^2\)) o L1 (\(\|\theta\|_1\)).
-- \(\lambda\) controla la fuerza de la regularización.
+**Ejemplo:** \(W = \begin{pmatrix} 0.2 & -0.5 \\ 0.8 & 0.1 \end{pmatrix}\) podría ser una matriz de pesos en una red neuronal.
 
-**Ejemplo:** Regresión ridge: \(L = MSE + \lambda \|\theta\|^2\).
+#### Tensores
+Generalización de vectores y matrices a más dimensiones. Un tensor de orden (rank) 0 es un escalar, orden 1 es un vector, orden 2 es una matriz, orden 3 o más es un tensor.
+
+**Ejemplo:** Una imagen a color de 224×224 píxeles se representa como un tensor 3D: (224, 224, 3). Un lote (batch) de 32 imágenes es un tensor 4D: (32, 224, 224, 3).
+
+### 5. Funciones elementales
+
+#### Función lineal
+\(f(x) = mx + b\)
+
+**Ejemplo paso a paso:**  
+\(f(x) = 2x + 1\)  
+- \(x = 0 \Rightarrow f(0) = 1\)  
+- \(x = 1 \Rightarrow f(1) = 3\)  
+- \(x = -1 \Rightarrow f(-1) = -1\)
+
+**Aplicación:** Modelos de regresión lineal.
+
+#### Función polinomial
+\(f(x) = a_n x^n + a_{n-1} x^{n-1} + \cdots + a_1 x + a_0\)
+
+**Ejemplo:** \(f(x) = x^2 - 3x + 2\)  
+- \(x = 0 \Rightarrow f(0) = 2\)  
+- \(x = 1 \Rightarrow f(1) = 0\)  
+- \(x = 2 \Rightarrow f(2) = 0\) (raíces)
+
+#### Función exponencial
+\(f(x) = a^x\) con \(a > 0\), \(a \neq 1\). La base más común es \(e\) (número de Euler ≈ 2.71828).
+
+**Ejemplo:** \(f(x) = e^x\)  
+- \(x = 0 \Rightarrow f(0) = 1\)  
+- \(x = 1 \Rightarrow f(1) \approx 2.718\)  
+- \(x = -1 \Rightarrow f(-1) \approx 0.368\)
+
+**Aplicación:** Crecimiento poblacional, interés compuesto, kernel RBF en SVM: \(K(x, x') = \exp(-\gamma \|x - x'\|^2)\).
+
+#### Función logarítmica
+\(f(x) = \log_a x\) con \(a > 0\), \(a \neq 1\), \(x > 0\). Es la inversa de la exponencial.
+
+**Ejemplo:** \(\log_{10} 100 = 2\) porque \(10^2 = 100\).  
+\(\ln e = 1\) porque \(e^1 = e\).
+
+**Aplicación:** Entropía, log-loss, verosimilitud.
+
+#### Función trigonométrica
+- Seno: \(f(x) = \sin x\)
+- Coseno: \(f(x) = \cos x\)
+
+**Ejemplo:** \(\sin 0 = 0\), \(\sin \pi/2 = 1\), \(\cos 0 = 1\), \(\cos \pi = -1\).
+
+**Aplicación:** Positional encoding en Transformers:  
+\(PE_{(pos, 2i)} = \sin\left(\frac{pos}{10000^{2i/d}}\right)\),  
+\(PE_{(pos, 2i+1)} = \cos\left(\frac{pos}{10000^{2i/d}}\right)\).
+
+#### Función trigonométrica hiperbólica
+- Seno hiperbólico: \(\sinh x = \frac{e^x - e^{-x}}{2}\)
+- Coseno hiperbólico: \(\cosh x = \frac{e^x + e^{-x}}{2}\)
+- Tangente hiperbólica: \(\tanh x = \frac{\sinh x}{\cosh x} = \frac{e^x - e^{-x}}{e^x + e^{-x}}\)
+
+**Ejemplo:** \(\tanh 0 = 0\), \(\tanh 1 \approx 0.762\), \(\tanh 2 \approx 0.964\).
+
+**Aplicación:** Función de activación tanh en RNNs y MLPs.
+
+### 6. Tipos de funciones por dominio
+
+#### Composición de funciones
+Dadas \(f\) y \(g\), la composición \(f \circ g\) se define como \((f \circ g)(x) = f(g(x))\).
+
+**Ejemplo paso a paso:**  
+\(f(x) = x^2\), \(g(x) = 2x + 1\)  
+\((f \circ g)(x) = f(g(x)) = f(2x+1) = (2x+1)^2\)  
+- Si \(x = 1\): \(g(1) = 3\), \(f(3) = 9\)  
+- Directo: \((2\cdot1+1)^2 = 9\) ✓
+
+**Aplicación en DL:** Una red neuronal es una composición de funciones:  
+\(f(x) = f_L(f_{L-1}(\dots f_1(x)\dots))\), donde cada capa aplica una transformación lineal seguida de una activación no lineal.
+
+#### Funciones por tramos
+Definidas por diferentes expresiones en diferentes intervalos.
+
+**Ejemplo:** ReLU (Rectified Linear Unit):
+\[
+\text{ReLU}(x) = 
+\begin{cases} 
+x & \text{si } x \geq 0 \\
+0 & \text{si } x < 0
+\end{cases}
+\]
+
+**Aplicación:** Función de activación más usada en DL.
+
+### 7. Funciones de activación
+
+#### Sigmoide
+\[
+\sigma(x) = \frac{1}{1 + e^{-x}}
+\]
+
+**Ejemplo paso a paso:**  
+- \(x = 0\): \(\sigma(0) = \frac{1}{1 + e^0} = \frac{1}{1+1} = 0.5\)  
+- \(x = 2\): \(\sigma(2) = \frac{1}{1 + e^{-2}} \approx \frac{1}{1 + 0.1353} \approx 0.881\)  
+- \(x = -2\): \(\sigma(-2) = \frac{1}{1 + e^{2}} \approx \frac{1}{1 + 7.389} \approx 0.119\)
+
+**Aplicación:** Regresión logística (salida entre 0 y 1), compuertas en LSTM.
+
+#### Tanh
+\[
+\tanh(x) = \frac{e^x - e^{-x}}{e^x + e^{-x}}
+\]
+
+**Ejemplo paso a paso:**  
+- \(x = 0\): \(\tanh(0) = 0\)  
+- \(x = 1\): \(\tanh(1) \approx \frac{2.718 - 0.368}{2.718 + 0.368} = \frac{2.35}{3.086} \approx 0.762\)  
+- \(x = -1\): \(\tanh(-1) \approx -0.762\)
+
+**Aplicación:** Función de activación en RNNs, centrada en cero.
+
+#### ReLU
+\[
+\text{ReLU}(x) = \max(0, x)
+\]
+
+**Ejemplo paso a paso:**  
+- \(x = 3\): ReLU(3) = 3  
+- \(x = -2\): ReLU(-2) = 0  
+- \(x = 0\): ReLU(0) = 0
+
+**Aplicación:** Función de activación por defecto en CNN y MLP.
+
+### 8. Concepto de función de pérdida
+
+Una función de pérdida \(L(y, \hat{y})\) mide la discrepancia entre el valor real \(y\) y el valor predicho \(\hat{y}\).
+
+#### Definición general
+\[
+L(\theta) = \frac{1}{n} \sum_{i=1}^{n} \ell(y_i, \hat{y}_i)
+\]
+donde \(\ell\) es la pérdida por ejemplo, y \(\theta\) son los parámetros del modelo.
+
+#### Ejemplos intuitivos
+
+**Distancia entre números (regresión):** Error cuadrático medio
+\[
+\text{MSE} = \frac{1}{n} \sum_{i=1}^{n} (y_i - \hat{y}_i)^2
+\]
+
+**Diferencia entre probabilidades (clasificación):** Entropía cruzada
+\[
+\text{Cross-Entropy} = -\sum_{i=1}^{n} y_i \log(\hat{y}_i)
+\]
+donde \(y_i \in \{0,1\}\) y \(\hat{y}_i \in [0,1]\) es la probabilidad predicha.
+
+**Ejemplo paso a paso (MSE):**  
+Valores reales: \(y = [3, -0.5, 2, 7]\)  
+Predicciones: \(\hat{y} = [2.5, 0.0, 2, 8]\)  
+Diferencias: \([0.5, -0.5, 0, -1]\)  
+Cuadrados: \([0.25, 0.25, 0, 1]\)  
+Suma: \(1.5\)  
+MSE = \(1.5 / 4 = 0.375\)
+
+**Ejemplo paso a paso (Cross-Entropy):**  
+Clasificación binaria, \(y = 1\), \(\hat{y} = 0.8\)  
+Pérdida: \(-\log(0.8) \approx -(-0.223) = 0.223\)  
+Si \(y = 0\), \(\hat{y} = 0.1\): pérdida \(-\log(0.9) \approx 0.105\) (notar que para \(y=0\) usamos \(-\log(1-\hat{y})\))
 
 ---
 
-### 8. Parámetros y su Dimensionalidad
+## Aplicaciones prácticas
 
-El número de parámetros varía enormemente:
+### Machine Learning (ML)
 
-| Modelo               | # parámetros aproximado |
-|----------------------|-------------------------|
-| Regresión lineal     | Pocos (número de features + 1) |
-| Random Forest        | Miles (número de árboles y umbrales) |
-| Red neuronal profunda| Millones (pesos de todas las conexiones) |
+#### Regresión lineal (función lineal)
+Modelo: \(\hat{y} = w^T x + b\)  
+Es una función lineal de las características \(x\). Los parámetros \(w\) (pesos) y \(b\) (sesgo) se aprenden minimizando una función de pérdida como MSE.
 
-En general, \(\theta \in \mathbb{R}^d\) con \(d\) desde decenas hasta millones.
+**Ecuación:**  
+\[
+\hat{y} = \sum_{j=1}^{n} w_j x_j + b
+\]
+Aquí aparece una **sumatoria** (tema de la semana) sobre las características.
+
+#### Regresión logística (sigmoide, softmax)
+Modelo de clasificación binaria:  
+\[
+P(y=1|x) = \sigma(w^T x + b) = \frac{1}{1 + e^{-(w^T x + b)}}
+\]
+La **función sigmoide** transforma una combinación lineal en una probabilidad entre 0 y 1.
+
+Para clasificación multiclase, se usa **softmax**:  
+\[
+P(y=k|x) = \frac{e^{w_k^T x + b_k}}{\sum_{j=1}^{K} e^{w_j^T x + b_j}}
+\]
+Aquí aparecen **exponenciales** y una **sumatoria** en el denominador.
+
+#### SVM (kernel RBF: exponencial)
+El kernel RBF (Radial Basis Function) mide similitud entre dos puntos:
+\[
+K(x, x') = \exp\left(-\gamma \|x - x'\|^2\right)
+\]
+Es una **función exponencial** aplicada a una distancia.
+
+#### Entropía (logaritmo)
+La entropía mide la incertidumbre en una distribución de probabilidad:
+\[
+H(S) = -\sum_{i=1}^{n} p_i \log_2 p_i
+\]
+Aparece una **sumatoria** y un **logaritmo**. En árboles de decisión, se usa para medir la impureza.
+
+#### Funciones de pérdida (log-loss)
+La log-loss (entropía cruzada binaria) es:
+\[
+L = -\frac{1}{n} \sum_{i=1}^{n} \left[ y_i \log(\hat{y}_i) + (1 - y_i) \log(1 - \hat{y}_i) \right]
+\]
+Combina **sumatoria** y **logaritmo**.
+
+### Deep Learning (DL)
+
+#### Perceptrón (función lineal + activación)
+Un perceptrón es la unidad básica de una red neuronal:
+\[
+\text{salida} = f(w^T x + b)
+\]
+donde \(f\) es una función de activación (ReLU, sigmoide, tanh). Aquí se combina una **función lineal** (suma ponderada) con una **función no lineal**.
+
+#### Funciones de activación (ReLU, GELU)
+- ReLU: \( \max(0, x) \) (función por tramos)
+- GELU: \( x \cdot \Phi(x) \) donde \(\Phi\) es la CDF de la normal, aproximada como \(0.5x(1 + \tanh(\sqrt{2/\pi}(x + 0.044715x^3)))\) (combina polinomio, exponencial y tanh).
+
+#### Positional encoding (seno/coseno)
+En Transformers, se añade información de posición:
+\[
+PE_{(pos, 2i)} = \sin\left(\frac{pos}{10000^{2i/d}}\right), \quad PE_{(pos, 2i+1)} = \cos\left(\frac{pos}{10000^{2i/d}}\right)
+\]
+Son **funciones trigonométricas** aplicadas a la posición.
+
+#### RNN (tanh, sigmoide)
+En una RNN, el estado oculto se actualiza como:
+\[
+h_t = \tanh(W_{hh} h_{t-1} + W_{xh} x_t + b_h)
+\]
+Aparece la **función tanh** (o sigmoide en LSTMs).
+
+#### Atención (softmax)
+El mecanismo de atención calcula pesos normalizados:
+\[
+\alpha_{ij} = \frac{\exp(e_{ij})}{\sum_{k} \exp(e_{ik})}
+\]
+donde \(e_{ij}\) son puntuaciones de atención. Aquí se usa **exponencial** y **sumatoria** (softmax).
 
 ---
-
-### 9. Resumen Conceptual
-
-Todos los modelos de machine learning comparten la misma estructura:
-
-| Paso | Concepto                |
-|------|-------------------------|
-| 1    | Modelo: \(f(x;\theta)\) |
-| 2    | Pérdida individual: \(l(y, \hat{y})\) |
-| 3    | Objetivo: \(L(\theta) = \frac{1}{n}\sum l(y_i, f(x_i;\theta))\) |
-| 4    | Optimización: algoritmo que minimiza \(L(\theta)\) |
-
-**Idea clave:** Toda rama de ML cambia solo estos tres elementos: el **modelo**, la **función de pérdida** y el **algoritmo de optimización**.
-
----
-
-### 10. Optimizadores Más Usados en la Práctica
-
-#### Machine Learning clásico
-- **Closed form** (solución analítica, ej. regresión lineal)
-- **Gradient Descent** (batch)
-- **Coordinate Descent**
-- **EM Algorithm** (para modelos con variables latentes, ej. clustering)
-
-#### Deep Learning
-- **SGD** (Stochastic Gradient Descent)
-- **Adam** (Adaptive Moment Estimation) — el más dominante actualmente
-- **AdamW** (Adam con decaimiento de peso corregido)
-- **RMSprop**
-
----
-
-### 11. Conclusión e Ideas Clave
-
-- La **función de pérdida** define qué significa equivocarse para el problema en cuestión.
-- El **optimizador** define cómo se corrigen los errores (cómo se actualizan los parámetros).
-- La mayoría de los problemas de machine learning se pueden escribir como **minimización empírica del riesgo (ERM)**.
-- La comprensión de estos fundamentos matemáticos es esencial para diseñar, implementar y depurar modelos de inteligencia artificial.
-
-
