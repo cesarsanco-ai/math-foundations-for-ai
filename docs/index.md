@@ -1,6 +1,7 @@
-# Cálculo y Álgebra Lineal para IA
+[⬅️ Volver al Inicio](https://cesarsanco-ai.github.io/)
 
-[⬅️ Volver al Inicio](/)
+
+# Cálculo y Álgebra Lineal para IA
 
 Bienvenido al material del curso **Cálculo y Álgebra Lineal para Inteligencia Artificial**. 
 
@@ -39,14 +40,5 @@ Cada sesión incluye material teórico, notebooks de práctica (implementación 
 
 Todo el código fuente, notebooks y materiales adicionales están disponibles en GitHub:
 
-[https://github.com/cesarsanco-ai/calculus-for-ai](https://github.com/cesarsanco-ai/calculus-for-ai)
+[https://github.com/cesarsanco-ai/math-foundations-for-ai](https://github.com/cesarsanco-ai/math-foundations-for-ai)
 
----
-
-### 👤 Autor
-
-**Carlos César Sánchez Coronel** | *Data Scientist & AI Engineer*  
-
-*Lima, Perú*  
-
-🔗 [LinkedIn](https://www.linkedin.com/in/cesar-sanchez-c/) | 📁 [GitHub](https://github.com/cesarsanco-ai)
