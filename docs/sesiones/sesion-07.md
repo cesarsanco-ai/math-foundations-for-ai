@@ -15,5 +15,5 @@ Comprender autovalores y autovectores para analizar estructura y reducción de d
 
 ### 💻 Ejercicios
 
-* 📓 [Ejercicio 1](../material/Sesion07/practica/SESION7_NTB1_CALCULO.md)
-* 📓 [Ejercicio 2](https://github.com/cesarsanco-ai/math-foundations-for-ai/blob/main/docs/material/Sesion07/practica/SESION7_NTB2_CALCULO.ipynb)
+* 📓 [Ejercicio 1](../material/Sesion07/practica/SESION7_NTB1-CALCULO.md)
+* 📓 [Ejercicio 2](https://github.com/cesarsanco-ai/math-foundations-for-ai/blob/main/docs/material/Sesion07/practica/SESION7_NTB2-CALCULO.ipynb)
