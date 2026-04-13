@@ -1,4 +1,7 @@
-## Semana 9: Tensores
+---
+layout: default
+---
+# Sesión 9: Tensores
 
 ### Teoría
 
@@ -17,7 +20,7 @@ Un **tensor** es una generalización de los conceptos de escalar, vector y matri
 | Tensor 3D | 3 | (d1, d2, d3) | Imagen en escala de grises: (alto, ancho, 1) |
 | Tensor 4D | 4 | (d1, d2, d3, d4) | Lote de imágenes color: (batch, alto, ancho, canales) |
 
-**Notación:** Usaremos negrita para tensores de orden ≥ 1. Por ejemplo, \(\mathcal{T}\) para un tensor de orden 3.
+**Notación:** Usaremos negrita para tensores de orden ≥ 1. Por ejemplo, $\mathcal{T}$ para un tensor de orden 3.
 
 **Ejemplo 1:** Un tensor de orden 3 con forma (2, 3, 4) tiene 2 × 3 × 4 = 24 elementos. Podemos visualizarlo como 2 matrices de 3×4 apiladas.
 
@@ -56,18 +59,18 @@ La dimensión de lote (batch) agrupa múltiples muestras independientes para pro
 ##### Suma elemento a elemento
 Dos tensores de la misma forma se suman componente a componente.
 
-**Ejemplo:** \(\mathcal{A} = \begin{pmatrix} 1 & 2 \\ 3 & 4 \end{pmatrix}\), \(\mathcal{B} = \begin{pmatrix} 5 & 6 \\ 7 & 8 \end{pmatrix}\)  
-\(\mathcal{A} + \mathcal{B} = \begin{pmatrix} 6 & 8 \\ 10 & 12 \end{pmatrix}\)
+**Ejemplo:** $\mathcal{A} = \begin{pmatrix} 1 & 2 \\ 3 & 4 \end{pmatrix}$, $\mathcal{B} = \begin{pmatrix} 5 & 6 \\ 7 & 8 \end{pmatrix}$  
+$\mathcal{A} + \mathcal{B} = \begin{pmatrix} 6 & 8 \\ 10 & 12 \end{pmatrix}$
 
 ##### Multiplicación elemento a elemento (Hadamard)
-También llamada producto de Hadamard: \((\mathcal{A} \odot \mathcal{B})_{ijk} = a_{ijk} b_{ijk}\).
+También llamada producto de Hadamard: $(\mathcal{A} \odot \mathcal{B})_{ijk} = a_{ijk} b_{ijk}$.
 
-**Ejemplo:** \(\begin{pmatrix} 1 & 2 \\ 3 & 4 \end{pmatrix} \odot \begin{pmatrix} 5 & 6 \\ 7 & 8 \end{pmatrix} = \begin{pmatrix} 5 & 12 \\ 21 & 32 \end{pmatrix}\)
+**Ejemplo:** $\begin{pmatrix} 1 & 2 \\ 3 & 4 \end{pmatrix} \odot \begin{pmatrix} 5 & 6 \\ 7 & 8 \end{pmatrix} = \begin{pmatrix} 5 & 12 \\ 21 & 32 \end{pmatrix}$
 
 ##### Producto tensorial (contracciones)
-Generaliza el producto de matrices a tensores de orden superior. La operación más común es el **producto punto** (suma sobre un eje común). Por ejemplo, el producto matriz-vector: \(\mathbf{c} = A \mathbf{v}\) equivale a \(c_i = \sum_j A_{ij} v_j\).
+Generaliza el producto de matrices a tensores de orden superior. La operación más común es el **producto punto** (suma sobre un eje común). Por ejemplo, el producto matriz-vector: $\mathbf{c} = A \mathbf{v}$ equivale a $c_i = \sum_j A_{ij} v_j$.
 
-Para tensores de orden 3, podemos tener contracciones como \(\mathcal{C}_{ik} = \sum_j \mathcal{A}_{ijk} \mathcal{B}_{jl}\) (sumando sobre j).
+Para tensores de orden 3, podemos tener contracciones como $\mathcal{C}_{ik} = \sum_j \mathcal{A}_{ijk} \mathcal{B}_{jl}$ (sumando sobre j).
 
 #### 4. Broadcasting
 
@@ -110,7 +113,7 @@ y = x.reshape(6, 4)   # ahora y tiene 6 filas y 4 columnas
 ##### Transpose (trasponer)
 Intercambia dos dimensiones específicas. Para matrices, es la operación habitual.
 
-**Ejemplo:** \(A\) de forma (3,4) → \(A^T\) de forma (4,3).
+**Ejemplo:** $A$ de forma (3,4) → $A^T$ de forma (4,3).
 
 ##### Permute
 Reordena todas las dimensiones según un nuevo orden.
@@ -135,13 +138,13 @@ La notación **einsum** (de Einstein summation) permite expresar operaciones ten
 **Ejemplos:**
 
 - Producto matriz-matriz: `"ij,jk->ik"`  
-  \(C_{ik} = \sum_j A_{ij} B_{jk}\)
+  $C_{ik} = \sum_j A_{ij} B_{jk}$
 
 - Traza de una matriz: `"ii->"`  
-  \(\text{traza}(A) = \sum_i A_{ii}\)
+  $\text{traza}(A) = \sum_i A_{ii}$
 
 - Producto punto de dos vectores: `"i,i->"`  
-  \( \mathbf{a} \cdot \mathbf{b} = \sum_i a_i b_i\)
+  $ \mathbf{a} \cdot \mathbf{b} = \sum_i a_i b_i$
 
 - Multiplicación elemento a elemento: `"ij,ij->ij"`
 
@@ -207,9 +210,9 @@ La codificación one-hot convierte variables categóricas en vectores binarios. 
 
 En una CNN, las imágenes se representan como tensores 4D: (batch, canales, altura, ancho). Los kernels (filtros) son también tensores 4D: (filtros, canales_entrada, altura_kernel, ancho_kernel). La convolución 2D realiza una suma ponderada local:
 
-\[
+$$
 \text{output}[b, f, i, j] = \sum_{c=0}^{C-1} \sum_{u=0}^{H-1} \sum_{v=0}^{W-1} \text{input}[b, c, i+u, j+v] \cdot \text{weight}[f, c, u, v] + \text{bias}[f]
-\]
+$$
 
 Esta operación es una contracción tensorial (suma sobre canales de entrada y dimensiones espaciales del kernel).
 
@@ -227,9 +230,9 @@ Una capa de embedding es esencialmente una matriz de lookup: para cada índice d
 
 En una RNN, la entrada es un tensor 3D: (batch, seq_len, input_size). El estado oculto es un tensor 2D: (batch, hidden_size) (o 3D si se devuelven todos los estados). La operación recurrente es:
 
-\[
+$$
 h_t = \tanh(W_{ih} x_t + b_{ih} + W_{hh} h_{t-1} + b_{hh})
-\]
+$$
 
 Esto se aplica a cada paso de tiempo, procesando el tensor a lo largo de la dimensión de secuencia.
 
@@ -239,11 +242,11 @@ Esto se aplica a cada paso de tiempo, procesando el tensor a lo largo de la dime
 
 En un transformer, la atención escalada por producto punto se calcula como:
 
-\[
+$$
 \text{Attention}(Q, K, V) = \text{softmax}\left(\frac{QK^T}{\sqrt{d_k}}\right) V
-\]
+$$
 
-Donde Q, K, V son tensores de forma (batch, seq_len, d_k). El producto \(QK^T\) tiene forma (batch, seq_len, seq_len) y luego se multiplica por V para obtener (batch, seq_len, d_v). Todo esto son operaciones tensoriales.
+Donde Q, K, V son tensores de forma (batch, seq_len, d_k). El producto $QK^T$ tiene forma (batch, seq_len, seq_len) y luego se multiplica por V para obtener (batch, seq_len, d_v). Todo esto son operaciones tensoriales.
 
 **Ejemplo:** Entrada de 32 frases, cada una de hasta 50 palabras, embedding de 512 dimensiones: Q, K, V son (32, 50, 512). La atención produce (32, 50, 512).
 

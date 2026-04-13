@@ -7,31 +7,13 @@ layout: default
 
 ## 🎯 Objetivo de la Sesión
 
-Consolidar fundamentos de cálculo y su aplicación en IA con práctica en notebooks.
+Extender el cálculo a múltiples variables mediante gradiente, Jacobiano y Hessiano para ML y DL.
 
-***
+## 📘 Teoría
 
-## 📘 Contenido Teórico
+* 🖼️ [Sesión 13](../material/Sesion13/teoria/sesion13.md)
 
-Fundamentos conceptuales y referencias de la semana.
+### 💻 Ejercicios
 
-* 🖼️ **Slides de Clase (fuente):** [PPT13-CALCULO.tex](../material/Sesion13/slides/PPT13-CALCULO.tex)
-
-* 📝 **Quick Reference:** [CheatSheet](../material/Sesion13/cheatsheet/cheatsheet.md)
-
-* 📎 **Anexo Técnico:** [Material Complementario](../material/Sesion13/anexo/anexo.md)
-
-***
-
-### 💻 Laboratorio
-
-*Nivel: Intermedio* ⭐⭐⭐
-
-* 📓 **Notebook Fundamentos:** [Notebook 1](https://github.com/cesarsanco-ai/math-foundations-for-ai/blob/main/docs/material/Sesion13/practica/SESION13-NTB1-CALCULO.ipynb)
-* 📓 **Notebook Aplicaciones:** [Notebook 2](https://github.com/cesarsanco-ai/math-foundations-for-ai/blob/main/docs/material/Sesion13/practica/SESION13-NTB2-CALCULO.ipynb)
-
-***
-
-## 🔗 Recursos complementarios
-
-* 📁 **[Repositorio del curso](https://github.com/cesarsanco-ai/math-foundations-for-ai)** — Código y materiales en GitHub.
+* 📓 [Ejercicio 1](https://github.com/cesarsanco-ai/math-foundations-for-ai/blob/main/docs/material/Sesion13/practica/SESION13_NTB1_CALCULO.md)
+* 📓 [Ejercicio 2](https://github.com/cesarsanco-ai/math-foundations-for-ai/blob/main/docs/material/Sesion13/practica/SESION13_NTB2_CALCULO.ipynb)

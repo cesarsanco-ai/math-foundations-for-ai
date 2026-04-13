@@ -1,4 +1,7 @@
-## Semana 11: Límites y Continuidad
+---
+layout: default
+---
+# Sesión 11: Límites y Continuidad
 
 ### Teoría
 
@@ -6,70 +9,70 @@
 
 ##### Idea intuitiva
 
-El límite de una función \(f(x)\) cuando \(x\) se aproxima a un valor \(a\) es el valor \(L\) al que se acerca \(f(x)\) a medida que \(x\) se acerca a \(a\), sin importar si \(f(a)\) está definido o es igual a \(L\).
+El límite de una función $f(x)$ cuando $x$ se aproxima a un valor $a$ es el valor $L$ al que se acerca $f(x)$ a medida que $x$ se acerca a $a$, sin importar si $f(a)$ está definido o es igual a $L$.
 
-**Ejemplo intuitivo:** Considera \(f(x) = \frac{x^2 - 1}{x - 1}\). Para \(x \neq 1\), podemos simplificar: \(f(x) = x + 1\). A medida que \(x\) se acerca a 1, \(f(x)\) se acerca a 2. Aunque \(f(1)\) no está definido (0/0), el límite cuando \(x \to 1\) es 2.
+**Ejemplo intuitivo:** Considera $f(x) = \frac{x^2 - 1}{x - 1}$. Para $x \neq 1$, podemos simplificar: $f(x) = x + 1$. A medida que $x$ se acerca a 1, $f(x)$ se acerca a 2. Aunque $f(1)$ no está definido (0/0), el límite cuando $x \to 1$ es 2.
 
 ##### Definición formal (epsilon-delta)
 
-Decimos que \(\lim_{x \to a} f(x) = L\) si para todo \(\epsilon > 0\) existe un \(\delta > 0\) tal que siempre que \(0 < |x - a| < \delta\), se cumple \(|f(x) - L| < \epsilon\).
+Decimos que $\lim_{x \to a} f(x) = L$ si para todo $\epsilon > 0$ existe un $\delta > 0$ tal que siempre que $0 < |x - a| < \delta$, se cumple $|f(x) - L| < \epsilon$.
 
-Esta definición captura la idea de que podemos hacer que \(f(x)\) esté tan cerca de \(L\) como queramos, tomando \(x\) suficientemente cerca de \(a\) (pero no igual).
+Esta definición captura la idea de que podemos hacer que $f(x)$ esté tan cerca de $L$ como queramos, tomando $x$ suficientemente cerca de $a$ (pero no igual).
 
 ##### Límites laterales
 
 A veces la función se comporta diferente al acercarse por la izquierda o por la derecha. Se definen:
 
-- Límite por la izquierda: \(\lim_{x \to a^-} f(x)\)
-- Límite por la derecha: \(\lim_{x \to a^+} f(x)\)
+- Límite por la izquierda: $\lim_{x \to a^-} f(x)$
+- Límite por la derecha: $\lim_{x \to a^+} f(x)$
 
 El límite existe si y solo si ambos límites laterales existen y son iguales.
 
-**Ejemplo:** \(f(x) = \frac{|x|}{x}\). Para \(x \to 0^+\), \(f(x) = 1\); para \(x \to 0^-\), \(f(x) = -1\). Por tanto, \(\lim_{x \to 0} f(x)\) no existe.
+**Ejemplo:** $f(x) = \frac{|x|}{x}$. Para $x \to 0^+$, $f(x) = 1$; para $x \to 0^-$, $f(x) = -1$. Por tanto, $\lim_{x \to 0} f(x)$ no existe.
 
 ##### Límites al infinito
 
-También consideramos el comportamiento cuando \(x\) crece indefinidamente: \(\lim_{x \to \infty} f(x)\) o \(\lim_{x \to -\infty} f(x)\).
+También consideramos el comportamiento cuando $x$ crece indefinidamente: $\lim_{x \to \infty} f(x)$ o $\lim_{x \to -\infty} f(x)$.
 
-**Ejemplo:** \(\lim_{x \to \infty} \frac{1}{x} = 0\).
+**Ejemplo:** $\lim_{x \to \infty} \frac{1}{x} = 0$.
 
 #### 2. Continuidad de funciones
 
 ##### Definición
 
-Una función \(f\) es continua en un punto \(a\) si:
+Una función $f$ es continua en un punto $a$ si:
 
-1. \(f(a)\) está definido.
-2. \(\lim_{x \to a} f(x)\) existe.
-3. \(\lim_{x \to a} f(x) = f(a)\).
+1. $f(a)$ está definido.
+2. $\lim_{x \to a} f(x)$ existe.
+3. $\lim_{x \to a} f(x) = f(a)$.
 
 Intuitivamente, no hay saltos ni interrupciones; se puede dibujar sin levantar el lápiz.
 
-**Ejemplo:** \(f(x) = x^2\) es continua en todo \(\mathbb{R}\).  
-\(f(x) = \begin{cases} x^2 & \text{si } x \neq 2 \\ 5 & \text{si } x = 2 \end{cases}\) no es continua en \(x=2\) porque el límite es 4 pero \(f(2)=5\).
+**Ejemplo:** $f(x) = x^2$ es continua en todo $\mathbb{R}$.  
+$f(x) = \begin{cases} x^2 & \text{si } x \neq 2 \\ 5 & \text{si } x = 2 \end{cases}$ no es continua en $x=2$ porque el límite es 4 pero $f(2)=5$.
 
 ##### Tipos de discontinuidades
 
-- **Discontinuidad evitable (removible):** El límite existe pero no coincide con el valor de la función (o la función no está definida). Ejemplo: \(f(x) = \frac{x^2-1}{x-1}\) en \(x=1\).
-- **Discontinuidad de salto:** Los límites laterales existen pero son diferentes. Ejemplo: \(f(x) = \frac{|x|}{x}\) en \(x=0\).
-- **Discontinuidad infinita:** La función tiende a infinito cerca del punto. Ejemplo: \(f(x) = \frac{1}{x}\) en \(x=0\).
-- **Discontinuidad esencial (oscilatoria):** No existe el límite por oscilación. Ejemplo: \(f(x) = \sin(1/x)\) en \(x=0\).
+- **Discontinuidad evitable (removible):** El límite existe pero no coincide con el valor de la función (o la función no está definida). Ejemplo: $f(x) = \frac{x^2-1}{x-1}$ en $x=1$.
+- **Discontinuidad de salto:** Los límites laterales existen pero son diferentes. Ejemplo: $f(x) = \frac{|x|}{x}$ en $x=0$.
+- **Discontinuidad infinita:** La función tiende a infinito cerca del punto. Ejemplo: $f(x) = \frac{1}{x}$ en $x=0$.
+- **Discontinuidad esencial (oscilatoria):** No existe el límite por oscilación. Ejemplo: $f(x) = \sin(1/x)$ en $x=0$.
 
 #### 3. Propiedades de funciones continuas
 
 ##### Teorema del valor intermedio
 
-Si \(f\) es continua en un intervalo cerrado \([a, b]\) y \(k\) es cualquier número entre \(f(a)\) y \(f(b)\), entonces existe al menos un \(c \in [a, b]\) tal que \(f(c) = k\).
+Si $f$ es continua en un intervalo cerrado $[a, b]$ y $k$ es cualquier número entre $f(a)$ y $f(b)$, entonces existe al menos un $c \in [a, b]$ tal que $f(c) = k$.
 
 **Interpretación:** Una función continua no puede saltar de un valor a otro sin pasar por todos los intermedios.
 
-**Ejemplo:** La función \(f(x) = x^3 - x\) en \([0,2]\). \(f(0)=0\), \(f(2)=6\). Para \(k=3\), debe existir un \(c\) tal que \(f(c)=3\). Efectivamente, \(c \approx 1.5\) (pues \(1.5^3 - 1.5 = 3.375 - 1.5 = 1.875\), no exacto; pero por el teorema, existe aunque no sea fácil de hallar analíticamente).
+**Ejemplo:** La función $f(x) = x^3 - x$ en $[0,2]$. $f(0)=0$, $f(2)=6$. Para $k=3$, debe existir un $c$ tal que $f(c)=3$. Efectivamente, $c \approx 1.5$ (pues $1.5^3 - 1.5 = 3.375 - 1.5 = 1.875$, no exacto; pero por el teorema, existe aunque no sea fácil de hallar analíticamente).
 
 ##### Teorema de los valores extremos (Weierstrass)
 
-Si \(f\) es continua en un intervalo cerrado \([a, b]\), entonces \(f\) alcanza un máximo y un mínimo absolutos en ese intervalo.
+Si $f$ es continua en un intervalo cerrado $[a, b]$, entonces $f$ alcanza un máximo y un mínimo absolutos en ese intervalo.
 
-**Ejemplo:** \(f(x) = x^2\) en \([-2, 2]\) tiene mínimo 0 en \(x=0\) y máximo 4 en \(x=\pm 2\).
+**Ejemplo:** $f(x) = x^2$ en $[-2, 2]$ tiene mínimo 0 en $x=0$ y máximo 4 en $x=\pm 2$.
 
 #### 4. Comportamiento local y estabilidad
 
@@ -90,18 +93,18 @@ Las funciones de pérdida en ML deben ser al menos continuas (y preferiblemente 
 **Ejemplo:** El error cuadrático medio (MSE) es una función continua y diferenciable de los parámetros. En cambio, el error absoluto medio (MAE) es continua pero no diferenciable en 0 (aunque se puede manejar con subgradientes). Una función escalón (como el error 0-1 en clasificación) es discontinua, por eso no se usa directamente en optimización por gradiente.
 
 **Ejemplo concreto:** En regresión lineal, la función de costo MSE:
-\[
+$$
 L(w) = \frac{1}{n} \sum_{i=1}^n (y_i - w x_i)^2
-\]
-es un polinomio en \(w\), por tanto continua y diferenciable. Esto permite usar gradiente descendente.
+$$
+es un polinomio en $w$, por tanto continua y diferenciable. Esto permite usar gradiente descendente.
 
 En cambio, si definiéramos una pérdida como:
-\[
+$$
 L(w) = \begin{cases}
 0 & \text{si } |y - \hat{y}| < 0.5 \\
 1 & \text{en otro caso}
 \end{cases}
-\]
+$$
 sería discontinua y no podríamos optimizar con gradiente.
 
 ##### 2. Optimización y convergencia
@@ -110,7 +113,7 @@ La continuidad también juega un papel en la convergencia de algoritmos de optim
 
 Además, en métodos de búsqueda de línea, se asume continuidad para asegurar que existe un punto que satisface las condiciones de Wolfe.
 
-**Ejemplo:** En SVM con hinge loss, la función hinge loss \( \max(0, 1 - y f(x)) \) es continua (aunque no diferenciable en el punto donde el argumento es 0). Esto permite usar subgradientes.
+**Ejemplo:** En SVM con hinge loss, la función hinge loss $ \max(0, 1 - y f(x)) $ es continua (aunque no diferenciable en el punto donde el argumento es 0). Esto permite usar subgradientes.
 
 #### Deep Learning (DL)
 
@@ -118,8 +121,8 @@ Además, en métodos de búsqueda de línea, se asume continuidad para asegurar 
 
 Las funciones de activación deben ser continuas para que la red sea estable. Una discontinuidad podría causar que pequeñas variaciones en la entrada produzcan cambios abruptos en la salida, lo cual no es deseable.
 
-- **ReLU:** \( \text{ReLU}(x) = \max(0, x) \) es continua en todo \(\mathbb{R}\) (aunque no diferenciable en 0). Esto es aceptable; de hecho, es la más usada.
-- **Sigmoide:** \( \sigma(x) = 1/(1+e^{-x}) \) es continua y suave.
+- **ReLU:** $ \text{ReLU}(x) = \max(0, x) $ es continua en todo $\mathbb{R}$ (aunque no diferenciable en 0). Esto es aceptable; de hecho, es la más usada.
+- **Sigmoide:** $ \sigma(x) = 1/(1+e^{-x}) $ es continua y suave.
 - **Tanh:** también continua y suave.
 - **Step function (escalón):** No se usa en redes profundas por su discontinuidad, aunque en perceptrones originales sí se usaba (pero no permitía backpropagation).
 
@@ -135,7 +138,7 @@ Además, en técnicas como _gradient clipping_, se aprovecha la continuidad para
 
 ##### 3. Regularización y estabilidad
 
-La regularización L2 añade un término \(\lambda \|\theta\|^2\) que es continuo y diferenciable, lo que ayuda a mantener la estabilidad del modelo al penalizar pesos grandes. Sin continuidad, la regularización podría no tener el efecto suave deseado.
+La regularización L2 añade un término $\lambda \|\theta\|^2$ que es continuo y diferenciable, lo que ayuda a mantener la estabilidad del modelo al penalizar pesos grandes. Sin continuidad, la regularización podría no tener el efecto suave deseado.
 
 ##### 4. Análisis de sensibilidad
 

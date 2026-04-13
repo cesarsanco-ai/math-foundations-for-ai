@@ -7,31 +7,13 @@ layout: default
 
 ## 🎯 Objetivo de la Sesión
 
-Consolidar fundamentos de cálculo y su aplicación en IA con práctica en notebooks.
+Resolver sistemas lineales y conectar su formulación con problemas de ajuste en aprendizaje automático.
 
-***
+## 📘 Teoría
 
-## 📘 Contenido Teórico
+* 🖼️ [Sesión 4](../material/Sesion04/teoria/sesion4.md)
 
-Fundamentos conceptuales y referencias de la semana.
+### 💻 Ejercicios
 
-* 🖼️ **Slides de Clase (fuente):** [PPT04-CALCULO.tex](../material/Sesion04/slides/PPT04-CALCULO.tex)
-
-* 📝 **Quick Reference:** [CheatSheet](../material/Sesion04/cheatsheet/cheatsheet.md)
-
-* 📎 **Anexo Técnico:** [Material Complementario](../material/Sesion04/anexo/anexo.md)
-
-***
-
-### 💻 Laboratorio
-
-*Nivel: Intermedio* ⭐⭐⭐
-
-* 📓 **Notebook Fundamentos:** [Notebook 1](https://github.com/cesarsanco-ai/math-foundations-for-ai/blob/main/docs/material/Sesion04/practica/SESION4-NTB1-CALCULO.ipynb)
-* 📓 **Notebook Aplicaciones:** [Notebook 2](https://github.com/cesarsanco-ai/math-foundations-for-ai/blob/main/docs/material/Sesion04/practica/SESION4-NTB2-CALCULO.ipynb)
-
-***
-
-## 🔗 Recursos complementarios
-
-* 📁 **[Repositorio del curso](https://github.com/cesarsanco-ai/math-foundations-for-ai)** — Código y materiales en GitHub.
+* 📓 [Ejercicio 1](https://github.com/cesarsanco-ai/math-foundations-for-ai/blob/main/docs/material/Sesion04/practica/SESION4_NTB1_CALCULO.md)
+* 📓 [Ejercicio 2](https://github.com/cesarsanco-ai/math-foundations-for-ai/blob/main/docs/material/Sesion04/practica/SESION4_NTB2_CALCULO.ipynb)

@@ -1,4 +1,7 @@
-## Semana 10: Probabilidad y Estadística para IA
+---
+layout: default
+---
+# Sesión 10: Probabilidad y Estadística para IA
 
 ### Teoría
 
@@ -6,59 +9,59 @@
 
 ##### Axiomas de probabilidad
 
-La probabilidad es una medida que cuantifica la incertidumbre. Para un espacio muestral \(\Omega\) (conjunto de todos los resultados posibles), una probabilidad \(P\) asigna a cada evento \(A \subseteq \Omega\) un número real que satisface:
+La probabilidad es una medida que cuantifica la incertidumbre. Para un espacio muestral $\Omega$ (conjunto de todos los resultados posibles), una probabilidad $P$ asigna a cada evento $A \subseteq \Omega$ un número real que satisface:
 
-1. **No negatividad:** \(P(A) \geq 0\) para todo evento \(A\).
-2. **Normalización:** \(P(\Omega) = 1\).
-3. **Aditividad:** Si \(A\) y \(B\) son eventos mutuamente excluyentes (\(A \cap B = \emptyset\)), entonces \(P(A \cup B) = P(A) + P(B)\).
+1. **No negatividad:** $P(A) \geq 0$ para todo evento $A$.
+2. **Normalización:** $P(\Omega) = 1$.
+3. **Aditividad:** Si $A$ y $B$ son eventos mutuamente excluyentes ($A \cap B = \emptyset$), entonces $P(A \cup B) = P(A) + P(B)$.
 
-**Ejemplo:** Lanzar un dado justo: \(\Omega = \{1,2,3,4,5,6\}\). \(P(\{2\}) = 1/6\). \(P(\{2,4,6\}) = 3/6 = 0.5\).
+**Ejemplo:** Lanzar un dado justo: $\Omega = \{1,2,3,4,5,6\}$. $P(\{2\}) = 1/6$. $P(\{2,4,6\}) = 3/6 = 0.5$.
 
 ##### Probabilidad condicional
 
-La probabilidad de que ocurra \(A\) dado que ocurrió \(B\) se define como:
+La probabilidad de que ocurra $A$ dado que ocurrió $B$ se define como:
 
-\[
+$$
 P(A|B) = \frac{P(A \cap B)}{P(B)}, \quad \text{si } P(B) > 0
-\]
+$$
 
-**Ejemplo:** En una baraja de 52 cartas, sea \(A\) = "sacar un as" y \(B\) = "sacar una carta roja". Hay 2 ases rojos (corazones y diamantes). \(P(A \cap B) = 2/52 = 1/26\). \(P(B) = 26/52 = 1/2\). Entonces \(P(A|B) = (1/26)/(1/2) = (1/26) \times 2 = 2/26 = 1/13 \approx 0.077\).
+**Ejemplo:** En una baraja de 52 cartas, sea $A$ = "sacar un as" y $B$ = "sacar una carta roja". Hay 2 ases rojos (corazones y diamantes). $P(A \cap B) = 2/52 = 1/26$. $P(B) = 26/52 = 1/2$. Entonces $P(A|B) = (1/26)/(1/2) = (1/26) \times 2 = 2/26 = 1/13 \approx 0.077$.
 
 ##### Independencia
 
-Dos eventos \(A\) y \(B\) son independientes si:
+Dos eventos $A$ y $B$ son independientes si:
 
-\[
+$$
 P(A \cap B) = P(A) P(B)
-\]
-o equivalentemente, \(P(A|B) = P(A)\).
+$$
+o equivalentemente, $P(A|B) = P(A)$.
 
-**Ejemplo:** Lanzar dos monedas. \(A\) = "primera moneda sale cara", \(B\) = "segunda moneda sale cara". \(P(A)=0.5\), \(P(B)=0.5\), \(P(A \cap B)=0.25\). Como \(0.25 = 0.5 \times 0.5\), son independientes.
+**Ejemplo:** Lanzar dos monedas. $A$ = "primera moneda sale cara", $B$ = "segunda moneda sale cara". $P(A)=0.5$, $P(B)=0.5$, $P(A \cap B)=0.25$. Como $0.25 = 0.5 \times 0.5$, son independientes.
 
 ##### Teorema de Bayes
 
 Relaciona probabilidades condicionales:
 
-\[
+$$
 P(A|B) = \frac{P(B|A) P(A)}{P(B)}
-\]
+$$
 
 Es fundamental en inferencia estadística y aprendizaje automático, ya que permite actualizar creencias a partir de evidencia.
 
 **Ejemplo:** Una prueba para detectar una enfermedad tiene 99% de sensibilidad (detecta correctamente a enfermos) y 98% de especificidad (detecta correctamente a sanos). La enfermedad afecta al 1% de la población. Si una persona da positivo, ¿cuál es la probabilidad de que realmente esté enferma?
 
-- \(A\) = "tener la enfermedad", \(P(A) = 0.01\)
-- \(B\) = "dar positivo"
-- \(P(B|A) = 0.99\) (sensibilidad)
-- \(P(B|A^c) = 1 - 0.98 = 0.02\) (tasa de falsos positivos)
+- $A$ = "tener la enfermedad", $P(A) = 0.01$
+- $B$ = "dar positivo"
+- $P(B|A) = 0.99$ (sensibilidad)
+- $P(B|A^c) = 1 - 0.98 = 0.02$ (tasa de falsos positivos)
 
-Calculamos \(P(B) = P(B|A)P(A) + P(B|A^c)P(A^c) = 0.99 \times 0.01 + 0.02 \times 0.99 = 0.0099 + 0.0198 = 0.0297\)
+Calculamos $P(B) = P(B|A)P(A) + P(B|A^c)P(A^c) = 0.99 \times 0.01 + 0.02 \times 0.99 = 0.0099 + 0.0198 = 0.0297$
 
 Aplicamos Bayes:
 
-\[
+$$
 P(A|B) = \frac{0.99 \times 0.01}{0.0297} = \frac{0.0099}{0.0297} = 0.3333...
-\]
+$$
 
 ¡Solo 33%! A pesar de la alta precisión de la prueba, la baja prevalencia hace que la mayoría de los positivos sean falsos.
 
@@ -75,44 +78,44 @@ Una variable aleatoria es una función que asigna un valor numérico a cada resu
 
 ##### Esperanza (media)
 
-La esperanza matemática \(E[X]\) es el valor promedio ponderado de una variable aleatoria.
+La esperanza matemática $E[X]$ es el valor promedio ponderado de una variable aleatoria.
 
-- Para variable discreta: \(E[X] = \sum_i x_i P(X = x_i)\)
-- Para variable continua: \(E[X] = \int x f(x) dx\), donde \(f\) es la función de densidad.
+- Para variable discreta: $E[X] = \sum_i x_i P(X = x_i)$
+- Para variable continua: $E[X] = \int x f(x) dx$, donde $f$ es la función de densidad.
 
-**Ejemplo:** Lanzar un dado justo: \(E[X] = 1\cdot\frac{1}{6} + 2\cdot\frac{1}{6} + \cdots + 6\cdot\frac{1}{6} = \frac{21}{6} = 3.5\)
+**Ejemplo:** Lanzar un dado justo: $E[X] = 1\cdot\frac{1}{6} + 2\cdot\frac{1}{6} + \cdots + 6\cdot\frac{1}{6} = \frac{21}{6} = 3.5$
 
 ##### Varianza
 
 Mide la dispersión de los valores alrededor de la media:
 
-\[
+$$
 \text{Var}(X) = E[(X - E[X])^2] = E[X^2] - (E[X])^2
-\]
+$$
 
-La desviación estándar es \(\sigma_X = \sqrt{\text{Var}(X)}\).
+La desviación estándar es $\sigma_X = \sqrt{\text{Var}(X)}$.
 
-**Ejemplo:** Para el dado: \(E[X^2] = 1^2\cdot\frac{1}{6} + 2^2\cdot\frac{1}{6} + \cdots + 6^2\cdot\frac{1}{6} = \frac{91}{6} \approx 15.167\). Entonces \(\text{Var}(X) = 15.167 - 3.5^2 = 15.167 - 12.25 = 2.917\), \(\sigma_X \approx 1.708\).
+**Ejemplo:** Para el dado: $E[X^2] = 1^2\cdot\frac{1}{6} + 2^2\cdot\frac{1}{6} + \cdots + 6^2\cdot\frac{1}{6} = \frac{91}{6} \approx 15.167$. Entonces $\text{Var}(X) = 15.167 - 3.5^2 = 15.167 - 12.25 = 2.917$, $\sigma_X \approx 1.708$.
 
 ##### Covarianza
 
 Mide la relación lineal entre dos variables aleatorias:
 
-\[
+$$
 \text{Cov}(X, Y) = E[(X - E[X])(Y - E[Y])] = E[XY] - E[X]E[Y]
-\]
+$$
 
 - Si es positiva: tienden a moverse en la misma dirección.
 - Si es negativa: tienden a moverse en direcciones opuestas.
 - Si es cero: no hay relación lineal (aunque podría haber otra relación).
 
-**Ejemplo:** Sean \(X\) = altura, \(Y\) = peso. Generalmente covarianza positiva (a mayor altura, mayor peso en promedio).
+**Ejemplo:** Sean $X$ = altura, $Y$ = peso. Generalmente covarianza positiva (a mayor altura, mayor peso en promedio).
 
 La **correlación** (Pearson) normaliza la covarianza:
 
-\[
+$$
 \rho_{XY} = \frac{\text{Cov}(X,Y)}{\sigma_X \sigma_Y} \in [-1, 1]
-\]
+$$
 
 #### 3. Distribuciones
 
@@ -120,11 +123,11 @@ La **correlación** (Pearson) normaliza la covarianza:
 
 Es la distribución continua más importante. Su función de densidad es:
 
-\[
+$$
 f(x|\mu, \sigma^2) = \frac{1}{\sqrt{2\pi\sigma^2}} e^{-\frac{(x-\mu)^2}{2\sigma^2}}
-\]
+$$
 
-donde \(\mu\) es la media y \(\sigma^2\) la varianza. La normal estándar tiene \(\mu=0\), \(\sigma=1\).
+donde $\mu$ es la media y $\sigma^2$ la varianza. La normal estándar tiene $\mu=0$, $\sigma=1$.
 
 **Propiedad:** Por el Teorema Central del Límite, la suma de muchas variables independientes tiende a una normal.
 
@@ -132,26 +135,26 @@ donde \(\mu\) es la media y \(\sigma^2\) la varianza. La normal estándar tiene 
 
 ##### Distribución de Bernoulli
 
-Modela un experimento con dos resultados (éxito/fracaso). \(X \sim \text{Bernoulli}(p)\):
+Modela un experimento con dos resultados (éxito/fracaso). $X \sim \text{Bernoulli}(p)$:
 
-- \(P(X=1) = p\) (éxito)
-- \(P(X=0) = 1-p\) (fracaso)
+- $P(X=1) = p$ (éxito)
+- $P(X=0) = 1-p$ (fracaso)
 
-**Esperanza:** \(E[X] = p\)  
-**Varianza:** \(\text{Var}(X) = p(1-p)\)
+**Esperanza:** $E[X] = p$  
+**Varianza:** $\text{Var}(X) = p(1-p)$
 
-**Ejemplo:** Lanzar una moneda: \(p=0.5\).
+**Ejemplo:** Lanzar una moneda: $p=0.5$.
 
 ##### Distribución multinomial
 
-Generaliza la binomial a más de dos categorías. Modela el número de veces que ocurre cada categoría en \(n\) ensayos independientes, con probabilidades \(p_1, p_2, \dots, p_k\) que suman 1.
+Generaliza la binomial a más de dos categorías. Modela el número de veces que ocurre cada categoría en $n$ ensayos independientes, con probabilidades $p_1, p_2, \dots, p_k$ que suman 1.
 
 **Ejemplo:** Lanzar un dado 10 veces y contar cuántas veces sale cada cara.
 
 ##### Distribución uniforme
 
 - **Uniforme discreta:** Todos los resultados tienen igual probabilidad. Ejemplo: dado justo.
-- **Uniforme continua:** Densidad constante en un intervalo \([a, b]\): \(f(x) = \frac{1}{b-a}\) para \(x \in [a, b]\).
+- **Uniforme continua:** Densidad constante en un intervalo $[a, b]$: $f(x) = \frac{1}{b-a}$ para $x \in [a, b]$.
 
 **Ejemplo:** Generar números aleatorios entre 0 y 1.
 
@@ -159,7 +162,7 @@ Generaliza la binomial a más de dos categorías. Modela el número de veces que
 
 ##### Medidas de tendencia central
 
-- **Media:** \(\bar{x} = \frac{1}{n}\sum_{i=1}^n x_i\)
+- **Media:** $\bar{x} = \frac{1}{n}\sum_{i=1}^n x_i$
 - **Mediana:** Valor que divide la muestra en dos mitades (50% por debajo).
 - **Moda:** Valor que más se repite.
 
@@ -168,8 +171,8 @@ Generaliza la binomial a más de dos categorías. Modela el número de veces que
 ##### Medidas de dispersión
 
 - **Rango:** max - min.
-- **Varianza muestral:** \(s^2 = \frac{1}{n-1}\sum (x_i - \bar{x})^2\)
-- **Desviación estándar:** \(s = \sqrt{s^2}\)
+- **Varianza muestral:** $s^2 = \frac{1}{n-1}\sum (x_i - \bar{x})^2$
+- **Desviación estándar:** $s = \sqrt{s^2}$
 - **Cuartiles:** Q1 (25%), Q2 (mediana, 50%), Q3 (75%). Rango intercuartil (IQR) = Q3 - Q1.
 
 **Ejemplo:** Con los datos anteriores, Q1 = 3, Q3 = 8, IQR = 5.
@@ -179,43 +182,43 @@ Generaliza la binomial a más de dos categorías. Modela el número de veces que
 - **Pearson:** Mide relación lineal. Sensible a outliers.
 - **Spearman:** Basado en rangos, mide cualquier relación monótona (no necesariamente lineal).
 
-**Ejemplo:** Calcular Pearson para (x, y) = (1,2), (2,3), (3,5). Primero medias: \(\bar{x}=2\), \(\bar{y}=10/3≈3.33\). Covarianza = \(((1-2)(2-3.33)+(2-2)(3-3.33)+(3-2)(5-3.33))/2\) (usando n-1) = ((-1)(-1.33)+ (0)(-0.33)+ (1)(1.67))/2 = (1.33+0+1.67)/2 = 3/2 = 1.5. Desviaciones: \(s_x = \sqrt{((1-2)^2+(2-2)^2+(3-2)^2)/2} = \sqrt{(1+0+1)/2} = \sqrt{1} = 1\); \(s_y = \sqrt{((2-3.33)^2+(3-3.33)^2+(5-3.33)^2)/2} = \sqrt{(1.77+0.11+2.79)/2} = \sqrt{4.67/2} = \sqrt{2.335} ≈ 1.528\). Entonces \(r = 1.5 / (1 × 1.528) ≈ 0.982\).
+**Ejemplo:** Calcular Pearson para (x, y) = (1,2), (2,3), (3,5). Primero medias: $\bar{x}=2$, $\bar{y}=10/3≈3.33$. Covarianza = $((1-2)(2-3.33)+(2-2)(3-3.33)+(3-2)(5-3.33))/2$ (usando n-1) = ((-1)(-1.33)+ (0)(-0.33)+ (1)(1.67))/2 = (1.33+0+1.67)/2 = 3/2 = 1.5. Desviaciones: $s_x = \sqrt{((1-2)^2+(2-2)^2+(3-2)^2)/2} = \sqrt{(1+0+1)/2} = \sqrt{1} = 1$; $s_y = \sqrt{((2-3.33)^2+(3-3.33)^2+(5-3.33)^2)/2} = \sqrt{(1.77+0.11+2.79)/2} = \sqrt{4.67/2} = \sqrt{2.335} ≈ 1.528$. Entonces $r = 1.5 / (1 × 1.528) ≈ 0.982$.
 
 #### 5. Entropía, información mutua, divergencia KL
 
 ##### Entropía (Shannon)
 
-Mide la incertidumbre o sorpresa promedio de una variable aleatoria. Para una distribución discreta \(P\):
+Mide la incertidumbre o sorpresa promedio de una variable aleatoria. Para una distribución discreta $P$:
 
-\[
+$$
 H(P) = -\sum_{i} p_i \log_2 p_i \quad (\text{en bits}) \quad \text{o} \quad H(P) = -\sum_{i} p_i \ln p_i \quad (\text{en nats})
-\]
+$$
 
 **Propiedades:** La entropía es máxima cuando todos los eventos son equiprobables. Mínima (0) cuando un evento tiene probabilidad 1.
 
-**Ejemplo:** Moneda justa: \(H = -0.5\log_2 0.5 - 0.5\log_2 0.5 = -0.5(-1) -0.5(-1) = 0.5+0.5 = 1\) bit. Moneda sesgada p=0.9: \(H = -0.9\log_2 0.9 - 0.1\log_2 0.1 \approx -0.9(-0.152) -0.1(-3.322) = 0.137 + 0.332 = 0.469\) bits (menos incertidumbre).
+**Ejemplo:** Moneda justa: $H = -0.5\log_2 0.5 - 0.5\log_2 0.5 = -0.5(-1) -0.5(-1) = 0.5+0.5 = 1$ bit. Moneda sesgada p=0.9: $H = -0.9\log_2 0.9 - 0.1\log_2 0.1 \approx -0.9(-0.152) -0.1(-3.322) = 0.137 + 0.332 = 0.469$ bits (menos incertidumbre).
 
 ##### Información mutua
 
 Mide la dependencia entre dos variables: cuánto reduce el conocimiento de una la incertidumbre de la otra.
 
-\[
+$$
 I(X;Y) = H(X) - H(X|Y) = \sum_{x,y} p(x,y) \log \frac{p(x,y)}{p(x)p(y)}
-\]
+$$
 
 Es cero si son independientes.
 
 ##### Divergencia KL (Kullback-Leibler)
 
-Mide la "distancia" entre dos distribuciones \(P\) y \(Q\) (no es simétrica ni una métrica):
+Mide la "distancia" entre dos distribuciones $P$ y $Q$ (no es simétrica ni una métrica):
 
-\[
+$$
 D_{KL}(P \parallel Q) = \sum_i p_i \log \frac{p_i}{q_i}
-\]
+$$
 
-Interpretación: número promedio de bits adicionales necesarios para codificar muestras de \(P\) usando un código óptimo para \(Q\). En aprendizaje automático, minimizar la divergencia KL es equivalente a maximizar la verosimilitud.
+Interpretación: número promedio de bits adicionales necesarios para codificar muestras de $P$ usando un código óptimo para $Q$. En aprendizaje automático, minimizar la divergencia KL es equivalente a maximizar la verosimilitud.
 
-**Ejemplo:** \(P = [0.5, 0.5]\), \(Q = [0.9, 0.1]\). \(D_{KL}(P||Q) = 0.5\log(0.5/0.9) + 0.5\log(0.5/0.1) = 0.5\log(0.556) + 0.5\log(5) ≈ 0.5(-0.847) + 0.5(2.302) = -0.4235 + 1.151 = 0.7275\) nats.
+**Ejemplo:** $P = [0.5, 0.5]$, $Q = [0.9, 0.1]$. $D_{KL}(P||Q) = 0.5\log(0.5/0.9) + 0.5\log(0.5/0.1) = 0.5\log(0.556) + 0.5\log(5) ≈ 0.5(-0.847) + 0.5(2.302) = -0.4235 + 1.151 = 0.7275$ nats.
 
 #### 6. Tests estadísticos
 
@@ -229,9 +232,9 @@ Compara dos distribuciones (una muestra vs teórica, o dos muestras). Mide la m�
 
 Mide el cambio en la distribución de una variable entre dos momentos. Común en monitoreo de modelos:
 
-\[
+$$
 \text{PSI} = \sum_{i} (\%\text{actual}_i - \%\text{esperado}_i) \cdot \ln\left(\frac{\%\text{actual}_i}{\%\text{esperado}_i}\right)
-\]
+$$
 
 Valores > 0.25 indican drift significativo.
 
@@ -243,9 +246,9 @@ Probabilidad de obtener un resultado tan extremo como el observado, asumiendo qu
 
 Rango de valores que con cierta confianza (ej. 95%) contiene el verdadero parámetro poblacional. Para la media con varianza conocida:
 
-\[
+$$
 \bar{x} \pm z_{\alpha/2} \frac{\sigma}{\sqrt{n}}
-\]
+$$
 
 ---
 
@@ -263,9 +266,9 @@ El Análisis Exploratorio de Datos (EDA) utiliza todas las medidas descriptivas:
 
 La regresión logística modela la probabilidad de pertenencia a una clase:
 
-\[
+$$
 P(y=1|x) = \sigma(w^T x + b) = \frac{1}{1 + e^{-(w^T x + b)}}
-\]
+$$
 
 Se entrena maximizando la verosimilitud (equivalente a minimizar cross-entropy). La salida es una probabilidad.
 
@@ -275,7 +278,7 @@ Se entrena maximizando la verosimilitud (equivalente a minimizar cross-entropy).
 
 El clasificador Naive Bayes aplica el teorema de Bayes con el supuesto de independencia condicional entre características:
 
-\[
+$$
 P(y|x_1,\dots,x_n) \propto P(y) \prod_{i=1}^n P(x_i|y)
 ```
 
@@ -285,8 +288,8 @@ P(y|x_1,\dots,x_n) \propto P(y) \prod_{i=1}^n P(x_i|y)
 
 Los árboles usan medidas de impureza para decidir splits:
 
-- **Entropía:** \(H(S) = -\sum p_i \log_2 p_i\)
-- **Índice Gini:** \(G(S) = 1 - \sum p_i^2\)
+- **Entropía:** $H(S) = -\sum p_i \log_2 p_i$
+- **Índice Gini:** $G(S) = 1 - \sum p_i^2$
 
 **Ejemplo:** Un nodo con 10 muestras: 6 de clase A, 4 de clase B. Entropía = -0.6 log₂0.6 - 0.4 log₂0.4 ≈ -0.6(-0.737) -0.4(-1.322) = 0.442 + 0.529 = 0.971. Gini = 1 - (0.6²+0.4²) = 1 - (0.36+0.16) = 0.48.
 
@@ -296,7 +299,7 @@ El error de generalización se descompone en:
 
 \[
 \text{Error} = \text{Bias}^2 + \text{Varianza} + \text{Ruido}
-\]
+$$
 
 - **Bias:** Error por suposiciones erróneas del modelo (underfitting).
 - **Varianza:** Error por sensibilidad a fluctuaciones en el entrenamiento (overfitting).
@@ -356,9 +359,9 @@ La inicialización adecuada controla la varianza de las activaciones para evitar
 
 Batch Norm normaliza las activaciones de una capa usando la media y varianza del mini-batch:
 
-\[
+$$
 \hat{x} = \frac{x - \mu_B}{\sqrt{\sigma_B^2 + \epsilon}}, \quad y = \gamma \hat{x} + \beta
-\]
+$$
 
 Luego aprende parámetros de escala γ y desplazamiento β. Durante entrenamiento, mantiene medias móviles de μ y σ para usar en inferencia.
 
@@ -368,32 +371,32 @@ Luego aprende parámetros de escala γ y desplazamiento β. Durante entrenamient
 
 Los modelos de lenguaje autoregresivos (como GPT) modelan la probabilidad de una secuencia como producto de probabilidades condicionales:
 
-\[
+$$
 P(x_1, x_2, \dots, x_T) = \prod_{t=1}^T P(x_t | x_{<t})
-\]
+$$
 
-Cada \(P(x_t | x_{<t})\) es una distribución sobre el vocabulario (softmax). El entrenamiento maximiza la log-verosimilitud.
+Cada $P(x_t | x_{<t})$ es una distribución sobre el vocabulario (softmax). El entrenamiento maximiza la log-verosimilitud.
 
 **Ejemplo:** Para la frase "el gato come", la probabilidad se descompone como P(el) × P(gato|el) × P(come|el,gato).
 
 ##### 5. Modelos generativos (distribuciones, divergencia KL)
 
-- **VAE (Variational Autoencoder):** Minimiza la divergencia KL entre la distribución posterior aproximada \(q(z|x)\) y la prior \(p(z)\) (normal estándar). La pérdida es:
-  \[
+- **VAE (Variational Autoencoder):** Minimiza la divergencia KL entre la distribución posterior aproximada $q(z|x)$ y la prior $p(z)$ (normal estándar). La pérdida es:
+  $$
   L = \text{Reconstrucción} + D_{KL}(q(z|x) \parallel p(z))
-  \]
-- **GANs:** La distribución generada \(p_g\) se compara implícitamente con la real \(p_{data}\) mediante el discriminador.
+  $$
+- **GANs:** La distribución generada $p_g$ se compara implícitamente con la real $p_{data}$ mediante el discriminador.
 
 **Ejemplo:** En VAE, la divergencia KL tiene fórmula cerrada para Gaussianas:  
-\(D_{KL}(N(\mu, \sigma^2) \parallel N(0,1)) = -\frac{1}{2}(1 + \log \sigma^2 - \mu^2 - \sigma^2)\)
+$D_{KL}(N(\mu, \sigma^2) \parallel N(0,1)) = -\frac{1}{2}(1 + \log \sigma^2 - \mu^2 - \sigma^2)$
 
 ##### 6. CLIP (softmax, pérdida contrastiva)
 
 CLIP entrena un modelo para alinear imágenes y textos en un espacio común. Usa una pérdida contrastiva basada en softmax sobre similitudes coseno:
 
-\[
+$$
 L = -\log \frac{\exp(\text{sim}(I_i, T_i)/\tau)}{\sum_{j=1}^N \exp(\text{sim}(I_i, T_j)/\tau)} - \log \frac{\exp(\text{sim}(I_i, T_i)/\tau)}{\sum_{j=1}^N \exp(\text{sim}(I_j, T_i)/\tau)}
-\]
+$$
 
 Esto maximiza la similitud entre pares correctos y minimiza con pares incorrectos.
 

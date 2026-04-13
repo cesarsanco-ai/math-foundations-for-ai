@@ -2,36 +2,18 @@
 layout: default
 ---
 
-# Sesion 14: Optimización
+# Sesion 14: Optimización y Gradiente Descendente
 [⬅️ Volver al Índice](../index.md)
 
 ## 🎯 Objetivo de la Sesión
 
-Consolidar fundamentos de cálculo y su aplicación en IA con práctica en notebooks.
+Implementar principios de optimización y descenso de gradiente en problemas de entrenamiento de modelos.
 
-***
+## 📘 Teoría
 
-## 📘 Contenido Teórico
+* 🖼️ [Sesión 14](../material/Sesion14/teoria/sesion14.md)
 
-Fundamentos conceptuales y referencias de la semana.
+### 💻 Ejercicios
 
-* 🖼️ **Slides de Clase (fuente):** [PPT14-CALCULO.tex](../material/Sesion14/slides/PPT14-CALCULO.tex)
-
-* 📝 **Quick Reference:** [CheatSheet](../material/Sesion14/cheatsheet/cheatsheet.md)
-
-* 📎 **Anexo Técnico:** [Material Complementario](../material/Sesion14/anexo/anexo.md)
-
-***
-
-### 💻 Laboratorio
-
-*Nivel: Intermedio* ⭐⭐⭐
-
-* 📓 **Notebook Fundamentos:** [Notebook 1](https://github.com/cesarsanco-ai/math-foundations-for-ai/blob/main/docs/material/Sesion14/practica/SESION14-NTB1-CALCULO.ipynb)
-* 📓 **Notebook Aplicaciones:** [Notebook 2](https://github.com/cesarsanco-ai/math-foundations-for-ai/blob/main/docs/material/Sesion14/practica/SESION14-NTB2-CALCULO.ipynb)
-
-***
-
-## 🔗 Recursos complementarios
-
-* 📁 **[Repositorio del curso](https://github.com/cesarsanco-ai/math-foundations-for-ai)** — Código y materiales en GitHub.
+* 📓 [Ejercicio 1](https://github.com/cesarsanco-ai/math-foundations-for-ai/blob/main/docs/material/Sesion14/practica/SESION14_NTB1_CALCULO.md)
+* 📓 [Ejercicio 2](https://github.com/cesarsanco-ai/math-foundations-for-ai/blob/main/docs/material/Sesion14/practica/SESION14_NTB2_CALCULO.ipynb)

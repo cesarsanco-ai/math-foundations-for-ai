@@ -7,31 +7,13 @@ layout: default
 
 ## 🎯 Objetivo de la Sesión
 
-Consolidar fundamentos de cálculo y su aplicación en IA con práctica en notebooks.
+Interpretar transformaciones lineales como base de la representación de datos y de las capas en redes neuronales.
 
-***
+## 📘 Teoría
 
-## 📘 Contenido Teórico
+* 🖼️ [Sesión 6](../material/Sesion06/teoria/sesion6.md)
 
-Fundamentos conceptuales y referencias de la semana.
+### 💻 Ejercicios
 
-* 🖼️ **Slides de Clase (fuente):** [PPT06-CALCULO.tex](../material/Sesion06/slides/PPT06-CALCULO.tex)
-
-* 📝 **Quick Reference:** [CheatSheet](../material/Sesion06/cheatsheet/cheatsheet.md)
-
-* 📎 **Anexo Técnico:** [Material Complementario](../material/Sesion06/anexo/anexo.md)
-
-***
-
-### 💻 Laboratorio
-
-*Nivel: Intermedio* ⭐⭐⭐
-
-* 📓 **Notebook Fundamentos:** [Notebook 1](https://github.com/cesarsanco-ai/math-foundations-for-ai/blob/main/docs/material/Sesion06/practica/SESION6-NTB1-CALCULO.ipynb)
-* 📓 **Notebook Aplicaciones:** [Notebook 2](https://github.com/cesarsanco-ai/math-foundations-for-ai/blob/main/docs/material/Sesion06/practica/SESION6-NTB2-CALCULO.ipynb)
-
-***
-
-## 🔗 Recursos complementarios
-
-* 📁 **[Repositorio del curso](https://github.com/cesarsanco-ai/math-foundations-for-ai)** — Código y materiales en GitHub.
+* 📓 [Ejercicio 1](https://github.com/cesarsanco-ai/math-foundations-for-ai/blob/main/docs/material/Sesion06/practica/SESION6_NTB1_CALCULO.md)
+* 📓 [Ejercicio 2](https://github.com/cesarsanco-ai/math-foundations-for-ai/blob/main/docs/material/Sesion06/practica/SESION6_NTB2_CALCULO.ipynb)

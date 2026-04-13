@@ -3,11 +3,11 @@
 
 # Cálculo y Álgebra Lineal para IA
 
-Bienvenido al material del curso **Cálculo y Álgebra Lineal para Inteligencia Artificial**. 
+Bienvenido a mi curso de **Cálculo y Álgebra Lineal para Inteligencia Artificial**. 
 
 ## 📖 Sesiones
 
-Cada sesión incluye material teórico, notebooks de práctica (implementación en Python), ejercicios y recursos complementarios que conectan la matemática con la IA.
+Cada sesión incluye material teórico, ejercicios, recursos complementarios y proyectos.
 
 | Semana | Tema |
 |--------|--------|
@@ -26,19 +26,11 @@ Cada sesión incluye material teórico, notebooks de práctica (implementación 
 | 13 | [Cálculo Multivariable](sesiones/sesion-13.md) |
 | 14 | [Optimización](sesiones/sesion-14.md) |
 
-> **Nota:** Se recomienda contar con conocimientos básicos de Python y haber utilizado bibliotecas numéricas como NumPy.
-
-## 📂 Recursos generales
-
-- **Cheatsheet**: Resumen de fórmulas de álgebra lineal, derivadas multivariables y algoritmos de optimización.  
-  [Descargar cheatsheet](cheatsheet/Math_for_AI_Cheatsheet.pdf)
-
-- **Proyecto Integrador**: Implementación de un optimizador desde cero y análisis de superficies de pérdida.  
-  [Ver proyecto integrador](proyecto-integrador/README.md)
+> **Nota:** Se recomienda contar con conocimientos básicos de Python.
 
 ## 🔗 Repositorio 
 
-Todo el código fuente, notebooks y materiales adicionales están disponibles en GitHub:
+Todo el código fuente está disponible en el repositorio de GitHub:
 
 [https://github.com/cesarsanco-ai/math-foundations-for-ai](https://github.com/cesarsanco-ai/math-foundations-for-ai)
 

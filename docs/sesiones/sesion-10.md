@@ -2,36 +2,18 @@
 layout: default
 ---
 
-# Sesion 10: Probabilidades en IA
+# Sesion 10: Probabilidad y Estadística para IA
 [⬅️ Volver al Índice](../index.md)
 
 ## 🎯 Objetivo de la Sesión
 
-Consolidar fundamentos de cálculo y su aplicación en IA con práctica en notebooks.
+Aplicar conceptos de probabilidad y estadística para modelado, evaluación e interpretación en IA.
 
-***
+## 📘 Teoría
 
-## 📘 Contenido Teórico
+* 🖼️ [Sesión 10](../material/Sesion10/teoria/sesion10.md)
 
-Fundamentos conceptuales y referencias de la semana.
+### 💻 Ejercicios
 
-* 🖼️ **Slides de Clase (fuente):** [PPT10-CALCULO.tex](../material/Sesion10/slides/PPT10-CALCULO.tex)
-
-* 📝 **Quick Reference:** [CheatSheet](../material/Sesion10/cheatsheet/cheatsheet.md)
-
-* 📎 **Anexo Técnico:** [Material Complementario](../material/Sesion10/anexo/anexo.md)
-
-***
-
-### 💻 Laboratorio
-
-*Nivel: Intermedio* ⭐⭐⭐
-
-* 📓 **Notebook Fundamentos:** [Notebook 1](https://github.com/cesarsanco-ai/math-foundations-for-ai/blob/main/docs/material/Sesion10/practica/SESION10-NTB1-CALCULO.ipynb)
-* 📓 **Notebook Aplicaciones:** [Notebook 2](https://github.com/cesarsanco-ai/math-foundations-for-ai/blob/main/docs/material/Sesion10/practica/SESION10-NTB2-CALCULO.ipynb)
-
-***
-
-## 🔗 Recursos complementarios
-
-* 📁 **[Repositorio del curso](https://github.com/cesarsanco-ai/math-foundations-for-ai)** — Código y materiales en GitHub.
+* 📓 [Ejercicio 1](https://github.com/cesarsanco-ai/math-foundations-for-ai/blob/main/docs/material/Sesion10/practica/SESION10_NTB1_CALCULO.md)
+* 📓 [Ejercicio 2](https://github.com/cesarsanco-ai/math-foundations-for-ai/blob/main/docs/material/Sesion10/practica/SESION10_NTB2_CALCULO.ipynb)
