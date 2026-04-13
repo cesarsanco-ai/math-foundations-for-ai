@@ -1,7 +1,7 @@
 ---
 layout: default
 ---
-# Sesión 4: Sistemas de Ecuaciones Lineales - Solucionario NTB1
+# Sesion 4: Ejercicios de Sistemas de Ecuaciones Lineales
 
 Material de práctica intermedio-avanzado orientado a IA. Cada ejercicio incluye desarrollo paso a paso y explicación aplicada.
 

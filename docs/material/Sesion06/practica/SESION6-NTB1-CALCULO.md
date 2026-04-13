@@ -1,7 +1,7 @@
 ---
 layout: default
 ---
-# Sesión 6: Transformaciones Lineales - Solucionario NTB1
+# Sesion 6: Ejercicios de Transformaciones Lineales
 
 Material de práctica intermedio-avanzado orientado a IA. Cada ejercicio incluye desarrollo paso a paso y explicación aplicada.
 

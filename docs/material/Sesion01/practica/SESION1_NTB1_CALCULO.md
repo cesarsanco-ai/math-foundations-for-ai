@@ -1,7 +1,7 @@
 ---
 layout: default
 ---
-# Sesión 1: Fundamentos Matemáticos - Solucionario NTB1
+# Sesion 1: Ejercicios de Fundamentos Matematicos
 
 Material de práctica intermedio-avanzado orientado a IA. Cada ejercicio incluye procedimiento detallado y cierre conceptual aplicado.
 

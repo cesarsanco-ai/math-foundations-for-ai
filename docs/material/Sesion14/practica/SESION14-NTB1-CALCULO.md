@@ -1,7 +1,7 @@
 ---
 layout: default
 ---
-# Sesión 14: Optimizacion y Gradiente Descendente - Solucionario NTB1
+# Sesion 14: Ejercicios de Optimizacion y Gradiente Descendente
 
 Material intermedio-avanzado orientado a IA. Cada ejercicio se desarrolla paso a paso con interpretación aplicada.
 

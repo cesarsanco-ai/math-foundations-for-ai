@@ -1,7 +1,7 @@
 ---
 layout: default
 ---
-# Sesión 7: Autovalores y Autovectores - Solucionario NTB1
+# Sesion 7: Ejercicios de Autovalores y Autovectores
 
 Material de práctica intermedio-avanzado orientado a IA. Cada ejercicio incluye desarrollo paso a paso y explicación aplicada.
 

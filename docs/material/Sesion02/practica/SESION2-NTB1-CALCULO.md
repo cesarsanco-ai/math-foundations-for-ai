@@ -1,7 +1,7 @@
 ---
 layout: default
 ---
-# Sesión 2: Fundamentos de IA - Solucionario NTB1
+# Sesion 2: Ejercicios de Fundamentos de IA
 
 Material de práctica intermedio-avanzado orientado a IA. Cada ejercicio incluye procedimiento detallado y cierre conceptual aplicado.
 

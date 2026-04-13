@@ -1,7 +1,7 @@
 ---
 layout: default
 ---
-# Sesión 13: Calculo Multivariable - Solucionario NTB1
+# Sesion 13: Ejercicios de Calculo Multivariable
 
 Material intermedio-avanzado orientado a IA. Cada ejercicio se desarrolla paso a paso con interpretación aplicada.
 

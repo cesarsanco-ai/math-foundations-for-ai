@@ -1,7 +1,7 @@
 ---
 layout: default
 ---
-# Sesión 5: Espacios Vectoriales y Normas - Solucionario NTB1
+# Sesion 5: Ejercicios de Espacios Vectoriales y Normas
 
 Material de práctica intermedio-avanzado orientado a IA. Cada ejercicio incluye desarrollo paso a paso y explicación aplicada.
 

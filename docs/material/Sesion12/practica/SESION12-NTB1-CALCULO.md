@@ -1,7 +1,7 @@
 ---
 layout: default
 ---
-# Sesión 12: Derivadas e Integrales en una Variable - Solucionario NTB1
+# Sesion 12: Ejercicios de Derivadas e Integrales en una Variable
 
 Material intermedio-avanzado orientado a IA. Cada ejercicio se desarrolla paso a paso con interpretación aplicada.
 

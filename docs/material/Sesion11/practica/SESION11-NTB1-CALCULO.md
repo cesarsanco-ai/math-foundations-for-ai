@@ -1,7 +1,7 @@
 ---
 layout: default
 ---
-# Sesión 11: Limites y Continuidad - Solucionario NTB1
+# Sesion 11: Ejercicios de Limites y Continuidad
 
 Material intermedio-avanzado orientado a IA. Cada ejercicio se desarrolla paso a paso con interpretación aplicada.
 

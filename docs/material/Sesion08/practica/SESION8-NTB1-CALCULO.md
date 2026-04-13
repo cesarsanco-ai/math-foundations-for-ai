@@ -1,7 +1,7 @@
 ---
 layout: default
 ---
-# Sesión 8: Descomposición de Matrices - Solucionario NTB1
+# Sesion 8: Ejercicios de Descomposicion de Matrices
 
 Material de práctica intermedio-avanzado orientado a IA. Cada ejercicio incluye desarrollo paso a paso y explicación aplicada.
 

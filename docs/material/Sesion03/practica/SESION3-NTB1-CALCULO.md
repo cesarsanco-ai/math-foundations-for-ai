@@ -1,7 +1,7 @@
 ---
 layout: default
 ---
-# Sesión 3: Matrices - Solucionario NTB1
+# Sesion 3: Ejercicios de Matrices
 
 Material de práctica intermedio-avanzado orientado a IA. Cada ejercicio incluye procedimiento detallado y cierre conceptual aplicado.
 

@@ -1,7 +1,7 @@
 ---
 layout: default
 ---
-# Sesión 9: Tensores - Solucionario NTB1
+# Sesion 9: Ejercicios de Tensores
 
 Material de práctica intermedio-avanzado orientado a IA. Cada ejercicio incluye desarrollo paso a paso y explicación aplicada.
 
